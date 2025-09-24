@@ -5,6 +5,7 @@ type TotalRatingBarProps = {
   rating: number;
   ratingsCount: number;
   reviewsCount: number;
+  cursorPointer?: boolean;
 };
 
 
@@ -12,20 +13,14 @@ export const TotalRatingBar = ({
   rating,
   ratingsCount,
   reviewsCount,
+  cursorPointer
 }: TotalRatingBarProps) => {
   return (
-    <div className="w-fit flex gap-6 p-3 items-center rounded hover:bg-gray-300">
+    <div className={`w-fit flex gap-6 px-1 py-3 items-center rounded ${cursorPointer ? 'cursor-pointer' : ''} hover:bg-gray-200`}>
       <StarRating rating={rating} />
 
       <LabelText text={`${ratingsCount.toLocaleString("en-US")} ratings`} />
-
-      <p className="text-gray-600 text-sm">
-        {ratingsCount.toLocaleString("en-US")} ratings
-      </p>
-
-      <p className="text-gray-600 text-sm">
-        {reviewsCount.toLocaleString("en-US")} reviews
-      </p>
+      <LabelText text={`${reviewsCount.toLocaleString("en-US")} reviews`} />
     </div>
   );
 };
