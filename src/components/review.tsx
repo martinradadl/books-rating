@@ -11,7 +11,7 @@ export const Review = () => {
     const reviewerName = "John Doe";
     const reviewsCount = 99;
     const followersCount = 6543;
-    const rating = 5;
+    const rating = 4;
     const date = 'February 19, 2017';
     const review = `YOU. ARE. THE. DEAD. Oh my God. I got the chills so many times toward the end of this book. It completely blew my mind. It managed to surpass my high expectations AND be nothing at all like I expected. Or in Newspeak "Double Plus Good."
 
@@ -40,14 +40,14 @@ I read Fahrenheit 451 over ten years ago in my early teens. At the time, I remem
                     <LabelText text={`${formatNumberShort(followersCount)} followers`} />
                 </div>
 
-                <PillButton label="Follow" bgColor="black" bgColorHover="gray-600" paddingX={8} fitWidth />
+                <PillButton label="Follow" className="px-8 w-fit" />
             </div>
 
             {/* Right Column */}
             <div className="flex flex-col gap-4 flex-1">
                 <div className="flex place-content-between">
                     <StarRating rating={rating} />
-                    <LabelText text={date} hoverUnderline cursorPointer />
+                    <LabelText text={date} className="cursor-pointer hover:underline" />
                 </div>
 
                 <p className="text-base mb-4">
@@ -82,7 +82,7 @@ I read Fahrenheit 451 over ten years ago in my early teens. At the time, I remem
                     <p className="font-semibold cursor-pointer hover:underline">Report</p>
                 </div>
 
-                <Separator margin={4} />
+                <Separator className="my-4" />
             </div>
         </div>
     )

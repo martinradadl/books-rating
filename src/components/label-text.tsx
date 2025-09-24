@@ -1,12 +1,13 @@
+import classNames from "classnames";
+
 type LabelTextProps = {
     text: string;
-    cursorPointer?: boolean;
-    hoverUnderline?: boolean;
+    className?: string;
 }
 
-export const LabelText = ({ text, cursorPointer, hoverUnderline }: LabelTextProps) => {
+export const LabelText = ({ text, className }: LabelTextProps) => {
     return (
-        <p className={`text-gray-600 text-sm ${cursorPointer ? 'cursor-pointer' : ''} ${hoverUnderline ? 'hover:underline' : ''}`}>
+        <p className={classNames('text-gray-600 text-sm', className)}>
             {text}
         </p>
     );

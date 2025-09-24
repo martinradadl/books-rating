@@ -1,15 +1,14 @@
+import classNames from 'classnames'
+
 interface Props {
     label: string;
-    bgColor: string;
-    bgColorHover: string;
-    width?: number;
-    paddingX?: number;
-    fitWidth?: boolean;
+    className?: string;
 }
 
-export const PillButton = ({ label, bgColor, bgColorHover, width, paddingX, fitWidth }: Props) => {
+export const PillButton = ({ label, className }: Props) => {
     return (
-        <button className={`text-white font-bold items-center rounded-full py-2${fitWidth ? ' w-fit ' : ' '}${paddingX ? ` px-${paddingX} ` : ' '}${width ? ` w-${width} ` : ' '}bg-${bgColor} hover:bg-${bgColorHover} focus:outline-none focus:ring-3 focus:ring-${bgColor} focus:ring-offset-3`}>
+        <button className={classNames('bg-black text-white font-bold items-center rounded-full py-2 hover:bg-gray-600 focus:ring-3 focus:ring-black focus:ring-offset-3',
+            className)}>
             {label}
         </button>
     )

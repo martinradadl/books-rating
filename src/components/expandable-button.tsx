@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { MdOutlineExpandLess, MdOutlineExpandMore } from "react-icons/md";
 
 type ExpandableButtonProps = {
@@ -10,11 +11,13 @@ type ExpandableButtonProps = {
 export const ExpandableButton = ({
     label, expandedLabel, isExpanded, setIsExpanded
 }: ExpandableButtonProps) => {
+    const dynamicStyles = isExpanded ? 'pt-4' : ''
+
     return (
         <div>
             {expandedLabel || !isExpanded ? (
                 <div
-                    className={`flex items-center gap-1 w-fit cursor-pointer group ${isExpanded ? 'pt-4' : ''}`}
+                    className={classNames('flex items-center gap-1 w-fit cursor-pointer group', dynamicStyles)}
                     onClick={() => setIsExpanded(!isExpanded)}
                 >
                     <p className="font-semibold group-hover:underline">

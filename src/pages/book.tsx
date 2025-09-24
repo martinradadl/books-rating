@@ -87,11 +87,11 @@ Orwell's work remains influential in popular culture and in political culture, a
       <div className="w-72 p-4 sticky top-0 self-start flex flex-col gap-4 items-center">
         <div className="w-48 aspect-2/3 bg-gray-600" /> {/* Book Cover */}
 
-        <PillButton label="Want to Read" bgColor="green-800" bgColorHover="green-700" width={60} />
+        <PillButton label="Want to Read" className="w-60 bg-green-800 hover:bg-green-700 focus:ring-green-800" />
 
         <StarRating interactive />
 
-        <LabelText text="Rate this book" cursorPointer />
+        <LabelText text="Rate this book" className="cursor-pointer" />
       </div>
 
 
@@ -110,7 +110,7 @@ Orwell's work remains influential in popular culture and in political culture, a
             rating,
             ratingsCount,
             reviewsCount,
-            cursorPointer: true
+            className: 'cursor-pointer'
           }}
         />
 
@@ -173,7 +173,7 @@ Orwell's work remains influential in popular culture and in political culture, a
           setIsExpanded={setShowDetails}
         />
 
-        <Separator margin={8} />
+        <Separator className={'my-8'} />
 
         <div className="flex">
           <div className="flex flex-1 justify-center items-center gap-2">
@@ -187,7 +187,7 @@ Orwell's work remains influential in popular culture and in political culture, a
           </div>
         </div>
 
-        <Separator margin={8} />
+        <Separator className={'my-8'} />
 
         <SectionTitle name="About the author" />
 
@@ -202,7 +202,7 @@ Orwell's work remains influential in popular culture and in political culture, a
             )} followers`} />
           </div>
 
-          <PillButton label="Follow" bgColor="black" bgColorHover="gray-600" paddingX={8} />
+          <PillButton label="Follow" className="px-8" />
         </div>
 
         <p className="text-base my-6">
@@ -217,13 +217,13 @@ Orwell's work remains influential in popular culture and in political culture, a
           setIsExpanded={setShowFullAuthorDescription}
         />
 
-        <Separator margin={8} />
+        <Separator className={'my-8'} />
 
         <SectionTitle name="Readers also enjoyed" />
 
         <BooksCarousel bookWidth={40} showAllLabel="All similar books" />
 
-        <Separator margin={8} />
+        <Separator className={'my-8'} />
 
         <SectionTitle name="Ratings & Reviews" />
 
@@ -235,14 +235,14 @@ Orwell's work remains influential in popular culture and in political culture, a
           <div className="flex gap-6 items-center">
             <div className="flex flex-col items-center gap-2">
               <StarRating interactive />
-              <LabelText text="Rate this book" cursorPointer />
+              <LabelText text="Rate this book" className="cursor-pointer" />
             </div>
 
-            <PillButton label="Write a Review" bgColor="black" bgColorHover="gray-600" paddingX={6} />
+            <PillButton label="Write a Review" className="px-6" />
           </div>
         </div>
 
-        <Separator margin={8} />
+        <Separator className={'my-8'} />
 
         <SectionTitle name="Community Reviews" />
 

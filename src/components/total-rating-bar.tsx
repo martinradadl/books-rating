@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { LabelText } from "./label-text";
 import { StarRating } from "./star-rating";
 
@@ -5,7 +6,7 @@ type TotalRatingBarProps = {
   rating: number;
   ratingsCount: number;
   reviewsCount: number;
-  cursorPointer?: boolean;
+  className?: string;
 };
 
 
@@ -13,10 +14,10 @@ export const TotalRatingBar = ({
   rating,
   ratingsCount,
   reviewsCount,
-  cursorPointer
+  className
 }: TotalRatingBarProps) => {
   return (
-    <div className={`w-fit flex gap-6 px-1 py-3 items-center rounded ${cursorPointer ? 'cursor-pointer' : ''} hover:bg-gray-200`}>
+    <div className={classNames('w-fit flex gap-6 px-1 py-3 items-center rounded hover:bg-gray-200', className)}>
       <StarRating rating={rating} />
 
       <LabelText text={`${ratingsCount.toLocaleString("en-US")} ratings`} />
