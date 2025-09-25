@@ -1,30 +1,27 @@
-import classNames from "classnames";
 import { MdArrowForwardIos } from "react-icons/md"
 
 type BooksCarouselProps = {
-    bookWidth: number;
     showAllLabel: string;
+    items?: number;
 }
 
-const widthMap: Record<number, string> = {
-    36: "w-36",
-    40: "w-40",
-};
 
-export const BooksCarousel = ({ bookWidth, showAllLabel }: BooksCarouselProps) => {
-    const dynamicStyles = widthMap[bookWidth];
-
+export const BooksCarousel = ({ showAllLabel, items = 5 }: BooksCarouselProps) => {
     return (<>
-        <div className="flex gap-6 overflow-auto my-6">
-            {Array(4).fill(null).map((_, i) => (
-                <div key={i} className={classNames('aspect-2/3 bg-gray-600', dynamicStyles)} />
-            ))}
+        <div className="flex gap-4 my-6">
+            {Array(items)
+                .fill(null)
+                .map((_, i) => (
+                    <div
+                        key={i}
+                        className="bg-gray-600 rounded aspect-[2/3] flex-1"
+                    />
+                ))}
         </div>
 
         <div className="flex gap-2 items-center cursor-pointer group">
             <p className="font-semibold group-hover:underline">{showAllLabel}</p>
             <MdArrowForwardIos size={16} />
         </div>
-    </>
-    )
+    </>)
 }
