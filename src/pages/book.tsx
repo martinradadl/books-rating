@@ -10,6 +10,7 @@ import { RatingDistribution } from "../components/star-rating-histogram";
 import { Review } from "../components/review";
 import { Separator } from "../components/separator";
 import { PillButton } from "../components/pill-button";
+import { SectionTitle } from "../components/section-title";
 
 const AvatarGroup = () => {
   return (
@@ -20,10 +21,6 @@ const AvatarGroup = () => {
     </div>
   );
 };
-
-const SectionTitle = ({ name }: { name: string }) => {
-  return (<p className="text-2xl font-bold">{name}</p>)
-}
 
 export const Book = () => {
   const Title = "1984";
@@ -162,7 +159,7 @@ Orwell's work remains influential in popular culture and in political culture, a
 
             <p className="text-base font-bold mt-2">More editions</p>
 
-            <BooksCarousel bookWidth={36} showAllLabel="Show all editions" />
+            <BooksCarousel showAllLabel="Show all editions" />
           </>
         )}
 
@@ -221,7 +218,7 @@ Orwell's work remains influential in popular culture and in political culture, a
 
         <SectionTitle name="Readers also enjoyed" />
 
-        <BooksCarousel bookWidth={40} showAllLabel="All similar books" />
+        <BooksCarousel showAllLabel="All similar books" items={4} />
 
         <Separator className={'my-8'} />
 
