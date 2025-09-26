@@ -17,11 +17,17 @@ export const TotalRatingBar = ({
   className
 }: TotalRatingBarProps) => {
   return (
-    <div className={classNames('w-fit flex gap-6 px-1 py-3 items-center rounded hover:bg-gray-200', className)}>
-      <StarRating rating={rating} />
+    <div className={classNames('w-fit flex flex-col lg:flex-row gap-2 lg:gap-6 px-1 py-3 items-center rounded hover:bg-gray-200', className)}>
+      <div className="flex gap-4">
+        <StarRating rating={rating} />
+        <p className="text-3xl font-bold">{rating}</p>
+      </div>
 
-      <LabelText text={`${ratingsCount.toLocaleString("en-US")} ratings`} />
-      <LabelText text={`${reviewsCount.toLocaleString("en-US")} reviews`} />
+      <div className="flex gap-2">
+        <LabelText text={`${ratingsCount.toLocaleString("en-US")} ratings`} />
+        <LabelText text={"·"} />
+        <LabelText text={`${reviewsCount.toLocaleString("en-US")} reviews`} />
+      </div>
     </div>
   );
 };

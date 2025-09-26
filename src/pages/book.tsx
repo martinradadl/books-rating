@@ -12,6 +12,7 @@ import { Separator } from "../components/separator";
 import { PillButton } from "../components/pill-button";
 import { SectionTitle } from "../components/section-title";
 import { AvatarGroup } from "../components/avatar-group";
+import { BookActions } from "../components/book-actions";
 
 export const Book = () => {
   const Title = "1984";
@@ -67,40 +68,37 @@ Orwell's work remains influential in popular culture and in political culture, a
   const [showFullAuthorDescription, setShowFullAuthorDescription] = useState(false);
 
   return (
-    <div className="flex max-w-6xl w-full m-auto md:w-auto">
+    <div className="flex flex-col md:flex-row max-w-6xl w-full m-auto">
 
       {/* Book Cover Container */}
 
-
-      <div className="w-72 p-4 sticky top-0 self-start flex flex-col gap-4 items-center">
+      <div className="w-full md:w-72 p-4 md:sticky md:top-0 self-start flex flex-col gap-4 items-center">
         <div className="w-48 aspect-2/3 bg-gray-600" /> {/* Book Cover */}
 
-        <PillButton label="Want to Read" className="w-60 bg-green-800 hover:bg-green-700 focus:ring-green-800" />
-
-        <StarRating interactive />
-
-        <LabelText text="Rate this book" className="cursor-pointer" />
+        <BookActions />
       </div>
-
 
       {/* Main Content */}
 
+      <div className="flex flex-col flex-1 overflow-y-auto px-6 py-2 md:py-6">
+        <div className="flex flex-col items-center md:items-start">
+          <p className="text-5xl font-semibold">{Title}</p>
 
-      <div className="flex flex-col flex-1 overflow-y-auto p-6">
-        <p className="text-5xl font-semibold">{Title}</p>
+          <p className="text-4xl cursor-pointer hover:underline">
+            {authorName}
+          </p>
 
-        <p className="text-4xl cursor-pointer hover:underline">
-          {authorName}
-        </p>
+          <TotalRatingBar
+            {...{
+              rating,
+              ratingsCount,
+              reviewsCount,
+              className: 'cursor-pointer'
+            }}
+          />
+        </div>
 
-        <TotalRatingBar
-          {...{
-            rating,
-            ratingsCount,
-            reviewsCount,
-            className: 'cursor-pointer'
-          }}
-        />
+        <BookActions showOnMobileView />
 
         <p className="text-base mb-4">
           {showFullDescription
@@ -163,13 +161,37 @@ Orwell's work remains influential in popular culture and in political culture, a
 
         <Separator className={'my-8'} />
 
-        <div className="flex">
-          <div className="flex flex-1 justify-center items-center gap-2">
+        {/* ---------- OTHER USERS INTERESTED SECTION ---------- */}
+
+        {/* ---------- MOBILE: grid ---------- */}
+        <div className="w-full lg:hidden">
+          <div className="mx-auto max-w-md grid gap-y-4">
+            {/* Row 1 */}
+            <div className="flex items-center justify-center gap-2">
+              <AvatarGroup />
+              <div className="w-50">
+                <LabelText text={`${currentlyReadingCount} people are currently reading`} />
+              </div>
+            </div>
+
+            {/* Row 2 */}
+            <div className="flex items-center justify-center gap-2">
+              <AvatarGroup />
+              <div className="w-50">
+                <LabelText text={`${wantToReadCount} people want to read`} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ---------- DESKTOP: flex ---------- */}
+        <div className="hidden lg:flex">
+          <div className="flex items-center gap-2 justify-center flex-1">
             <AvatarGroup />
             <LabelText text={`${currentlyReadingCount} people are currently reading`} />
           </div>
 
-          <div className="flex flex-1 justify-center items-center gap-2">
+          <div className="flex items-center gap-2 justify-center flex-1">
             <AvatarGroup />
             <LabelText text={`${wantToReadCount} people want to read`} />
           </div>
@@ -185,7 +207,7 @@ Orwell's work remains influential in popular culture and in political culture, a
           <div className="flex flex-col flex-1">
             <p className="font-semibold text-lg cursor-pointer hover:underline">{authorName}</p>
 
-            <LabelText text={`${authorBooksCount} books - ${formatNumberShort(
+            <LabelText text={`${authorBooksCount} books · ${formatNumberShort(
               authorFollowersCount
             )} followers`} />
           </div>

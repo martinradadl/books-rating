@@ -27,25 +27,30 @@ I read Fahrenheit 451 over ten years ago in my early teens. At the time, I remem
 
 
     return (
-        <div className="flex py-4">
+        <div className="flex flex-col lg:flex-row py-2">
 
             {/* Left Column */}
-            <div className="flex flex-col gap-2 w-60">
+            <div className="flex lg:flex-col gap-2 lg:w-60">
                 <div className="w-16 h-16 rounded-full bg-gray-600" /> {/* Reviewer's profile pic*/}
 
-                <p className="font-semibold text-lg cursor-pointer hover:underline">{reviewerName}</p>
+                <div className="flex flex-col flex-1 lg:flex-none">
+                    <p className="font-semibold text-lg cursor-pointer hover:underline">{reviewerName}</p>
 
-                <div className="flex flex-col gap-0.5">
-                    <LabelText text={`${reviewsCount} reviews`} />
-                    <LabelText text={`${formatNumberShort(followersCount)} followers`} />
+                    <div className="flex lg:flex-col gap-0.5">
+                        <LabelText text={`${reviewsCount} reviews`} />
+                        <div className="lg:hidden">
+                            <LabelText text={"·"} />
+                        </div>
+                        <LabelText text={`${formatNumberShort(followersCount)} followers`} />
+                    </div>
                 </div>
 
-                <PillButton label="Follow" className="px-8 w-fit" />
+                <PillButton label="Follow" className="px-8 w-fit h-fit py-3" />
             </div>
 
             {/* Right Column */}
             <div className="flex flex-col gap-4 flex-1">
-                <div className="flex place-content-between">
+                <div className="flex place-content-between items-center pt-2 lg:pt-0">
                     <StarRating rating={rating} />
                     <LabelText text={date} className="cursor-pointer hover:underline" />
                 </div>
