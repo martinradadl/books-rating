@@ -85,7 +85,7 @@ Orwell's work remains influential in popular culture and in political culture, a
         <div className="flex flex-col items-center md:items-start">
           <p className="text-5xl font-semibold">{Title}</p>
 
-          <p className="text-4xl cursor-pointer hover:underline">
+          <p className="text-4xl cursor-pointer hover:underline focus:ring-3 focus:ring-offset-2 rounded" tabIndex={0}>
             {authorName}
           </p>
 
@@ -106,20 +106,21 @@ Orwell's work remains influential in popular culture and in political culture, a
           isExpanded={showFullDescription}
           setIsExpanded={setShowFullDescription}
           content={
-            <p className={classNames("text-base", !showFullDescription && 'max-h-20 overflow-hidden mb-10')}>
+            <p className={classNames("text-base", !showFullDescription && 'max-h-20 overflow-hidden mb-6')}>
               {bookDescription}
             </p>
           }
         />
 
-        <div className="flex flex-col gap-4 py-6">
+        <div className="flex flex-col gap-4 pt-6 pb-10">
           <div className="flex flex-wrap py-2 gap-2 items-center">
             <LabelText text="Genres" />
 
             {relatedGenres.map((genre, index) => (
               <label
                 key={index}
-                className="cursor-pointer underline underline-offset-4 decoration-3 decoration-green-700"
+                className="cursor-pointer underline underline-offset-4 decoration-3 decoration-green-700 focus:ring-3 focus:ring-offset-2 rounded"
+                tabIndex={0}
               >
                 {genre}
               </label>
@@ -170,7 +171,6 @@ Orwell's work remains influential in popular culture and in political culture, a
         {/* ---------- MOBILE: grid ---------- */}
         <div className="w-full lg:hidden">
           <div className="mx-auto max-w-md grid gap-y-4">
-            {/* Row 1 */}
             <div className="flex items-center justify-center gap-2">
               <AvatarGroup />
               <div className="w-50">
@@ -178,7 +178,6 @@ Orwell's work remains influential in popular culture and in political culture, a
               </div>
             </div>
 
-            {/* Row 2 */}
             <div className="flex items-center justify-center gap-2">
               <AvatarGroup />
               <div className="w-50">
@@ -206,10 +205,12 @@ Orwell's work remains influential in popular culture and in political culture, a
         <SectionTitle name="About the author" />
 
         <div className="flex py-2 gap-4 items-center">
-          <div className="w-16 h-16 rounded-full bg-gray-600" /> {/* Author's profile pic*/}
+          <div className="w-16 h-16 rounded-full bg-gray-600 focus:ring-3 focus:ring-offset-2" tabIndex={0} /> {/* Author's profile pic*/}
 
           <div className="flex flex-col flex-1 min-w-0">
-            <p className="font-semibold text-lg cursor-pointer hover:underline truncate">{authorName}</p>
+            <p className="w-fit font-semibold text-lg cursor-pointer hover:underline truncate focus:ring-3 rounded" tabIndex={0}>
+              {authorName}
+            </p>
 
             <LabelText text={`${authorBooksCount} books · ${formatNumberShort(
               authorFollowersCount
@@ -224,7 +225,7 @@ Orwell's work remains influential in popular culture and in political culture, a
           isExpanded={showFullAuthorDescription}
           setIsExpanded={setShowFullAuthorDescription}
           content={
-            <p className={classNames("text-base my-6", !showFullAuthorDescription && 'max-h-20 mb-10 overflow-hidden')}>
+            <p className={classNames("text-base my-6", !showFullAuthorDescription && 'max-h-20 mb-6 overflow-hidden')}>
               {authorDescription}
             </p>
           }
