@@ -4,7 +4,7 @@ import { MdMenuBook } from "react-icons/md";
 import { TotalRatingBar } from "../components/total-rating-bar";
 import { formatNumberShort } from "../helpers/utils";
 import { LabelText } from "../components/label-text";
-import { ExpandableButton } from "../components/expandable-button";
+import { ExpandableContent } from "../components/expandable-content";
 import { BooksCarousel } from "../components/books-carousel";
 import { RatingDistribution } from "../components/star-rating-histogram";
 import { Review } from "../components/review";
@@ -13,6 +13,7 @@ import { PillButton } from "../components/pill-button";
 import { SectionTitle } from "../components/section-title";
 import { AvatarGroup } from "../components/avatar-group";
 import { BookActions } from "../components/book-actions";
+import classNames from "classnames";
 
 export const Book = () => {
   const Title = "1984";
@@ -100,20 +101,19 @@ Orwell's work remains influential in popular culture and in political culture, a
 
         <BookActions showOnMobileView />
 
-        <p className="text-base mb-4">
-          {showFullDescription
-            ? bookDescription
-            : `${bookDescription.slice(0, 440)}...`}
-        </p>
-
-        <ExpandableButton
+        <ExpandableContent
           label="Show more"
           isExpanded={showFullDescription}
           setIsExpanded={setShowFullDescription}
+          content={
+            <p className={classNames("text-base", !showFullDescription && 'max-h-20 overflow-hidden mb-10')}>
+              {bookDescription}
+            </p>
+          }
         />
 
         <div className="flex flex-col gap-4 py-6">
-          <div className="flex py-2 gap-2 items-center">
+          <div className="flex flex-wrap py-2 gap-2 items-center">
             <LabelText text="Genres" />
 
             {relatedGenres.map((genre, index) => (
@@ -131,32 +131,36 @@ Orwell's work remains influential in popular culture and in political culture, a
           <LabelText text={`First published ${firstPublished}`} />
         </div>
 
-        {showDetails && (
-          <>
-            <p className="text-base font-bold py-2">This edition</p>
-
-            <div className="grid gap-y-2 my-6">
-              {editionDetails.map((detail) => (
-                <div key={detail.label} className="flex">
-                  <div className="w-32">
-                    <LabelText text={detail.label} />
-                  </div>
-                  <div className="text-base text-gray-600">{detail.value}</div>
-                </div>
-              ))}
-            </div>
-
-            <p className="text-base font-bold mt-2">More editions</p>
-
-            <BooksCarousel showAllLabel="Show all editions" />
-          </>
-        )}
-
-        <ExpandableButton
+        <ExpandableContent
           label="Book details & editions"
           expandedLabel="Fewer details"
           isExpanded={showDetails}
           setIsExpanded={setShowDetails}
+          content={
+            !showDetails ?
+              <div className="h-4" />
+              :
+              <div className="mb-10">
+                <p className="text-base font-bold py-2">This edition</p>
+
+                <div className="grid gap-y-2 my-6">
+                  {editionDetails.map((detail) => (
+                    <div key={detail.label} className="flex">
+                      <div className="w-32">
+                        <LabelText text={detail.label} />
+                      </div>
+                      <div className="text-base text-gray-600">{detail.value}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className={!showDetails ? 'my-4' : 'hidden'} />
+
+                <p className="text-base font-bold mt-2">More editions</p>
+
+                <BooksCarousel showAllLabel="Show all editions" />
+              </div>
+          }
         />
 
         <Separator className={'my-8'} />
@@ -204,34 +208,33 @@ Orwell's work remains influential in popular culture and in political culture, a
         <div className="flex py-2 gap-4 items-center">
           <div className="w-16 h-16 rounded-full bg-gray-600" /> {/* Author's profile pic*/}
 
-          <div className="flex flex-col flex-1">
-            <p className="font-semibold text-lg cursor-pointer hover:underline">{authorName}</p>
+          <div className="flex flex-col flex-1 min-w-0">
+            <p className="font-semibold text-lg cursor-pointer hover:underline truncate">{authorName}</p>
 
             <LabelText text={`${authorBooksCount} books · ${formatNumberShort(
               authorFollowersCount
-            )} followers`} />
+            )} followers`} className="truncate" />
           </div>
 
           <PillButton label="Follow" className="px-8" />
         </div>
 
-        <p className="text-base my-6">
-          {showFullAuthorDescription
-            ? authorDescription
-            : `${authorDescription.slice(0, 300)}...`}
-        </p>
-
-        <ExpandableButton
+        <ExpandableContent
           label="Show more"
           isExpanded={showFullAuthorDescription}
           setIsExpanded={setShowFullAuthorDescription}
+          content={
+            <p className={classNames("text-base my-6", !showFullAuthorDescription && 'max-h-20 mb-10 overflow-hidden')}>
+              {authorDescription}
+            </p>
+          }
         />
 
         <Separator className={'my-8'} />
 
         <SectionTitle name="Readers also enjoyed" />
 
-        <BooksCarousel showAllLabel="All similar books" items={4} />
+        <BooksCarousel showAllLabel="All similar books" />
 
         <Separator className={'my-8'} />
 
@@ -248,7 +251,7 @@ Orwell's work remains influential in popular culture and in political culture, a
               <LabelText text="Rate this book" className="cursor-pointer" />
             </div>
 
-            <PillButton label="Write a Review" className="px-6" />
+            <PillButton label="Write a Review" className="px-6 whitespace-nowrap" />
           </div>
         </div>
 
