@@ -17,11 +17,12 @@ export const ExpandableContent = ({
     return (
         <div className="relative">
             {content}
-            <div className={classNames("absolute bottom-0 bg-gradient-to-b from-transparent to-blue-300 w-full", !isExpanded && '')}>
+            <div className={classNames("absolute bottom-0 w-full pt-8", !isExpanded && 'bg-gradient-to-b from-transparent to-white to-[16px]')}>
                 {(expandedLabel || !isExpanded) && (
                     <div
-                        className={classNames('flex items-center gap-1 w-fit cursor-pointer group', isExpanded ? 'pt-4' : '')}
+                        className={classNames('flex items-center gap-1 w-fit cursor-pointer group focus:ring-3 rounded', isExpanded ? 'mt-4' : '')}
                         onClick={() => setIsExpanded(!isExpanded)}
+                        tabIndex={0}
                     >
                         <p className="font-semibold group-hover:underline">
                             {isExpanded ? expandedLabel : label}
