@@ -2,10 +2,11 @@ import { useState } from "react"
 import { formatNumberShort } from "../helpers/utils"
 import { LabelText } from "./label-text"
 import { StarRating } from "./star-rating"
-import { ExpandableButton } from "./expandable-button"
+import { ExpandableContent } from "./expandable-content"
 import { MdOutlineComment, MdOutlineThumbUp } from "react-icons/md"
 import { Separator } from "./separator"
 import { PillButton } from "./pill-button"
+import classNames from "classnames"
 
 export const Review = () => {
     const reviewerName = "John Doe";
@@ -33,38 +34,39 @@ I read Fahrenheit 451 over ten years ago in my early teens. At the time, I remem
             <div className="flex lg:flex-col gap-2 lg:w-60">
                 <div className="w-16 h-16 rounded-full bg-gray-600" /> {/* Reviewer's profile pic*/}
 
-                <div className="flex flex-col flex-1 lg:flex-none">
-                    <p className="font-semibold text-lg cursor-pointer hover:underline">{reviewerName}</p>
+                <div className="flex flex-col flex-1 lg:flex-none min-w-0">
+                    <p className="font-semibold text-lg cursor-pointer hover:underline truncate">
+                        {reviewerName}
+                    </p>
 
-                    <div className="flex lg:flex-col gap-0.5">
-                        <LabelText text={`${reviewsCount} reviews`} />
+                    <div className="flex lg:flex-col gap-0.5 min-w-0">
+                        <LabelText text={`${reviewsCount} reviews`} className="truncate max-w-[100px]" />
                         <div className="lg:hidden">
                             <LabelText text={"·"} />
                         </div>
-                        <LabelText text={`${formatNumberShort(followersCount)} followers`} />
+                        <LabelText text={`${formatNumberShort(followersCount)} followers`} className="truncate max-w-[100px]" />
                     </div>
                 </div>
 
-                <PillButton label="Follow" className="px-8 w-fit h-fit py-3" />
+                <PillButton label="Follow" className="px-8 w-fit h-fit py-2" />
             </div>
 
             {/* Right Column */}
-            <div className="flex flex-col gap-4 flex-1">
+            <div className="flex flex-col gap-2 flex-1">
                 <div className="flex place-content-between items-center pt-2 lg:pt-0">
                     <StarRating rating={rating} />
                     <LabelText text={date} className="cursor-pointer hover:underline" />
                 </div>
 
-                <p className="text-base mb-4">
-                    {showFullReview
-                        ? review
-                        : `${review.slice(0, 440)}...`}
-                </p>
-
-                <ExpandableButton
+                <ExpandableContent
                     label="Show more"
                     isExpanded={showFullReview}
                     setIsExpanded={setShowFullReview}
+                    content={
+                        <p className={classNames("text-base", !showFullReview && 'max-h-20 mb-10 overflow-hidden')}>
+                            {review}
+                        </p>
+                    }
                 />
 
                 <div className="flex">
