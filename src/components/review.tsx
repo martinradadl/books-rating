@@ -32,10 +32,12 @@ I read Fahrenheit 451 over ten years ago in my early teens. At the time, I remem
 
             {/* Left Column */}
             <div className="flex lg:flex-col gap-2 lg:w-60">
-                <div className="w-16 h-16 rounded-full bg-gray-600" /> {/* Reviewer's profile pic*/}
+                <div className="w-16 h-16 rounded-full bg-gray-600 focus:ring-3 focus:ring-offset-2" tabIndex={0} /> {/* Reviewer's profile pic*/}
 
                 <div className="flex flex-col flex-1 lg:flex-none min-w-0">
-                    <p className="font-semibold text-lg cursor-pointer hover:underline truncate">
+                    <p className="w-fit font-semibold text-lg cursor-pointer hover:underline truncate focus:ring-2 rounded"
+                        tabIndex={0}
+                    >
                         {reviewerName}
                     </p>
 
@@ -55,7 +57,7 @@ I read Fahrenheit 451 over ten years ago in my early teens. At the time, I remem
             <div className="flex flex-col gap-2 flex-1">
                 <div className="flex place-content-between items-center pt-2 lg:pt-0">
                     <StarRating rating={rating} />
-                    <LabelText text={date} className="cursor-pointer hover:underline" />
+                    <LabelText text={date} className="cursor-pointer hover:underline focus:ring-2 rounded" />
                 </div>
 
                 <ExpandableContent
@@ -63,30 +65,34 @@ I read Fahrenheit 451 over ten years ago in my early teens. At the time, I remem
                     isExpanded={showFullReview}
                     setIsExpanded={setShowFullReview}
                     content={
-                        <p className={classNames("text-base", !showFullReview && 'max-h-20 mb-10 overflow-hidden')}>
+                        <p className={classNames("text-base", !showFullReview && 'max-h-20 mb-6 overflow-hidden')}>
                             {review}
                         </p>
                     }
                 />
 
-                <div className="flex">
-                    <p className="font-semibold text-gray-600 cursor-pointer hover:underline">{likesCount.toLocaleString()} likes</p>
+                <div className="flex mt-2">
+                    <p className="font-semibold text-gray-600 cursor-pointer hover:underline focus:ring-2 rounded" tabIndex={0}>
+                        {likesCount.toLocaleString()} likes
+                    </p>
                     <p className="mx-2"> - </p>
-                    <p className="font-semibold text-gray-600 cursor-pointer hover:underline">{commentsCount.toLocaleString()} comments</p>
+                    <p className="font-semibold text-gray-600 cursor-pointer hover:underline focus:ring-2 rounded" tabIndex={0}>
+                        {commentsCount.toLocaleString()} comments
+                    </p>
                 </div>
 
                 <div className="flex gap-4">
-                    <div className="flex gap-2 group">
+                    <div className="flex gap-2 group focus:ring-2 focus:ring-offset-1 rounded" tabIndex={0}>
                         <MdOutlineThumbUp size={20} />
                         <p className="font-semibold cursor-pointer group-hover:underline">Like</p>
                     </div>
 
-                    <div className="flex gap-2 group">
+                    <div className="flex gap-2 group focus:ring-2 focus:ring-offset-1 rounded" tabIndex={0}>
                         <MdOutlineComment size={20} />
                         <p className="font-semibold cursor-pointer group-hover:underline">Comment</p>
                     </div>
 
-                    <p className="font-semibold cursor-pointer hover:underline">Report</p>
+                    <p className="font-semibold cursor-pointer hover:underline focus:ring-2 focus:ring-offset-1 rounded" tabIndex={0}>Report</p>
                 </div>
 
                 <Separator className="my-4" />

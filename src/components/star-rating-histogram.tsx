@@ -19,7 +19,7 @@ export const RatingDistribution: React.FC<Props> = ({ ratings }) => {
         const percent = ((rating.count / total) * 100);
 
         return (
-          <div key={rating.stars} className="flex items-center cursor-pointer my-4 group">
+          <div key={rating.stars} className="flex items-center cursor-pointer my-4 group focus:ring-3 focus:ring-offset-3 rounded-full" tabIndex={0}>
             <div className="w-16 underline text-base font-bold">
               {rating.stars} {rating.stars === 1 ? "star" : "stars"}
             </div>
