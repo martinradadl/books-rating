@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import { MdArrowForwardIos } from "react-icons/md";
 
 type BooksCarouselProps = {
@@ -6,52 +5,21 @@ type BooksCarouselProps = {
 };
 
 export const BooksCarousel = ({ showAllLabel }: BooksCarouselProps) => {
-    const [itemsToShow, setItemsToShow] = useState(5);
-    const carouselRef = useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-        const calculateItemsToShow = () => {
-            if (carouselRef.current) {
-                const carouselWidth = carouselRef.current.offsetWidth;
-
-                if (carouselWidth < 400) setItemsToShow(2);
-                else if (carouselWidth < 600) setItemsToShow(3);
-                else if (carouselWidth < 800) setItemsToShow(4);
-                else setItemsToShow(5);
-            }
-        };
-
-        const resizeObserver = new ResizeObserver(calculateItemsToShow);
-
-        const currentCarouselRef = carouselRef.current;
-
-        if (currentCarouselRef) {
-            resizeObserver.observe(currentCarouselRef);
-        }
-
-        calculateItemsToShow();
-
-        return () => {
-            if (currentCarouselRef) {
-                resizeObserver.unobserve(currentCarouselRef);
-            }
-        };
-    }, []);
-
     return (
-        <div ref={carouselRef}>
-            <div className="flex gap-4 my-6">
-                {Array(itemsToShow)
+        <div>
+            <div className="flex gap-4 my-6 p-2 overflow-x-auto">
+                {Array(5)
                     .fill(null)
                     .map((_, i) => (
                         <div
                             key={i}
-                            className="bg-gray-600 rounded aspect-[2/3] flex-1"
+                            className="bg-gray-600 rounded focus:ring-3 focus:ring-offset-3 aspect-[2/3] min-w-[40%] min-[35rem]:min-w-[35%] min-[40rem]:min-w-[30%] min-[50rem]:min-w-[25%] min-[60rem]:min-w-[23.1%]"
+                            tabIndex={0}
                         />
                     ))}
             </div>
 
-            <div className="flex gap-2 items-center cursor-pointer group">
+            <div className="flex gap-2 items-center cursor-pointer group focus:ring-3 focus:ring-offset-3 rounded w-fit" tabIndex={0}>
                 <p className="font-semibold group-hover:underline">
                     {showAllLabel}
                 </p>
