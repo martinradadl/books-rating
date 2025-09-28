@@ -1,4 +1,3 @@
-import React from "react";
 import { LabelText } from "./label-text";
 
 interface Rating {
@@ -6,11 +5,11 @@ interface Rating {
   count: number;
 }
 
-interface Props {
+interface RatingDistributionProps {
   ratings: Rating[];
 }
 
-export const RatingDistribution: React.FC<Props> = ({ ratings }) => {
+export const RatingDistribution = ({ ratings }: RatingDistributionProps) => {
   const total = ratings.reduce((sum, rating) => sum + rating.count, 0);
 
   return (
