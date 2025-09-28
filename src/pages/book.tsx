@@ -14,6 +14,7 @@ import { SectionTitle } from "../components/section-title";
 import { AvatarGroup } from "../components/avatar-group";
 import { BookActions } from "../components/book-actions";
 import classNames from "classnames";
+import { ProfilePic } from "../components/profile-pic";
 
 export const Book = () => {
   const Title = "1984";
@@ -70,16 +71,11 @@ Orwell's work remains influential in popular culture and in political culture, a
 
   return (
     <div className="flex flex-col md:flex-row max-w-6xl w-full m-auto">
-
-      {/* Book Cover Container */}
-
       <div className="w-full md:w-72 p-4 md:sticky md:top-0 self-start flex flex-col gap-4 items-center">
-        <div className="w-48 aspect-2/3 bg-gray-600" /> {/* Book Cover */}
+        <div className="w-48 aspect-2/3 bg-gray-600" />
 
         <BookActions />
       </div>
-
-      {/* Main Content */}
 
       <div className="flex flex-col flex-1 overflow-y-auto px-6 py-2 md:py-6">
         <div className="flex flex-col items-center md:items-start">
@@ -166,9 +162,6 @@ Orwell's work remains influential in popular culture and in political culture, a
 
         <Separator className={'my-8'} />
 
-        {/* ---------- OTHER USERS INTERESTED SECTION ---------- */}
-
-        {/* ---------- MOBILE: grid ---------- */}
         <div className="w-full lg:hidden">
           <div className="mx-auto max-w-md grid gap-y-4">
             <div className="flex items-center justify-center gap-2">
@@ -187,7 +180,6 @@ Orwell's work remains influential in popular culture and in political culture, a
           </div>
         </div>
 
-        {/* ---------- DESKTOP: flex ---------- */}
         <div className="hidden lg:flex">
           <div className="flex items-center gap-2 justify-center flex-1">
             <AvatarGroup />
@@ -205,7 +197,7 @@ Orwell's work remains influential in popular culture and in political culture, a
         <SectionTitle name="About the author" />
 
         <div className="flex py-2 gap-4 items-center">
-          <div className="w-16 h-16 rounded-full bg-gray-600 focus:ring-3 focus:ring-offset-2" tabIndex={0} /> {/* Author's profile pic*/}
+          <ProfilePic />
 
           <div className="flex flex-col flex-1 min-w-0">
             <p className="w-fit font-semibold text-lg cursor-pointer hover:underline truncate focus:ring-3 rounded" tabIndex={0}>

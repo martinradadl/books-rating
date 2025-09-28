@@ -7,6 +7,7 @@ import { MdOutlineComment, MdOutlineThumbUp } from "react-icons/md"
 import { Separator } from "./separator"
 import { PillButton } from "./pill-button"
 import classNames from "classnames"
+import { ProfilePic } from "./profile-pic"
 
 export const Review = () => {
     const reviewerName = "John Doe";
@@ -29,10 +30,8 @@ I read Fahrenheit 451 over ten years ago in my early teens. At the time, I remem
 
     return (
         <div className="flex flex-col lg:flex-row py-2">
-
-            {/* Left Column */}
             <div className="flex lg:flex-col gap-2 lg:w-60">
-                <div className="w-16 h-16 rounded-full bg-gray-600 focus:ring-3 focus:ring-offset-2" tabIndex={0} /> {/* Reviewer's profile pic*/}
+                <ProfilePic />
 
                 <div className="flex flex-col flex-1 lg:flex-none min-w-0">
                     <p className="w-fit font-semibold text-lg cursor-pointer hover:underline truncate focus:ring-2 rounded"
@@ -53,7 +52,7 @@ I read Fahrenheit 451 over ten years ago in my early teens. At the time, I remem
                 <PillButton label="Follow" className="px-8 w-fit h-fit py-2" />
             </div>
 
-            {/* Right Column */}
+
             <div className="flex flex-col gap-2 flex-1">
                 <div className="flex place-content-between items-center pt-2 lg:pt-0">
                     <StarRating rating={rating} />
