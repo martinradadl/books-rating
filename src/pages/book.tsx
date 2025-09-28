@@ -15,6 +15,7 @@ import { AvatarGroup } from "../components/avatar-group";
 import { BookActions } from "../components/book-actions";
 import classNames from "classnames";
 import { ProfilePic } from "../components/profile-pic";
+import { BookCover } from "../components/book-cover";
 
 export const Book = () => {
   const Title = "1984";
@@ -72,7 +73,7 @@ Orwell's work remains influential in popular culture and in political culture, a
   return (
     <div className="flex flex-col md:flex-row max-w-6xl w-full m-auto">
       <div className="w-full md:w-72 p-4 md:sticky md:top-0 self-start flex flex-col gap-4 items-center">
-        <div className="w-48 aspect-2/3 bg-gray-600" />
+        <BookCover className="w-48" />
 
         <BookActions />
       </div>

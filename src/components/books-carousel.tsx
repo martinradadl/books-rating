@@ -1,4 +1,5 @@
 import { MdArrowForwardIos } from "react-icons/md";
+import { BookCover } from "./book-cover";
 
 type BooksCarouselProps = {
     showAllLabel: string;
@@ -11,10 +12,9 @@ export const BooksCarousel = ({ showAllLabel }: BooksCarouselProps) => {
                 {Array(5)
                     .fill(null)
                     .map((_, i) => (
-                        <div
+                        <BookCover
                             key={i}
-                            className="bg-gray-600 rounded focus:ring-3 focus:ring-offset-3 aspect-[2/3] min-w-[25%] md:min-w-[30%] lg:min-w-[23.5%]"
-                            tabIndex={0}
+                            className="rounded focus:ring-3 focus:ring-offset-3 min-w-[25%] md:min-w-[30%] lg:min-w-[23.5%]"
                         />
                     ))}
             </div>
