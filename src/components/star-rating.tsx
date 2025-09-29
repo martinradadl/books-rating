@@ -45,19 +45,19 @@ export const StarRating: React.FC<StarRatingProps> = ({
             onClick={() => handleClick(index)}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
+            className={interactive ? "focus:ring-2 focus:ring-offset-3 rounded-full" : ""}
+            tabIndex={0}
           >
             {isFilled ? (
               <FaStar
-                className={`${
-                  interactive ? "cursor-pointer" : ""
-                } text-yellow-500`}
+                className={`${interactive ? "cursor-pointer" : ""
+                  } text-yellow-500`}
                 size={30}
               />
             ) : (
               <FaRegStar
-                className={`${
-                  interactive ? "cursor-pointer" : ""
-                } text-gray-400`}
+                className={`${interactive ? "cursor-pointer" : ""
+                  } text-gray-400`}
                 size={30}
               />
             )}

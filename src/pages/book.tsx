@@ -4,7 +4,7 @@ import { MdMenuBook } from "react-icons/md";
 import { TotalRatingBar } from "../components/total-rating-bar";
 import { formatNumberShort } from "../helpers/utils";
 import { LabelText } from "../components/label-text";
-import { ExpandableButton } from "../components/expandable-button";
+import { ExpandableContent } from "../components/expandable-content";
 import { BooksCarousel } from "../components/books-carousel";
 import { RatingDistribution } from "../components/star-rating-histogram";
 import { Review } from "../components/review";
@@ -12,6 +12,10 @@ import { Separator } from "../components/separator";
 import { PillButton } from "../components/pill-button";
 import { SectionTitle } from "../components/section-title";
 import { AvatarGroup } from "../components/avatar-group";
+import { BookActions } from "../components/book-actions";
+import classNames from "classnames";
+import { ProfilePic } from "../components/profile-pic";
+import { BookCover } from "../components/book-cover";
 
 export const Book = () => {
   const Title = "1984";
@@ -67,61 +71,53 @@ Orwell's work remains influential in popular culture and in political culture, a
   const [showFullAuthorDescription, setShowFullAuthorDescription] = useState(false);
 
   return (
-    <div className="flex max-w-6xl w-full m-auto md:w-auto">
+    <div className="flex flex-col md:flex-row max-w-6xl w-full m-auto">
+      <div className="w-full md:w-72 p-4 md:sticky md:top-0 self-start flex flex-col gap-4 items-center">
+        <BookCover className="w-48" />
 
-      {/* Book Cover Container */}
-
-
-      <div className="w-72 p-4 sticky top-0 self-start flex flex-col gap-4 items-center">
-        <div className="w-48 aspect-2/3 bg-gray-600" /> {/* Book Cover */}
-
-        <PillButton label="Want to Read" className="w-60 bg-green-800 hover:bg-green-700 focus:ring-green-800" />
-
-        <StarRating interactive />
-
-        <LabelText text="Rate this book" className="cursor-pointer" />
+        <BookActions />
       </div>
 
+      <div className="flex flex-col flex-1 overflow-y-auto px-6 py-2 md:py-6">
+        <div className="flex flex-col items-center md:items-start">
+          <p className="text-5xl font-semibold">{Title}</p>
 
-      {/* Main Content */}
+          <p className="text-4xl cursor-pointer hover:underline focus:ring-3 focus:ring-offset-2 rounded" tabIndex={0}>
+            {authorName}
+          </p>
 
+          <TotalRatingBar
+            {...{
+              rating,
+              ratingsCount,
+              reviewsCount,
+              className: 'cursor-pointer'
+            }}
+          />
+        </div>
 
-      <div className="flex flex-col flex-1 overflow-y-auto p-6">
-        <p className="text-5xl font-semibold">{Title}</p>
+        <BookActions showOnMobileView />
 
-        <p className="text-4xl cursor-pointer hover:underline">
-          {authorName}
-        </p>
-
-        <TotalRatingBar
-          {...{
-            rating,
-            ratingsCount,
-            reviewsCount,
-            className: 'cursor-pointer'
-          }}
-        />
-
-        <p className="text-base mb-4">
-          {showFullDescription
-            ? bookDescription
-            : `${bookDescription.slice(0, 440)}...`}
-        </p>
-
-        <ExpandableButton
+        <ExpandableContent
           label="Show more"
           isExpanded={showFullDescription}
           setIsExpanded={setShowFullDescription}
+          content={
+            <p className={classNames("text-base", !showFullDescription && 'max-h-20 overflow-hidden mb-6')}>
+              {bookDescription}
+            </p>
+          }
         />
 
-        <div className="flex flex-col gap-4 py-6">
-          <div className="flex py-2 gap-2 items-center">
+        <div className="flex flex-col gap-4 pt-6 pb-10">
+          <div className="flex flex-wrap py-2 gap-2 items-center">
             <LabelText text="Genres" />
 
             {relatedGenres.map((genre, index) => (
               <label
                 key={index}
-                className="cursor-pointer underline underline-offset-4 decoration-3 decoration-green-700"
+                className="cursor-pointer underline underline-offset-4 decoration-3 decoration-green-700 focus:ring-3 focus:ring-offset-2 rounded"
+                tabIndex={0}
               >
                 {genre}
               </label>
@@ -133,43 +129,65 @@ Orwell's work remains influential in popular culture and in political culture, a
           <LabelText text={`First published ${firstPublished}`} />
         </div>
 
-        {showDetails && (
-          <>
-            <p className="text-base font-bold py-2">This edition</p>
-
-            <div className="grid gap-y-2 my-6">
-              {editionDetails.map((detail) => (
-                <div key={detail.label} className="flex">
-                  <div className="w-32">
-                    <LabelText text={detail.label} />
-                  </div>
-                  <div className="text-base text-gray-600">{detail.value}</div>
-                </div>
-              ))}
-            </div>
-
-            <p className="text-base font-bold mt-2">More editions</p>
-
-            <BooksCarousel showAllLabel="Show all editions" />
-          </>
-        )}
-
-        <ExpandableButton
+        <ExpandableContent
           label="Book details & editions"
           expandedLabel="Fewer details"
           isExpanded={showDetails}
           setIsExpanded={setShowDetails}
+          content={
+            !showDetails ?
+              <div className="h-4" />
+              :
+              <div className="mb-10">
+                <p className="text-base font-bold py-2">This edition</p>
+
+                <div className="grid gap-y-2 my-6">
+                  {editionDetails.map((detail) => (
+                    <div key={detail.label} className="flex">
+                      <div className="w-32">
+                        <LabelText text={detail.label} />
+                      </div>
+                      <div className="text-base text-gray-600">{detail.value}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className={!showDetails ? 'my-4' : 'hidden'} />
+
+                <p className="text-base font-bold mt-2">More editions</p>
+
+                <BooksCarousel showAllLabel="Show all editions" />
+              </div>
+          }
         />
 
         <Separator className={'my-8'} />
 
-        <div className="flex">
-          <div className="flex flex-1 justify-center items-center gap-2">
+        <div className="w-full lg:hidden">
+          <div className="mx-auto max-w-md grid gap-y-4">
+            <div className="flex items-center justify-center gap-2">
+              <AvatarGroup />
+              <div className="w-50">
+                <LabelText text={`${currentlyReadingCount} people are currently reading`} />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-2">
+              <AvatarGroup />
+              <div className="w-50">
+                <LabelText text={`${wantToReadCount} people want to read`} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="hidden lg:flex">
+          <div className="flex items-center gap-2 justify-center flex-1">
             <AvatarGroup />
             <LabelText text={`${currentlyReadingCount} people are currently reading`} />
           </div>
 
-          <div className="flex flex-1 justify-center items-center gap-2">
+          <div className="flex items-center gap-2 justify-center flex-1">
             <AvatarGroup />
             <LabelText text={`${wantToReadCount} people want to read`} />
           </div>
@@ -180,36 +198,37 @@ Orwell's work remains influential in popular culture and in political culture, a
         <SectionTitle name="About the author" />
 
         <div className="flex py-2 gap-4 items-center">
-          <div className="w-16 h-16 rounded-full bg-gray-600" /> {/* Author's profile pic*/}
+          <ProfilePic />
 
-          <div className="flex flex-col flex-1">
-            <p className="font-semibold text-lg cursor-pointer hover:underline">{authorName}</p>
+          <div className="flex flex-col flex-1 min-w-0">
+            <p className="w-fit font-semibold text-lg cursor-pointer hover:underline truncate focus:ring-3 rounded" tabIndex={0}>
+              {authorName}
+            </p>
 
-            <LabelText text={`${authorBooksCount} books - ${formatNumberShort(
+            <LabelText text={`${authorBooksCount} books · ${formatNumberShort(
               authorFollowersCount
-            )} followers`} />
+            )} followers`} className="truncate" />
           </div>
 
           <PillButton label="Follow" className="px-8" />
         </div>
 
-        <p className="text-base my-6">
-          {showFullAuthorDescription
-            ? authorDescription
-            : `${authorDescription.slice(0, 300)}...`}
-        </p>
-
-        <ExpandableButton
+        <ExpandableContent
           label="Show more"
           isExpanded={showFullAuthorDescription}
           setIsExpanded={setShowFullAuthorDescription}
+          content={
+            <p className={classNames("text-base my-6", !showFullAuthorDescription && 'max-h-20 mb-6 overflow-hidden')}>
+              {authorDescription}
+            </p>
+          }
         />
 
         <Separator className={'my-8'} />
 
         <SectionTitle name="Readers also enjoyed" />
 
-        <BooksCarousel showAllLabel="All similar books" items={4} />
+        <BooksCarousel showAllLabel="All similar books" />
 
         <Separator className={'my-8'} />
 
@@ -226,7 +245,7 @@ Orwell's work remains influential in popular culture and in political culture, a
               <LabelText text="Rate this book" className="cursor-pointer" />
             </div>
 
-            <PillButton label="Write a Review" className="px-6" />
+            <PillButton label="Write a Review" className="px-6 whitespace-nowrap" />
           </div>
         </div>
 
