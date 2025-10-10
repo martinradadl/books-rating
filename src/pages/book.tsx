@@ -16,6 +16,7 @@ import { BookActions } from "../components/book-actions";
 import classNames from "classnames";
 import { ProfilePic } from "../components/profile-pic";
 import { BookCover } from "../components/book-cover";
+import { SearchReviewBar } from "../components/searchReviewBar";
 
 export const Book = () => {
   const Title = "1984";
@@ -262,6 +263,8 @@ Orwell's work remains influential in popular culture and in political culture, a
         />
 
         <RatingDistribution ratings={ratings} />
+
+        <SearchReviewBar />
 
         <LabelText text={`Displaying 1 - 20 of ${reviewsCount.toLocaleString()} reviews`} />
 
