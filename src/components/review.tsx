@@ -29,20 +29,20 @@ I read Fahrenheit 451 over ten years ago in my early teens. At the time, I remem
 
 
     return (
-        <div className="flex flex-col lg:flex-row py-2">
-            <div className="flex lg:flex-col gap-2 lg:w-60">
+        <div className="flex flex-col md:flex-row py-2 md:gap-8">
+            <div className="flex md:flex-col gap-2 lg:w-60 md:flex-1">
                 <ProfilePic />
 
-                <div className="flex flex-col flex-1 lg:flex-none min-w-0">
+                <div className="flex flex-col flex-1 md:flex-none min-w-0">
                     <p className="w-fit font-semibold text-lg cursor-pointer hover:underline truncate focus:ring-2 rounded"
                         tabIndex={0}
                     >
                         {reviewerName}
                     </p>
 
-                    <div className="flex lg:flex-col gap-0.5 min-w-0">
+                    <div className="flex md:flex-col gap-0.5 min-w-0">
                         <LabelText text={`${reviewsCount} reviews`} className="truncate max-w-[100px]" />
-                        <div className="lg:hidden">
+                        <div className="md:hidden">
                             <LabelText text={"·"} />
                         </div>
                         <LabelText text={`${formatNumberShort(followersCount)} followers`} className="truncate max-w-[100px]" />
@@ -53,9 +53,9 @@ I read Fahrenheit 451 over ten years ago in my early teens. At the time, I remem
             </div>
 
 
-            <div className="flex flex-col gap-2 flex-1">
+            <div className="flex flex-col gap-2 flex-1 md:flex-3">
                 <div className="flex place-content-between items-center pt-2 lg:pt-0">
-                    <StarRating rating={rating} />
+                    <StarRating rating={rating} starsSize={20} />
                     <LabelText text={date} className="cursor-pointer hover:underline focus:ring-2 rounded" />
                 </div>
 
@@ -64,7 +64,7 @@ I read Fahrenheit 451 over ten years ago in my early teens. At the time, I remem
                     isExpanded={showFullReview}
                     setIsExpanded={setShowFullReview}
                     content={
-                        <p className={classNames("text-base", !showFullReview && 'max-h-20 mb-6 overflow-hidden')}>
+                        <p className={classNames("text-base", !showFullReview && 'max-h-32 mb-6 overflow-hidden')}>
                             {review}
                         </p>
                     }

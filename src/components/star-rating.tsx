@@ -5,12 +5,14 @@ type StarRatingProps = {
   rating?: number;
   interactive?: boolean;
   onChange?: (rating: number) => void;
+  starsSize?: number;
 };
 
 export const StarRating: React.FC<StarRatingProps> = ({
   rating = 0,
   interactive = false,
   onChange,
+  starsSize,
 }) => {
   const [selectedRating, setSelectedRating] = useState<number>(rating);
   const [hoverRating, setHoverRating] = useState<number>(0);
@@ -52,13 +54,13 @@ export const StarRating: React.FC<StarRatingProps> = ({
               <FaStar
                 className={`${interactive ? "cursor-pointer" : ""
                   } text-yellow-500`}
-                size={30}
+                size={starsSize || 30}
               />
             ) : (
               <FaRegStar
                 className={`${interactive ? "cursor-pointer" : ""
                   } text-gray-400`}
-                size={30}
+                size={starsSize || 30}
               />
             )}
           </div>

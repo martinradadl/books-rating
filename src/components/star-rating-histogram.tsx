@@ -32,7 +32,7 @@ export const RatingDistribution = ({ ratings }: RatingDistributionProps) => {
               </div>
             </div>
 
-            <div className="w-32 text-right text-gray-700 group-hover:underline">
+            <div className="w-32 text-left text-gray-700 group-hover:underline">
               <LabelText text={`${rating.count.toLocaleString()} (${Math.round(percent)}%)`} />
             </div>
           </div>

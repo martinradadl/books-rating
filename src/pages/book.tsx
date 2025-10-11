@@ -16,6 +16,7 @@ import { BookActions } from "../components/book-actions";
 import classNames from "classnames";
 import { ProfilePic } from "../components/profile-pic";
 import { BookCover } from "../components/book-cover";
+import { SearchReviewBar } from "../components/searchReviewBar";
 
 export const Book = () => {
   const Title = "1984";
@@ -71,14 +72,14 @@ Orwell's work remains influential in popular culture and in political culture, a
   const [showFullAuthorDescription, setShowFullAuthorDescription] = useState(false);
 
   return (
-    <div className="flex flex-col md:flex-row max-w-6xl w-full m-auto">
-      <div className="w-full md:w-72 p-4 md:sticky md:top-0 self-start flex flex-col gap-4 items-center">
-        <BookCover className="w-48" />
+    <div className="flex flex-col md:flex-row w-[91%] m-auto pt-[106px] xl:max-w-[1260px] md:gap-[3%] lg:gap-[2%] xl:gap-[1.7%]">
+      <div className="w-full md:flex-1 md:sticky md:top-0 self-start flex flex-col gap-4 items-center">
+        <BookCover className="w-48 xl:w-7/10" />
 
         <BookActions />
       </div>
 
-      <div className="flex flex-col flex-1 overflow-y-auto px-6 py-2 md:py-6">
+      <div className="flex flex-col md:flex-2 lg:flex-3 flex-1 overflow-y-auto lg:pl-8">
         <div className="flex flex-col items-center md:items-start">
           <p className="text-5xl font-semibold">{Title}</p>
 
@@ -103,7 +104,7 @@ Orwell's work remains influential in popular culture and in political culture, a
           isExpanded={showFullDescription}
           setIsExpanded={setShowFullDescription}
           content={
-            <p className={classNames("text-base", !showFullDescription && 'max-h-20 overflow-hidden mb-6')}>
+            <p className={classNames("text-base lg:w-8/9 xl:w-7/9", !showFullDescription && 'max-h-32 overflow-hidden mb-6')}>
               {bookDescription}
             </p>
           }
@@ -156,14 +157,14 @@ Orwell's work remains influential in popular culture and in political culture, a
 
                 <p className="text-base font-bold mt-2">More editions</p>
 
-                <BooksCarousel showAllLabel="Show all editions" />
+                <BooksCarousel showAllLabel="Show all editions" isMoreEditions />
               </div>
           }
         />
 
         <Separator className={'my-8'} />
 
-        <div className="w-full lg:hidden">
+        <div className="w-full sm:hidden">
           <div className="mx-auto max-w-md grid gap-y-4">
             <div className="flex items-center justify-center gap-2">
               <AvatarGroup />
@@ -181,7 +182,7 @@ Orwell's work remains influential in popular culture and in political culture, a
           </div>
         </div>
 
-        <div className="hidden lg:flex">
+        <div className="hidden sm:flex">
           <div className="flex items-center gap-2 justify-center flex-1">
             <AvatarGroup />
             <LabelText text={`${currentlyReadingCount} people are currently reading`} />
@@ -218,7 +219,7 @@ Orwell's work remains influential in popular culture and in political culture, a
           isExpanded={showFullAuthorDescription}
           setIsExpanded={setShowFullAuthorDescription}
           content={
-            <p className={classNames("text-base my-6", !showFullAuthorDescription && 'max-h-20 mb-6 overflow-hidden')}>
+            <p className={classNames("text-base my-6 lg:w-8/9 xl:w-7/9", !showFullAuthorDescription && 'max-h-20 mb-6 overflow-hidden')}>
               {authorDescription}
             </p>
           }
@@ -262,6 +263,8 @@ Orwell's work remains influential in popular culture and in political culture, a
         />
 
         <RatingDistribution ratings={ratings} />
+
+        <SearchReviewBar />
 
         <LabelText text={`Displaying 1 - 20 of ${reviewsCount.toLocaleString()} reviews`} />
 
