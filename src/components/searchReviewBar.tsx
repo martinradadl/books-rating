@@ -2,7 +2,7 @@ import { MdOutlineTune, MdSearch } from "react-icons/md"
 
 export const SearchReviewBar = () => {
     return (
-        <div className="flex items-center w-3/4 mb-4">
+        <div className="flex items-center lg:w-3/4 mb-4">
             <div
                 className="flex items-center flex-1 mr-3 px-3 h-11 rounded-full bg-gray-50 border border-gray-600 focus-within:ring-3 focus-within:ring-black focus-within:ring-offset-3"
             >

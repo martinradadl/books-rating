@@ -164,7 +164,7 @@ Orwell's work remains influential in popular culture and in political culture, a
 
         <Separator className={'my-8'} />
 
-        <div className="w-full lg:hidden">
+        <div className="w-full sm:hidden">
           <div className="mx-auto max-w-md grid gap-y-4">
             <div className="flex items-center justify-center gap-2">
               <AvatarGroup />
@@ -182,7 +182,7 @@ Orwell's work remains influential in popular culture and in political culture, a
           </div>
         </div>
 
-        <div className="hidden lg:flex">
+        <div className="hidden sm:flex">
           <div className="flex items-center gap-2 justify-center flex-1">
             <AvatarGroup />
             <LabelText text={`${currentlyReadingCount} people are currently reading`} />
