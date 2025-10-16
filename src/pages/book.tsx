@@ -73,9 +73,9 @@ Orwell's work remains influential in popular culture and in political culture, a
   const [showFullAuthorDescription, setShowFullAuthorDescription] = useState(false);
 
   return (
-    <div className="flex flex-col w-[91%] m-auto pb-6">
+    <div className="flex flex-col w-[91%] 2xl:w-[87.5%] m-auto pb-6">
       <div className="flex flex-col md:flex-row pt-4 xl:max-w-[1260px] md:gap-[3%] lg:gap-[2%] xl:gap-[1.7%]">
-        <div className="w-full md:flex-1 md:sticky md:top-0 self-start flex flex-col gap-4 items-center">
+        <div className="w-full md:flex-1 md:sticky md:top-26 self-start flex flex-col gap-4 items-center">
           <BookCover className="w-48 xl:w-7/10" />
 
           <BookActions />
