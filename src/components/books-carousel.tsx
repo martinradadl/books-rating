@@ -3,21 +3,25 @@ import { BookCover } from "./book-cover";
 import classNames from "classnames";
 import { LabelText } from "./label-text";
 import { FaStar } from "react-icons/fa";
+import { PillButton } from "./pill-button";
 
 type BooksCarouselProps = {
     showAllLabel: string;
     isMoreEditions?: boolean;
+    isBooksBySameAuthor?: boolean;
 };
 
-export const BooksCarousel = ({ showAllLabel, isMoreEditions }: BooksCarouselProps) => {
+export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAuthor }: BooksCarouselProps) => {
     return (
         <div>
             <div className="flex space-between my-6 p-2 overflow-x-auto md:overflow-hidden">
                 {Array(10)
                     .fill(null)
                     .map((_, i) => (
-                        <div className={classNames("flex flex-col mr-6 lg:mr-8 min-w-[28%] sm:min-w-[21%] lg:min-w-[21%] focus:ring-3 focus:ring-offset-3",
-                            isMoreEditions ? 'md:min-w-[21%] xl:min-w-[17%]' : 'md:min-w-[30%] xl:min-w-[22%]')}>
+                        <div className={classNames("flex flex-col mr-6 lg:mr-8 min-w-[28%] sm:min-w-[21%] focus:ring-3 focus:ring-offset-3",
+                            isMoreEditions ? 'md:min-w-[21%] xl:min-w-[17%]' :
+                                isBooksBySameAuthor ? 'md:min-w-[22.5%] lg:min-w-[17%]' : 'md:min-w-[30%] lg:min-w-[21%] xl:min-w-[22%]',
+                        )}>
                             <BookCover key={i} className='rounded' />
 
                             <div className="flex flex-col mt-4">
@@ -46,7 +50,9 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions }: BooksCarouselPro
                     ))}
             </div>
 
-            <div className="flex gap-2 items-center cursor-pointer group focus:ring-3 focus:ring-offset-3 rounded w-fit" tabIndex={0}>
+            <PillButton label={showAllLabel} className="md:hidden w-full bg-white !text-black border-2 border-black hover:!bg-gray-200" />
+
+            <div className="hidden md:flex gap-2 items-center cursor-pointer group focus:ring-3 focus:ring-offset-3 rounded w-fit" tabIndex={0}>
                 <p className="font-semibold group-hover:underline">
                     {showAllLabel}
                 </p>
