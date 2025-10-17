@@ -3,7 +3,7 @@ import { FaSquareFacebook, FaSquareInstagram, FaSquareTwitter } from "react-icon
 
 export const Footer = () => {
     return (
-        <div className="flex justify-between px-3 py-8 xl:mx-[35px] 2xl:w-[87.5%] 2xl:mx-auto">
+        <div className="flex justify-between px-3 py-8 xl:max-w-[1260px] xl:mx-[35px] 2xl:px-0 2xl:w-[87.5%] 2xl:mx-auto">
             <div className="flex flex-col w-[200px] md:w-fit md:flex-row">
                 <div className="flex flex-col mb-6 md:w-[200px]">
                     <p className="text-base font-bold">COMPANY</p>

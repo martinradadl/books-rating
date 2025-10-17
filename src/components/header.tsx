@@ -38,7 +38,7 @@ export const Header = () => {
             </div>
 
             <div className="w-full border-b border-gray-300 xl:px-[35px]">
-                <div className="flex w-full 2xl:w-[87.5%] mx-auto h-[50px] items-center justify-between relative">
+                <div className="flex w-full 2xl:w-[87.5%] mx-auto h-[50px] items-center justify-between relative 2xl:max-w-[1280px]">
                     <MdSearch size={28} className="md:hidden mx-2.5 cursor-pointer" />
 
                     <p className="text-3xl focus:ring-3 focus:ring-black focus:ring-offset-2 rounded cursor-pointer 
