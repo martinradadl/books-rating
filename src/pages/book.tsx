@@ -106,7 +106,7 @@ Orwell's work remains influential in popular culture and in political culture, a
             isExpanded={showFullDescription}
             setIsExpanded={setShowFullDescription}
             content={
-              <p className={classNames("text-base lg:w-8/9 xl:w-7/9", !showFullDescription && 'max-h-32 overflow-hidden mb-6')}>
+              <p className={classNames("text-base lg:w-8/9 xl:w-7/9", { 'max-h-32 overflow-hidden mb-6': showFullDescription })}>
                 {bookDescription}
               </p>
             }
@@ -221,7 +221,7 @@ Orwell's work remains influential in popular culture and in political culture, a
             isExpanded={showFullAuthorDescription}
             setIsExpanded={setShowFullAuthorDescription}
             content={
-              <p className={classNames("text-base my-6 lg:w-8/9 xl:w-7/9", !showFullAuthorDescription && 'max-h-20 mb-6 overflow-hidden')}>
+              <p className={classNames("text-base my-6 lg:w-8/9 xl:w-7/9", { 'max-h-20 mb-6 overflow-hidden': showFullAuthorDescription })}>
                 {authorDescription}
               </p>
             }
