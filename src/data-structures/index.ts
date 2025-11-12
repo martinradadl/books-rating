@@ -24,7 +24,7 @@ export interface SettingI {
 export interface BookI {
   _id: string;
   originalTitle: string;
-  authorId: string;
+  author: AuthorI;
   relatedGenres: GenreI[];
   firstPublished: Date;
   characters: CharacterI[];
@@ -35,7 +35,7 @@ export interface EditionI {
   _id: string;
   title: string;
   cover: string;
-  bookId: string;
+  book: BookI;
   description: string;
   published: Date;
   pagesCount: number;
