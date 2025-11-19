@@ -5,7 +5,7 @@ import type { EditionI } from "../../data-structures";
 
 const getAll = createAsyncThunk("editions/getAll", async () => {
   try {
-    const response = await axios.get(`${API_URL}/editions}`);
+    const response = await axios.get(`${API_URL}/editions`);
     return response.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -15,7 +15,7 @@ const getAll = createAsyncThunk("editions/getAll", async () => {
   }
 });
 
-const getById = createAsyncThunk("editions/getById", async (id) => {
+const getById = createAsyncThunk("editions/getById", async (id: string) => {
   try {
     const response = await axios.get(`${API_URL}/editions/${id}`);
     return response.data;

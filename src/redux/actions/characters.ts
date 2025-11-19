@@ -5,7 +5,7 @@ import type { CharacterI } from "../../data-structures";
 
 const getAll = createAsyncThunk("characters/getAll", async () => {
   try {
-    const response = await axios.get(`${API_URL}/characters}`);
+    const response = await axios.get(`${API_URL}/characters`);
     return response.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
