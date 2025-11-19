@@ -78,7 +78,7 @@ describe("Edition Actions", () => {
         new Error("Failed to fetch edition")
       );
 
-      await dispatch(actions.getById());
+      await dispatch(actions.getById("fakeId"));
 
       const state = store.getState() as RootState;
       const editionsState = state.editions;
@@ -94,7 +94,7 @@ describe("Edition Actions", () => {
         data: fakeEdition,
       });
 
-      await dispatch(actions.getById());
+      await dispatch(actions.getById("fakeId"));
 
       const state = store.getState() as RootState;
       const editionsState = state.editions;
