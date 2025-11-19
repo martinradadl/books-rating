@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { MdArrowForwardIos, MdSearch } from "react-icons/md"
+import { useNavigate } from "react-router-dom";
 
 const tabs = [
     'Home',
@@ -11,6 +12,7 @@ const tabs = [
 export const Header = () => {
     const [showTabs, setShowTabs] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -29,6 +31,7 @@ export const Header = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [lastScrollY]);
 
+
     return (
         <div className="flex flex-col bg-[#faf8f6] sticky top-0 z-50">
             <div className="flex gap-3 items-center justify-center h-10 bg-[#617054] text-white cursor-pointer">
@@ -43,6 +46,7 @@ export const Header = () => {
 
                     <p className="text-3xl focus:ring-3 focus:ring-black focus:ring-offset-2 rounded cursor-pointer 
                 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 md:mx-3.5"
+                        onClick={() => { navigate('/') }}
                         tabIndex={0}
                     >
                         Books Rating
