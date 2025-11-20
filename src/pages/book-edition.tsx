@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StarRating } from "../components/star-rating";
 import { MdMenuBook } from "react-icons/md";
 import { TotalRatingBar } from "../components/total-rating-bar";
@@ -18,75 +18,82 @@ import { ProfilePic } from "../components/profile-pic";
 import { BookCover } from "../components/book-cover";
 import { SearchReviewBar } from "../components/searchReviewBar";
 import { DiscussionOptions } from "../components/discussion-options";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import type { RootState } from "../redux/store";
+import editionsActions from "../redux/actions/editions";
+import { useParams } from "react-router-dom";
+import { format } from 'date-fns';
 
-export const Book = () => {
-  const Title = "1984";
-  const authorName = "George Orwell";
+const rating = 4.2;
+const ratingsCount = 5234567;
+const reviewsCount = 123456;
 
-  const rating = 4.2;
-  const ratingsCount = 5234567;
-  const reviewsCount = 123456;
+const currentlyReadingCount = 227534;
+const wantToReadCount = 2859419;
 
-  const bookDescription = `A masterpiece of rebellion and imprisonment where war is peace freedom is slavery and Big Brother is watching. Thought Police, Big Brother, Orwellian - these words have entered our vocabulary because of George Orwell's classic dystopian novel 1984. The story of one man's Nightmare Odyssey as he pursues a forbidden love affair through a world ruled by warring states and a power structure that controls not only information but also individual thought and memory 1984 is a prophetic haunting tale More relevant than ever before 1984 exposes the worst crimes imaginable the destruction of truth freedom and individuality. With a foreword by Thomas Pynchon. This beautiful paperback edition features deckled edges and french flaps a perfect gift for any occasion`;
+const authorBooksCount = 1657;
+const authorFollowersCount = 49622;
 
-  const relatedGenres = ["Classics", "Fiction", "Science Fiction", "Dystopia"];
+const ratings = [
+  { stars: 5, count: 2508803 },
+  { stars: 4, count: 1744045 },
+  { stars: 3, count: 744695 },
+  { stars: 2, count: 196673 },
+  { stars: 1, count: 104662 }
+];
 
-  const firstPublished = "June 8, 1949";
-  const pagesCount = 368;
-  const format = "Paperback";
-  const published = "July 1, 2022";
-  const ISBN = 9780452284234;
-  const ASIN = "B00A2MTYAI";
-  const language = "English";
+export const BookEdition = () => {
+  const { selectedEdition, status } = useAppSelector((state: RootState) => state.editions)
+  const { title, book, description, pagesCount, format: editionFormat, published, ISBN, ASIN, language, cover } = selectedEdition || {};
+  const { author, firstPublished, relatedGenres } = book || {};
 
-  const editionDetails = [
-    { label: "Format", value: `${pagesCount} pages, ${format}` },
-    { label: "Published", value: published },
-    {
-      label: "ISBN",
-      value: ISBN,
-    },
-    { label: "ASIN", value: ASIN },
-    { label: "Language", value: language },
-  ];
+  const formattedDate = (date: Date) => format(date, 'MMMM dd, yyyy')
 
-  const currentlyReadingCount = 227534;
-  const wantToReadCount = 2859419;
+  const editionDetails = useMemo(() => (
+    [
+      { label: "Format", value: `${pagesCount} pages, ${editionFormat}` },
+      { label: "Published", value: formattedDate(published || new Date()) },
+      {
+        label: "ISBN",
+        value: ISBN,
+      },
+      { label: "ASIN", value: ASIN },
+      { label: "Language", value: language },
+    ]
+  ), [ASIN, ISBN, editionFormat, language, pagesCount, published]);
 
-  const authorBooksCount = 1657;
-  const authorFollowersCount = 49622;
-  const authorDescription = `Eric Arthur Blair was an English novelist, poet, essayist, journalist and critic who wrote under the pen name of George Orwell. His work is characterised by lucid prose, social criticism, opposition to all totalitarianism (both authoritarian communism and fascism), and support of democratic socialism.
-Orwell is best known for his allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949), although his works also encompass literary criticism, poetry, fiction and polemical journalism. His non-fiction works, including The Road to Wigan Pier (1937), documenting his experience of working-class life in the industrial north of England, and Homage to Catalonia (1938), an account of his experiences soldiering for the Republican faction of the Spanish Civil War (1936–1939), are as critically respected as his essays on politics, literature, language and culture.
-Orwell's work remains influential in popular culture and in political culture, and the adjective "Orwellian"—describing totalitarian and authoritarian social practices—is part of the English language, like many of his neologisms, such as "Big Brother", "Thought Police", "Room 101", "Newspeak", "memory hole", "doublethink", and "thoughtcrime". In 2008, The Times named Orwell the second-greatest British writer since 1945.`;
-
-  const ratings = [
-    { stars: 5, count: 2508803 },
-    { stars: 4, count: 1744045 },
-    { stars: 3, count: 744695 },
-    { stars: 2, count: 196673 },
-    { stars: 1, count: 104662 }
-  ];
-
-
+  const params = useParams();
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showFullAuthorDescription, setShowFullAuthorDescription] = useState(false);
+  const dispatch = useAppDispatch();
+
+
+  useEffect(() => {
+    if (params.id) {
+      dispatch(editionsActions.getById(params.id));
+    }
+  }, [dispatch, params.id])
+
+  if (status === "loading") {
+    return <p>Loading edition...</p>
+  }
 
   return (
     <div className="flex flex-col w-[91%] xl:max-w-[1260px] 2xl:w-[87.5%] m-auto pb-6">
       <div className="flex flex-col md:flex-row pt-4 md:gap-[3%] lg:gap-[2%] xl:gap-[1.7%]">
         <div className="w-full md:flex-1 md:sticky md:top-26 self-start flex flex-col gap-4 items-center">
-          <BookCover className="w-48 xl:w-7/10" />
+          <BookCover className="w-48 xl:w-7/10" image={cover} />
 
           <BookActions />
         </div>
 
         <div className="flex flex-col md:flex-2 lg:flex-3 flex-1 overflow-y-auto lg:pl-8">
           <div className="flex flex-col items-center md:items-start">
-            <p className="text-5xl font-semibold">{Title}</p>
+            <p className="text-5xl font-semibold">{title}</p>
 
             <p className="text-4xl cursor-pointer hover:underline focus:ring-3 focus:ring-offset-2 rounded" tabIndex={0}>
-              {authorName}
+              {author?.name}
             </p>
 
             <TotalRatingBar
@@ -107,7 +114,7 @@ Orwell's work remains influential in popular culture and in political culture, a
             setIsExpanded={setShowFullDescription}
             content={
               <p className={classNames("text-base lg:w-8/9 xl:w-7/9", { 'max-h-32 overflow-hidden mb-6': !showFullDescription })}>
-                {bookDescription}
+                {description}
               </p>
             }
           />
@@ -116,20 +123,20 @@ Orwell's work remains influential in popular culture and in political culture, a
             <div className="flex flex-wrap py-2 gap-2 items-center">
               <LabelText text="Genres" />
 
-              {relatedGenres.map((genre, index) => (
+              {relatedGenres?.map((genre, index) => (
                 <label
                   key={index}
                   className="cursor-pointer underline underline-offset-4 decoration-3 decoration-green-700 focus:ring-3 focus:ring-offset-2 rounded"
                   tabIndex={0}
                 >
-                  {genre}
+                  {genre.name}
                 </label>
               ))}
             </div>
 
-            <LabelText text={`${pagesCount} pages, ${format}`} />
+            <LabelText text={`${pagesCount} pages, ${editionFormat}`} />
 
-            <LabelText text={`First published ${firstPublished}`} />
+            <LabelText text={`First published ${formattedDate(firstPublished || new Date())}`} />
           </div>
 
           <ExpandableContent
@@ -145,12 +152,14 @@ Orwell's work remains influential in popular culture and in political culture, a
                   <p className="text-base font-bold py-2">This edition</p>
 
                   <div className="grid gap-y-2 my-6">
-                    {editionDetails.map((detail) => (
+                    {editionDetails.filter((detail) => detail.value).map((detail) => (
                       <div key={detail.label} className="flex">
                         <div className="w-32">
                           <LabelText text={detail.label} />
                         </div>
-                        <div className="text-base text-gray-600">{detail.value}</div>
+                        <div className="text-base text-gray-600">
+                          {detail.value}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -201,11 +210,11 @@ Orwell's work remains influential in popular culture and in political culture, a
           <SectionTitle name="About the author" />
 
           <div className="flex py-2 gap-4 items-center">
-            <ProfilePic />
+            <ProfilePic image={author?.profilePic} />
 
             <div className="flex flex-col flex-1 min-w-0">
               <p className="w-fit font-semibold text-lg cursor-pointer hover:underline truncate focus:ring-3 rounded" tabIndex={0}>
-                {authorName}
+                {author?.name}
               </p>
 
               <LabelText text={`${authorBooksCount} books · ${formatNumberShort(
@@ -222,7 +231,7 @@ Orwell's work remains influential in popular culture and in political culture, a
             setIsExpanded={setShowFullAuthorDescription}
             content={
               <p className={classNames("text-base my-6 lg:w-8/9 xl:w-7/9", { 'max-h-20 mb-6 overflow-hidden': !showFullAuthorDescription })}>
-                {authorDescription}
+                {author?.description}
               </p>
             }
           />

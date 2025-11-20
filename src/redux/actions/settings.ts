@@ -5,7 +5,7 @@ import type { SettingI } from "../../data-structures";
 
 const getAll = createAsyncThunk("settings/getAll", async () => {
   try {
-    const response = await axios.get(`${API_URL}/settings}`);
+    const response = await axios.get(`${API_URL}/settings`);
     return response.data;
   } catch (error: unknown) {
     if (error instanceof Error) {

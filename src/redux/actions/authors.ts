@@ -5,7 +5,7 @@ import type { AuthorI } from "../../data-structures";
 
 const getAll = createAsyncThunk("authors/getAll", async () => {
   try {
-    const response = await axios.get(`${API_URL}/authors}`);
+    const response = await axios.get(`${API_URL}/authors`);
     return response.data;
   } catch (error: unknown) {
     if (error instanceof Error) {

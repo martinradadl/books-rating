@@ -18,7 +18,7 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
                 {Array(10)
                     .fill(null)
                     .map((_, i) => (
-                        <div className={classNames("flex flex-col mr-6 lg:mr-8 min-w-[28%] sm:min-w-[21%] focus:ring-3 focus:ring-offset-3",
+                        <div key={i} className={classNames("flex flex-col mr-6 lg:mr-8 min-w-[28%] sm:min-w-[21%] focus:ring-3 focus:ring-offset-3",
                             { 'md:min-w-[21%] xl:min-w-[17%]': isMoreEditions },
                             { 'md:min-w-[22.6%] lg:min-w-[17.5%] xl:min-w-[17.8%]': isBooksBySameAuthor && !isMoreEditions },
                             { 'md:min-w-[30%] lg:min-w-[21%] xl:min-w-[22%]': !isBooksBySameAuthor && !isMoreEditions },
