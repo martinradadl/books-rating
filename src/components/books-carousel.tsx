@@ -6,6 +6,7 @@ import { FaStar } from "react-icons/fa";
 import { PillButton } from "./pill-button";
 import { format } from 'date-fns';
 import type { EditionI } from "../data-structures";
+import { useCallback, useRef, useState } from "react";
 
 type BooksCarouselProps = {
     editionsList: EditionI[];
@@ -15,18 +16,58 @@ type BooksCarouselProps = {
 };
 
 export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAuthor, editionsList }: BooksCarouselProps) => {
+    const [atStart, setAtStart] = useState(true);
+    const [atEnd, setAtEnd] = useState(false);
+
     const year = (date: Date) => format(date, 'yyyy')
+
+
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    const updateScrollState = useCallback(() => {
+        const carousel = scrollRef.current;
+        if (!carousel) return;
+
+        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+
+        setAtStart(carousel.scrollLeft <= 3);
+        setAtEnd(carousel.scrollLeft >= maxScroll - 1);
+    }, []);
+
+    const scrollCarousel = useCallback((direction: "next" | "prev") => {
+        const carousel = scrollRef.current;
+        if (!carousel) return;
+
+        if (window.innerWidth < 768) return;
+
+        const carouselWidth = carousel.clientWidth;
+        const scrollAmount = direction === "next" ? carouselWidth : -carouselWidth;
+
+        carousel.scrollBy({ left: scrollAmount, behavior: "smooth" });
+
+        setTimeout(updateScrollState, 350);
+    }, [updateScrollState]);
 
     return (
         <div className="relative md:overflow-hidden">
-            <div className="absolute top-1/2 -translate-y-1/2 left-0 ml-[-14px] rounded-full p-3 bg-gray-200 shadow-lg shadow-gray-800/60 z-10">
+            {!atStart && (<button
+                onClick={() => scrollCarousel("prev")}
+                className="absolute top-1/2 -translate-y-1/2 left-0 ml-[-14px] rounded-full p-3 bg-gray-200 shadow-lg shadow-gray-800/60 z-10 hidden md:flex cursor-pointer"
+            >
                 <MdArrowBackIosNew size={24} />
-            </div>
-            <div className="absolute top-1/2 -translate-y-1/2 right-0 mr-[-14px] rounded-full p-3 bg-gray-200 shadow-lg shadow-gray-800/60 z-10">
-                <MdArrowForwardIos size={24} />
-            </div>
+            </button>)}
 
-            <div className="flex space-between my-6 p-2 overflow-x-auto md:overflow-hidden">
+            {!atEnd && (<button
+                onClick={() => scrollCarousel("next")}
+                className="absolute top-1/2 -translate-y-1/2 right-0 mr-[-14px] rounded-full p-3 bg-gray-200 shadow-lg shadow-gray-800/60 z-10 hidden md:flex cursor-pointer"
+            >
+                <MdArrowForwardIos size={24} />
+            </button>)}
+
+            <div
+                ref={scrollRef}
+                onScroll={updateScrollState}
+                className="flex space-between my-6 p-2 overflow-x-auto md:overflow-hidden scroll-smooth">
                 {editionsList
                     .map((edition, i) => (
                         <div key={i} className={classNames("flex flex-col mr-6 lg:mr-8 min-w-[28%] sm:min-w-[21%] focus:ring-3 focus:ring-offset-3",
@@ -60,7 +101,6 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
                         </div>
                     ))}
             </div>
-
 
             <PillButton label={showAllLabel} className="md:hidden w-full bg-white !text-black border-2 border-black hover:!bg-gray-200" />
 
