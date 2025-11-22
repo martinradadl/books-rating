@@ -43,7 +43,7 @@ const ratings = [
 ];
 
 export const BookEdition = () => {
-  const { selectedEdition, status } = useAppSelector((state: RootState) => state.editions)
+  const { selectedEdition, status, editionsList } = useAppSelector((state: RootState) => state.editions)
   const { title, book, description, pagesCount, format: editionFormat, published, ISBN, ASIN, language, cover } = selectedEdition || {};
   const { author, firstPublished, relatedGenres } = book || {};
 
@@ -72,6 +72,7 @@ export const BookEdition = () => {
   useEffect(() => {
     if (params.id) {
       dispatch(editionsActions.getById(params.id));
+      dispatch(editionsActions.getAll());
     }
   }, [dispatch, params.id])
 
@@ -83,7 +84,7 @@ export const BookEdition = () => {
     <div className="flex flex-col w-[91%] xl:max-w-[1260px] 2xl:w-[87.5%] m-auto pb-6">
       <div className="flex flex-col md:flex-row pt-4 md:gap-[3%] lg:gap-[2%] xl:gap-[1.7%]">
         <div className="w-full md:flex-1 md:sticky md:top-26 self-start flex flex-col gap-4 items-center">
-          <BookCover className="w-48 xl:w-7/10" image={cover} />
+          <BookCover className="w-48 xl:w-7/10" image={cover || ""} />
 
           <BookActions />
         </div>
@@ -168,7 +169,7 @@ export const BookEdition = () => {
 
                   <p className="text-base font-bold mt-2">More editions</p>
 
-                  <BooksCarousel showAllLabel="Show all editions" isMoreEditions />
+                  <BooksCarousel editionsList={editionsList} showAllLabel="Show all editions" isMoreEditions />
                 </div>
             }
           />
@@ -240,7 +241,7 @@ export const BookEdition = () => {
 
           <SectionTitle name="Readers also enjoyed" />
 
-          <BooksCarousel showAllLabel="All similar books" />
+          <BooksCarousel editionsList={editionsList} showAllLabel="All similar books" />
 
           <Separator className={'my-8'} />
 
@@ -290,10 +291,10 @@ export const BookEdition = () => {
       <DiscussionOptions />
 
       <SectionTitle>
-        Other books by <span className="italic">George Orwell</span>
+        Other books by <span className="italic">{author?.name}</span>
       </SectionTitle>
 
-      <BooksCarousel showAllLabel="All books by this author" isBooksBySameAuthor />
+      <BooksCarousel editionsList={editionsList} showAllLabel="All books by this author" isBooksBySameAuthor />
     </div>
 
   );
