@@ -1,8 +1,8 @@
 import classNames from "classnames";
 
 type BookCoverProps = {
+    image: string;
     className?: string;
-    image?: string;
 };
 
 export const BookCover = ({ className, image }: BookCoverProps) => {
