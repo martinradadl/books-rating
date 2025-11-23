@@ -18,11 +18,11 @@ type BooksCarouselProps = {
 export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAuthor, editionsList }: BooksCarouselProps) => {
     const [atStart, setAtStart] = useState(true);
     const [atEnd, setAtEnd] = useState(false);
+    const [pageCount, setPageCount] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     const year = (date: Date) => format(date, 'yyyy')
-
-
-    const scrollRef = useRef<HTMLDivElement>(null);
 
     const updateScrollState = useCallback(() => {
         const carousel = scrollRef.current;
@@ -32,6 +32,13 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
 
         setAtStart(carousel.scrollLeft <= 3);
         setAtEnd(carousel.scrollLeft >= maxScroll - 1);
+
+        const totalPages = Math.ceil(carousel.scrollWidth / carousel.clientWidth);
+        setPageCount(totalPages);
+
+        const pageIndex = Math.ceil(carousel.scrollLeft / carousel.clientWidth);
+
+        setCurrentPage(pageIndex);
     }, []);
 
     const scrollCarousel = useCallback((direction: "next" | "prev") => {
@@ -64,6 +71,16 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
                 <MdArrowForwardIos size={24} />
             </button>)}
 
+            <div className="absolute top-0 right-5 flex space-x-1 z-20">
+                {Array.from({ length: pageCount }).map((_, i) => (
+                    <div
+                        key={i}
+                        className={classNames("h-1 rounded transition-all w-4 bg-gray-300",
+                            { "bg-gray-700": i === currentPage })}
+                    />
+                ))}
+            </div>
+
             <div
                 ref={scrollRef}
                 onScroll={updateScrollState}
@@ -71,9 +88,9 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
                 {editionsList
                     .map((edition, i) => (
                         <div key={i} className={classNames("flex flex-col mr-6 lg:mr-8 min-w-[28%] sm:min-w-[21%] focus:ring-3 focus:ring-offset-3",
-                            { 'md:min-w-[21%] xl:min-w-[17%]': isMoreEditions },
+                            { 'md:min-w-[21.5%] xl:min-w-[17%]': isMoreEditions },
                             { 'md:min-w-[22.6%] lg:min-w-[17.5%] xl:min-w-[17.8%]': isBooksBySameAuthor && !isMoreEditions },
-                            { 'md:min-w-[30%] lg:min-w-[21%] xl:min-w-[22%]': !isBooksBySameAuthor && !isMoreEditions },
+                            { 'md:min-w-[30%] lg:min-w-[21.5%] xl:min-w-[22%]': !isBooksBySameAuthor && !isMoreEditions },
                         )}>
                             <BookCover key={i} className='rounded' image={edition.cover} />
 
