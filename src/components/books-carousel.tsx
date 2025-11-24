@@ -48,9 +48,17 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
         if (window.innerWidth < 768) return;
 
         const carouselWidth = carousel.clientWidth + 20;
-        const scrollAmount = direction === "next" ? carouselWidth : -carouselWidth;
+        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
 
-        carousel.scrollBy({ left: scrollAmount, behavior: "smooth" });
+        if (direction === "next") {
+            const nextPos = carousel.scrollLeft + carouselWidth;
+            const target = Math.min(nextPos, maxScroll - 34);
+            carousel.scrollTo({ left: target, behavior: "smooth" });
+        } else {
+            const prevPos = carousel.scrollLeft - carouselWidth;
+            const target = Math.max(prevPos, 0);
+            carousel.scrollTo({ left: target, behavior: "smooth" });
+        }
 
         setTimeout(updateScrollState, 350);
     }, [updateScrollState]);
