@@ -167,9 +167,12 @@ export const BookEdition = () => {
 
                   <div className={!showDetails ? 'my-4' : 'hidden'} />
 
-                  <p className="text-base font-bold mt-2">More editions</p>
-
-                  <BooksCarousel editionsList={editionsList} showAllLabel="Show all editions" isMoreEditions />
+                  <BooksCarousel
+                    title={<p className="text-base font-bold mt-2">More editions</p>}
+                    editionsList={editionsList}
+                    showAllLabel="Show all editions"
+                    isMoreEditions
+                  />
                 </div>
             }
           />
@@ -239,9 +242,11 @@ export const BookEdition = () => {
 
           <Separator className={'my-8'} />
 
-          <SectionTitle name="Readers also enjoyed" />
-
-          <BooksCarousel editionsList={editionsList} showAllLabel="All similar books" />
+          <BooksCarousel
+            editionsList={editionsList}
+            showAllLabel="All similar books"
+            title={<SectionTitle name="Readers also enjoyed" />}
+          />
 
           <Separator className={'my-8'} />
 
@@ -290,11 +295,14 @@ export const BookEdition = () => {
 
       <DiscussionOptions />
 
-      <SectionTitle>
-        Other books by <span className="italic">{author?.name}</span>
-      </SectionTitle>
-
-      <BooksCarousel editionsList={editionsList} showAllLabel="All books by this author" isBooksBySameAuthor />
+      <BooksCarousel
+        title={<SectionTitle>
+          Other books by <span className="italic">{author?.name}</span>
+        </SectionTitle>}
+        editionsList={editionsList}
+        showAllLabel="All books by this author"
+        isBooksBySameAuthor
+      />
     </div>
 
   );
