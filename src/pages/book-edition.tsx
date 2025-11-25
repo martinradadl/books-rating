@@ -77,7 +77,11 @@ export const BookEdition = () => {
   }, [dispatch, params.id])
 
   if (status === "loading") {
-    return <p>Loading edition...</p>
+    return (
+      <div className="flex justify-center items-center h-96">
+        <p className="text-4xl font-semibold">Loading edition...</p>
+      </div>
+    )
   }
 
   return (
