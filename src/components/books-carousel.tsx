@@ -6,7 +6,7 @@ import { FaStar } from "react-icons/fa";
 import { PillButton } from "./pill-button";
 import { format } from 'date-fns';
 import type { EditionI } from "../data-structures";
-import { useCallback, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
 type BooksCarouselProps = {
     editionsList: EditionI[];
@@ -24,6 +24,14 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
     const scrollRef = useRef<HTMLDivElement>(null);
 
     const year = (date: Date) => format(date, 'yyyy')
+
+
+    useEffect(() => {
+        const carousel = scrollRef.current;
+        if (!carousel) return;
+        const totalPages = Math.ceil(carousel.scrollWidth / carousel.clientWidth);
+        setPageCount(totalPages);
+    }, [scrollRef.current?.scrollWidth])
 
     const updateScrollState = useCallback(() => {
         const carousel = scrollRef.current;
