@@ -40,14 +40,14 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
         const maxScroll = carousel.scrollWidth - carousel.clientWidth;
 
         setAtStart(carousel.scrollLeft <= 1);
-        setAtEnd(carousel.scrollLeft >= maxScroll - 1);
+        setAtEnd(carousel.scrollLeft >= maxScroll - 36);
 
         const totalPages = Math.ceil(carousel.scrollWidth / carousel.clientWidth);
         setPageCount(totalPages);
 
-        const pageIndex = Math.ceil(carousel.scrollLeft / (carousel.clientWidth + 20));
+        const pageIndex = Math.ceil(carousel.scrollLeft / (carousel.clientWidth + (isMoreEditions ? 27.3 : isBooksBySameAuthor ? 24 : 22)));
         setCurrentPage(pageIndex);
-    }, []);
+    }, [isMoreEditions, isBooksBySameAuthor]);
 
     const scrollCarousel = useCallback((direction: "next" | "prev") => {
         const carousel = scrollRef.current;
@@ -55,12 +55,12 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
 
         if (window.innerWidth < 768) return;
 
-        const carouselWidth = carousel.clientWidth + 20;
-        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+        const carouselWidth = carousel.clientWidth + (isMoreEditions ? 27.3 : isBooksBySameAuthor ? 23.7 : 21.8);
+        const maxScroll = carousel.scrollWidth - carousel.clientWidth - (isMoreEditions ? 27 : isBooksBySameAuthor ? 22 : 20);
 
         if (direction === "next") {
             const nextPos = carousel.scrollLeft + carouselWidth;
-            const target = Math.min(nextPos, maxScroll - 34);
+            const target = Math.min(nextPos, maxScroll);
             carousel.scrollTo({ left: target, behavior: "smooth" });
         } else {
             const prevPos = carousel.scrollLeft - carouselWidth;
@@ -69,7 +69,7 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
         }
 
         setTimeout(updateScrollState, 350);
-    }, [updateScrollState]);
+    }, [updateScrollState, isMoreEditions, isBooksBySameAuthor]);
 
     return (
         <div>
@@ -87,7 +87,11 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
                 </div>
             </div>
 
-            <div className="relative max-w-[97.5%]">
+            <div className={classNames("relative",
+                { 'max-w-[97.2%]': isMoreEditions },
+                { 'max-w-[98.3%]': isBooksBySameAuthor },
+                { 'max-w-[98%]': !isMoreEditions && !isBooksBySameAuthor },
+            )}>
                 {!atStart && (<button
                     onClick={() => scrollCarousel("prev")}
                     className="absolute top-1/2 -translate-y-1/2 left-0 ml-[-14px] rounded-full p-3 bg-gray-200 shadow-lg shadow-gray-800/60 z-10 hidden md:flex cursor-pointer focus:ring-3 focus:ring-offset-3"
