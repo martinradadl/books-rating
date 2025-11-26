@@ -94,7 +94,7 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
             )}>
                 {!atStart && (<button
                     onClick={() => scrollCarousel("prev")}
-                    className="absolute top-1/2 -translate-y-1/2 left-0 ml-[-14px] rounded-full p-3 bg-gray-200 shadow-lg shadow-gray-800/60 z-10 hidden md:flex cursor-pointer focus:ring-3 focus:ring-offset-3"
+                    className="absolute top-1/2 -translate-y-1/2 left-0 ml-[-25px] rounded-full p-3 bg-gray-200 shadow-lg shadow-gray-800/60 z-10 hidden md:flex cursor-pointer focus:ring-3 focus:ring-offset-3"
                 >
                     <MdArrowBackIosNew size={24} />
                 </button>)}
