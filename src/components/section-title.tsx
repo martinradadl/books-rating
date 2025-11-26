@@ -5,7 +5,7 @@ type SectionTitleProps = {
 
 export const SectionTitle = ({ name, children }: SectionTitleProps) => {
     return (
-        <p className="text-2xl font-bold">
+        <p className="text-2xl font-semibold">
             {children ?? name}
         </p>
     )
