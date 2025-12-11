@@ -105,7 +105,175 @@ describe("Edition Actions", () => {
     });
   });
 
-  describe("getById", () => {
+  describe("getMoreEditionsFromBook", () => {
+    let store: ReturnType<typeof configureStore>;
+    let dispatch: AppDispatch;
+
+    beforeEach(() => {
+      vi.resetAllMocks();
+
+      store = configureStore({
+        reducer: {
+          editions: editionsReducer,
+        },
+      });
+
+      dispatch = store.dispatch;
+    });
+
+    it("should throw error message when status is not 200", async () => {
+      vi.mocked(axios.get).mockRejectedValueOnce(
+        new Error("Failed to fetch editions")
+      );
+
+      await dispatch(
+        actions.getMoreEditionsFromBook({ id: "fakeId", bookId: "fakeBookId" })
+      );
+
+      const state = store.getState() as RootState;
+      const editionsState = state.editions;
+
+      expect(editionsState.status).toBe("idle");
+      expect(editionsState.moreEditionsFromBook).toEqual([]);
+      expect(editionsState.error).toBe("Failed to fetch editions");
+    });
+
+    it("should return more editions from the same book when status is 200", async () => {
+      vi.mocked(axios.get).mockResolvedValueOnce({
+        status: 200,
+        data: fakeEditionsList,
+      });
+
+      await dispatch(
+        actions.getMoreEditionsFromBook({ id: "fakeId", bookId: "fakeBookId" })
+      );
+
+      const state = store.getState() as RootState;
+      const editionsState = state.editions;
+
+      expect(editionsState.status).toBe("idle");
+      expect(editionsState.moreEditionsFromBook).toEqual(fakeEditionsList);
+      expect(editionsState.error).toBe("");
+    });
+  });
+
+  describe("getBooksBySameAuthor", () => {
+    let store: ReturnType<typeof configureStore>;
+    let dispatch: AppDispatch;
+
+    beforeEach(() => {
+      vi.resetAllMocks();
+
+      store = configureStore({
+        reducer: {
+          editions: editionsReducer,
+        },
+      });
+
+      dispatch = store.dispatch;
+    });
+
+    it("should throw error message when status is not 200", async () => {
+      vi.mocked(axios.get).mockRejectedValueOnce(
+        new Error("Failed to fetch editions")
+      );
+
+      await dispatch(
+        actions.getBooksBySameAuthor({
+          authorId: "fakeAuthorId",
+          bookId: "fakeBookId",
+        })
+      );
+
+      const state = store.getState() as RootState;
+      const editionsState = state.editions;
+
+      expect(editionsState.status).toBe("idle");
+      expect(editionsState.booksBySameAuthor).toEqual([]);
+      expect(editionsState.error).toBe("Failed to fetch editions");
+    });
+
+    it("should return other books from the same author when status is 200", async () => {
+      vi.mocked(axios.get).mockResolvedValueOnce({
+        status: 200,
+        data: fakeEditionsList,
+      });
+
+      await dispatch(
+        actions.getBooksBySameAuthor({
+          authorId: "fakeAuthorId",
+          bookId: "fakeBookId",
+        })
+      );
+
+      const state = store.getState() as RootState;
+      const editionsState = state.editions;
+
+      expect(editionsState.status).toBe("idle");
+      expect(editionsState.booksBySameAuthor).toEqual(fakeEditionsList);
+      expect(editionsState.error).toBe("");
+    });
+  });
+
+  describe("getRelatedBooks", () => {
+    let store: ReturnType<typeof configureStore>;
+    let dispatch: AppDispatch;
+
+    beforeEach(() => {
+      vi.resetAllMocks();
+
+      store = configureStore({
+        reducer: {
+          editions: editionsReducer,
+        },
+      });
+
+      dispatch = store.dispatch;
+    });
+
+    it("should throw error message when status is not 200", async () => {
+      vi.mocked(axios.get).mockRejectedValueOnce(
+        new Error("Failed to fetch editions")
+      );
+
+      await dispatch(
+        actions.getRelatedBooks({
+          authorId: "fakeAuthorId",
+          bookId: "fakeBookId",
+        })
+      );
+
+      const state = store.getState() as RootState;
+      const editionsState = state.editions;
+
+      expect(editionsState.status).toBe("idle");
+      expect(editionsState.relatedBooks).toEqual([]);
+      expect(editionsState.error).toBe("Failed to fetch editions");
+    });
+
+    it("should return related books when status is 200", async () => {
+      vi.mocked(axios.get).mockResolvedValueOnce({
+        status: 200,
+        data: fakeEditionsList,
+      });
+
+      await dispatch(
+        actions.getRelatedBooks({
+          authorId: "fakeAuthorId",
+          bookId: "fakeBookId",
+        })
+      );
+
+      const state = store.getState() as RootState;
+      const editionsState = state.editions;
+
+      expect(editionsState.status).toBe("idle");
+      expect(editionsState.relatedBooks).toEqual(fakeEditionsList);
+      expect(editionsState.error).toBe("");
+    });
+  });
+
+  describe("Add", () => {
     let store: ReturnType<typeof configureStore>;
     let dispatch: AppDispatch;
 
