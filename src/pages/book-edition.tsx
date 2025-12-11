@@ -43,7 +43,7 @@ const ratings = [
 ];
 
 export const BookEdition = () => {
-  const { selectedEdition, status, editionsList } = useAppSelector((state: RootState) => state.editions)
+  const { selectedEdition, status, moreEditionsFromBook, relatedBooks, booksBySameAuthor } = useAppSelector((state: RootState) => state.editions)
   const { title, book, description, pagesCount, format: editionFormat, published, ISBN, ASIN, language, cover } = selectedEdition || {};
   const { author, firstPublished, relatedGenres } = book || {};
 
@@ -68,13 +68,35 @@ export const BookEdition = () => {
   const [showFullAuthorDescription, setShowFullAuthorDescription] = useState(false);
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    return () => {
+      dispatch(editionsActions.cleanUp());
+    }
+  }, [dispatch, params.id])
 
   useEffect(() => {
     if (params.id) {
       dispatch(editionsActions.getById(params.id));
-      dispatch(editionsActions.getAll());
     }
-  }, [dispatch, params.id])
+  }, [dispatch, params.id]);
+
+  useEffect(() => {
+    if (params.id && selectedEdition?.book._id) {
+      dispatch(editionsActions.getMoreEditionsFromBook({ id: params.id, bookId: selectedEdition?.book._id }));
+    }
+  }, [dispatch, params.id, selectedEdition?.book._id])
+
+  useEffect(() => {
+    if (selectedEdition?.book.author._id && selectedEdition?.book._id) {
+      dispatch(editionsActions.getBooksBySameAuthor({ authorId: selectedEdition?.book.author._id, bookId: selectedEdition?.book._id }));
+    }
+  }, [dispatch, selectedEdition?.book._id, selectedEdition?.book.author._id]);
+
+  useEffect(() => {
+    if (selectedEdition?.book.author._id && selectedEdition?.book._id) {
+      dispatch(editionsActions.getRelatedBooks({ authorId: selectedEdition?.book.author._id, bookId: selectedEdition?.book._id }));
+    }
+  }, [dispatch, selectedEdition?.book._id, selectedEdition?.book.author._id]);
 
   if (status === "loading") {
     return (
@@ -171,12 +193,12 @@ export const BookEdition = () => {
 
                   <div className={!showDetails ? 'my-4' : 'hidden'} />
 
-                  <BooksCarousel
+                  {moreEditionsFromBook.length > 0 && <BooksCarousel
                     title={<p className="text-base font-bold mt-2">More editions</p>}
-                    editionsList={editionsList}
+                    editionsList={moreEditionsFromBook}
                     showAllLabel="Show all editions"
                     isMoreEditions
-                  />
+                  />}
                 </div>
             }
           />
@@ -246,11 +268,11 @@ export const BookEdition = () => {
 
           <Separator className={'my-8'} />
 
-          <BooksCarousel
-            editionsList={editionsList}
+          {relatedBooks.length > 0 && <BooksCarousel
+            editionsList={relatedBooks}
             showAllLabel="All similar books"
             title={<SectionTitle name="Readers also enjoyed" />}
-          />
+          />}
 
           <Separator className={'my-8'} />
 
@@ -299,14 +321,14 @@ export const BookEdition = () => {
 
       <DiscussionOptions />
 
-      <BooksCarousel
+      {booksBySameAuthor.length > 0 && <BooksCarousel
         title={<SectionTitle>
           Other books by <span className="italic">{author?.name}</span>
         </SectionTitle>}
-        editionsList={editionsList}
+        editionsList={booksBySameAuthor}
         showAllLabel="All books by this author"
         isBooksBySameAuthor
-      />
+      />}
     </div>
 
   );
