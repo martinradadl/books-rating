@@ -6,7 +6,8 @@ import { FaStar } from "react-icons/fa";
 import { PillButton } from "./pill-button";
 import { format } from 'date-fns';
 import type { EditionI } from "../data-structures";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 
 type BooksCarouselProps = {
     editionsList: EditionI[];
@@ -16,13 +17,16 @@ type BooksCarouselProps = {
     isBooksBySameAuthor?: boolean;
 };
 
-export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAuthor, editionsList, title }: BooksCarouselProps) => {
-    const [atStart, setAtStart] = useState(true);
-    const [atEnd, setAtEnd] = useState(false);
-    const [pageCount, setPageCount] = useState(1);
-    const [currentPage, setCurrentPage] = useState(0);
-    const scrollRef = useRef<HTMLDivElement>(null);
+const isMoreEditionsStyles = 'md:min-w-1/4 md:max-w-1/4 xl:min-w-1/5 xl:max-w-1/5';
+const isRelatedBooksStyles = 'md:min-w-1/3 md:max-w-1/3 lg:min-w-1/4 lg:max-w-1/4';
+const isBooksBySameAuthorStyles = 'md:min-w-1/4 md:max-w-1/4 lg:min-w-1/5 lg:max-w-1/5';
 
+export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAuthor, editionsList, title }: BooksCarouselProps) => {
+    const [numOfPages, setNumOfPages] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [hasOverflow, setHasOverflow] = useState(false);
+    const navigate = useNavigate();
+    const scrollRef = useRef<HTMLDivElement>(null);
     const year = (date: Date) => format(date, 'yyyy')
 
 
@@ -30,76 +34,86 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
         const carousel = scrollRef.current;
         if (!carousel) return;
         const totalPages = Math.ceil(carousel.scrollWidth / carousel.clientWidth);
-        setPageCount(totalPages);
+        setNumOfPages(totalPages);
     }, [scrollRef.current?.scrollWidth])
 
-    const updateScrollState = useCallback(() => {
+    useEffect(() => {
         const carousel = scrollRef.current;
         if (!carousel) return;
 
-        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+        const checkOverflow = () => {
+            const currentHasOverflow = carousel.scrollWidth > carousel.clientWidth;
+            if (hasOverflow !== currentHasOverflow)
+                setHasOverflow(currentHasOverflow);
+            const totalPages = Math.ceil(carousel.scrollWidth / carousel.clientWidth);
+            if (totalPages !== numOfPages) {
+                setNumOfPages(totalPages);
+            }
+        };
 
-        setAtStart(carousel.scrollLeft <= 1);
-        setAtEnd(carousel.scrollLeft >= maxScroll - 36);
+        checkOverflow();
 
-        const totalPages = Math.ceil(carousel.scrollWidth / carousel.clientWidth);
-        setPageCount(totalPages);
+        window.addEventListener("resize", checkOverflow);
+        return () => window.removeEventListener("resize", checkOverflow);
+    }, [editionsList, numOfPages, hasOverflow]);
 
-        const pageIndex = Math.ceil(carousel.scrollLeft / (carousel.clientWidth + (isMoreEditions ? 27.3 : isBooksBySameAuthor ? 24 : 22)));
-        setCurrentPage(pageIndex);
-    }, [isMoreEditions, isBooksBySameAuthor]);
 
-    const scrollCarousel = useCallback((direction: "next" | "prev") => {
+    const scrollCarousel = (direction: "next" | "prev") => {
         const carousel = scrollRef.current;
         if (!carousel) return;
 
         if (window.innerWidth < 768) return;
 
-        const carouselWidth = carousel.clientWidth + (isMoreEditions ? 27.3 : isBooksBySameAuthor ? 23.7 : 21.8);
-        const maxScroll = carousel.scrollWidth - carousel.clientWidth - (isMoreEditions ? 27 : isBooksBySameAuthor ? 22 : 20);
+        const carouselWidth = carousel.clientWidth;
+        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
 
         if (direction === "next") {
             const nextPos = carousel.scrollLeft + carouselWidth;
             const target = Math.min(nextPos, maxScroll);
             carousel.scrollTo({ left: target, behavior: "smooth" });
+            setCurrentPage(prev => prev + 1);
         } else {
             const prevPos = carousel.scrollLeft - carouselWidth;
             const target = Math.max(prevPos, 0);
             carousel.scrollTo({ left: target, behavior: "smooth" });
+            setCurrentPage(prev => prev - 1);
         }
 
-        setTimeout(updateScrollState, 350);
-    }, [updateScrollState, isMoreEditions, isBooksBySameAuthor]);
+    };
+
+    const handleClickOnBook = (id: string) => {
+        navigate(`/edition/${id}`)
+    }
 
     return (
         <div>
             <div className="flex justify-between items-center mr-8">
                 {title}
 
-                <div className="flex space-x-1 z-20">
-                    {Array.from({ length: pageCount }).map((_, i) => (
+                {hasOverflow && <div className="flex space-x-1 z-20">
+                    {Array.from({ length: numOfPages }).map((_, i) => (
                         <div
                             key={i}
                             className={classNames("h-1 rounded transition-all w-4 bg-gray-300",
                                 { "bg-gray-700": i === currentPage })}
                         />
                     ))}
-                </div>
+                </div>}
             </div>
 
             <div className={classNames("relative",
-                { 'max-w-[97.2%]': isMoreEditions },
+                { 'max-w-[95%]': isMoreEditions },
                 { 'max-w-[98.3%]': isBooksBySameAuthor },
                 { 'max-w-[98%]': !isMoreEditions && !isBooksBySameAuthor },
             )}>
-                {!atStart && (<button
+                {hasOverflow && !(currentPage === 0) && (<button
                     onClick={() => scrollCarousel("prev")}
                     className="absolute top-1/2 -translate-y-1/2 left-0 ml-[-25px] rounded-full p-3 bg-gray-200 shadow-lg shadow-gray-800/60 z-10 hidden md:flex cursor-pointer focus:ring-3 focus:ring-offset-3"
                 >
                     <MdArrowBackIosNew size={24} />
                 </button>)}
 
-                {!atEnd && (<button
+                {hasOverflow && !(numOfPages - currentPage === 1) && (<button
                     onClick={() => scrollCarousel("next")}
                     className="absolute top-1/2 -translate-y-1/2 right-0 mr-[-14px] rounded-full p-3 bg-gray-200 shadow-lg shadow-gray-800/60 z-10 hidden md:flex cursor-pointer focus:ring-3 focus:ring-offset-3"
                 >
@@ -108,15 +122,16 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
 
                 <div
                     ref={scrollRef}
-                    onScroll={updateScrollState}
                     className="flex space-between mt-1 mb-2 py-2 overflow-x-auto md:overflow-hidden scroll-smooth">
                     {editionsList
                         .map((edition, i) => (
-                            <div key={i} className={classNames("flex flex-col mr-6 lg:mr-8 min-w-[28%] sm:min-w-[21%] focus:ring-3 focus:ring-offset-3",
-                                { 'md:min-w-[21.5%] xl:min-w-[17%]': isMoreEditions },
-                                { 'md:min-w-[22.6%] lg:min-w-[17.5%] xl:min-w-[17.8%]': isBooksBySameAuthor && !isMoreEditions },
-                                { 'md:min-w-[30%] lg:min-w-[21.5%] xl:min-w-[22%]': !isBooksBySameAuthor && !isMoreEditions },
-                            )}>
+                            <div key={i} className={classNames("flex flex-col pr-6 cursor-pointer lg:pr-8 min-w-1/3 max-w-1/3 sm:min-w-1/4 sm:max-w-1/4 focus:ring-3 focus:ring-offset-3",
+                                { [isMoreEditionsStyles]: isMoreEditions },
+                                { [isRelatedBooksStyles]: !isBooksBySameAuthor && !isMoreEditions },
+                                { [isBooksBySameAuthorStyles]: isBooksBySameAuthor },
+                            )}
+                                onClick={() => { handleClickOnBook(edition._id) }} tabIndex={0}
+                            >
                                 <BookCover key={i} className='rounded' image={edition.cover} />
 
                                 <div className="flex flex-col mt-4">
