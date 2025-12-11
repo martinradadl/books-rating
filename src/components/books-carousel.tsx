@@ -29,14 +29,6 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
     const scrollRef = useRef<HTMLDivElement>(null);
     const year = (date: Date) => format(date, 'yyyy')
 
-
-    useEffect(() => {
-        const carousel = scrollRef.current;
-        if (!carousel) return;
-        const totalPages = Math.ceil(carousel.scrollWidth / carousel.clientWidth);
-        setNumOfPages(totalPages);
-    }, [scrollRef.current?.scrollWidth])
-
     useEffect(() => {
         const carousel = scrollRef.current;
         if (!carousel) return;
