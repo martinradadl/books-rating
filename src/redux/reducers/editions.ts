@@ -5,6 +5,9 @@ import type { EditionI } from "../../data-structures";
 interface EditionsState {
   editionsList: EditionI[];
   selectedEdition: EditionI | null;
+  moreEditionsFromBook: EditionI[];
+  booksBySameAuthor: EditionI[];
+  relatedBooks: EditionI[];
   status: string;
   error: string;
 }
@@ -12,6 +15,9 @@ interface EditionsState {
 const initialState: EditionsState = {
   editionsList: [],
   selectedEdition: null,
+  moreEditionsFromBook: [],
+  booksBySameAuthor: [],
+  relatedBooks: [],
   status: "idle",
   error: "",
 };
@@ -46,6 +52,42 @@ const editionsSlice = createSlice({
         state.error = action.error.message || "Failed to fetch edition";
         state.selectedEdition = null;
       })
+      .addCase(actions.getMoreEditionsFromBook.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(actions.getMoreEditionsFromBook.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.moreEditionsFromBook = action.payload;
+      })
+      .addCase(actions.getMoreEditionsFromBook.rejected, (state, action) => {
+        state.status = "idle";
+        state.error = action.error.message || "Failed to fetch editions";
+        state.moreEditionsFromBook = [];
+      })
+      .addCase(actions.getBooksBySameAuthor.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(actions.getBooksBySameAuthor.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.booksBySameAuthor = action.payload;
+      })
+      .addCase(actions.getBooksBySameAuthor.rejected, (state, action) => {
+        state.status = "idle";
+        state.error = action.error.message || "Failed to fetch editions";
+        state.booksBySameAuthor = [];
+      })
+      .addCase(actions.getRelatedBooks.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(actions.getRelatedBooks.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.relatedBooks = action.payload;
+      })
+      .addCase(actions.getRelatedBooks.rejected, (state, action) => {
+        state.status = "idle";
+        state.error = action.error.message || "Failed to fetch editions";
+        state.relatedBooks = [];
+      })
       .addCase(actions.add.pending, (state) => {
         state.status = "loading";
       })
@@ -58,7 +100,10 @@ const editionsSlice = createSlice({
         state.status = "idle";
         state.error = action.error.message || "Failed to add edition";
         state.selectedEdition = null;
-      });
+      })
+      .addCase(actions.cleanUp, () => ({
+        ...initialState,
+      }));
   },
 });
 

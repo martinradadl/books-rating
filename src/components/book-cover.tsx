@@ -7,14 +7,9 @@ type BookCoverProps = {
 
 export const BookCover = ({ className, image }: BookCoverProps) => {
     return (
-        <div
+        <img
+            src={image}
             className={classNames("aspect-2/3 bg-gray-600 rounded-r-lg shadow-md drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]", className)}
-            style={{
-                backgroundImage: image ? `url(${image})` : undefined,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-            }}
-            tabIndex={0}
         />
     );
 };
