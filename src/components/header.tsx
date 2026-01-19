@@ -47,11 +47,12 @@ export const Header = () => {
                 <MdArrowForwardIos size={16} />
             </div>
 
-            <div className={classNames("w-full border-b border-gray-300 xl:px-[35px]",
-                { "lg:w-[970px] lg:mx-auto lg:text-left": isHomePage }
+            <div className={classNames("w-full border-b border-gray-300",
+                { "lg:w-[970px] lg:mx-auto lg:text-left xl:px-0": isHomePage },
+                { "xl:px-[35px]": !isHomePage }
             )}>
                 <div className={classNames("flex w-full 2xl:w-[87.5%] mx-auto h-[50px] items-center justify-between relative 2xl:max-w-[1280px]",
-                    { "lg:h-fit": isHomePage }
+                    { "lg:h-fit lg:mx-0": isHomePage }
                 )}>
                     <MdSearch size={28} className="md:hidden mx-2.5 cursor-pointer" />
 
