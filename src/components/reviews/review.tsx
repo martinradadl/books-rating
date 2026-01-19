@@ -1,13 +1,13 @@
 import { useState } from "react"
-import { formatNumberShort } from "../helpers/utils"
-import { LabelText } from "./label-text"
-import { StarRating } from "./star-rating"
-import { ExpandableContent } from "./expandable-content"
+import { formatNumberShort } from "../../helpers/utils"
+import { LabelText } from "../label-text"
+import { StarRating } from "../ratings/star-rating"
+import { ExpandableContent } from "../expandable-content"
 import { MdOutlineComment, MdOutlineThumbUp } from "react-icons/md"
-import { Separator } from "./separator"
-import { PillButton } from "./pill-button"
+import { Separator } from "../separator"
+import { PillButton } from "../buttons/pill-button"
 import classNames from "classnames"
-import { ProfilePic } from "./profile-pic"
+import { ProfilePic } from "../profile-pic"
 
 export const Review = () => {
     const reviewerName = "John Doe";

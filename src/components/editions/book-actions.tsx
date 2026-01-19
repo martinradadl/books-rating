@@ -1,7 +1,7 @@
 import classNames from "classnames";
-import { LabelText } from "./label-text"
-import { StarRating } from "./star-rating"
 import { MdOutlineExpandMore } from "react-icons/md";
+import { StarRating } from "../ratings/star-rating";
+import { LabelText } from "../label-text";
 
 type BookActionsProps = {
     showOnMobileView?: boolean;
