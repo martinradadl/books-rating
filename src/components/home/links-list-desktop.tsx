@@ -17,7 +17,7 @@ export const LinksListDesktop = ({ list, columns, className }: LinksListDesktopP
         }
 
         return result;
-    }, [list, columns]);
+    }, [JSON.stringify(list), columns]); // eslint-disable-line
 
     return (
         <div className="flex text-[#00635d] text-sm">
@@ -26,7 +26,7 @@ export const LinksListDesktop = ({ list, columns, className }: LinksListDesktopP
                     <div className="flex flex-col flex-1" key={i}>
                         {column.map((item) => {
                             return (
-                                <p className={classNames("hover:underline cursor-pointer w-fit", className)}>{item}</p>
+                                <p className={classNames("hover:underline cursor-pointer w-fit", className)} key={item}>{item}</p>
                             )
                         })}
                     </div>
