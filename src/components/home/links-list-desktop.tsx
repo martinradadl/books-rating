@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { useMemo } from "react";
 
 interface LinksListDesktopProps {
     list: string[];
@@ -7,17 +8,16 @@ interface LinksListDesktopProps {
 }
 
 export const LinksListDesktop = ({ list, columns, className }: LinksListDesktopProps) => {
-    const columnsSize = Math.ceil(list.length / (columns || 1));
-    const divideList = () => {
-        const result = [];
+    const dividedList = useMemo(() => {
+        const columnsSize = Math.ceil(list.length / (columns || 1));
+        const result: typeof list[] = [];
 
         for (let i = 0; i < list.length; i += columnsSize) {
             result.push(list.slice(i, i + columnsSize));
         }
 
         return result;
-    }
-    const dividedList = divideList();
+    }, [list, columns]);
 
     return (
         <div className="flex text-[#00635d] text-sm">
