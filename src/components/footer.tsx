@@ -1,5 +1,7 @@
-import { FaApple, FaGooglePlay, FaLinkedin } from "react-icons/fa"
+import { FaLinkedin } from "react-icons/fa"
 import { FaSquareFacebook, FaSquareInstagram, FaSquareTwitter } from "react-icons/fa6"
+import { GooglePlayButton } from "./buttons/google-play-button"
+import { AppStoreButton } from "./buttons/app-store-button"
 
 export const Footer = () => {
     return (
@@ -37,21 +39,8 @@ export const Footer = () => {
 
             <div className="flex flex-col mb-6 gap-1">
                 <div className="flex flex-col lg:flex-row gap-1 lg:gap-2">
-                    <div className="w-[135px] h-10 flex items-center bg-black text-white px-3 rounded-lg cursor-pointer">
-                        <FaApple size={24} className="text-white mr-2" />
-                        <div className="leading-tight text-left text-xs">
-                            <p className="text-[10px]">Download on the</p>
-                            <p className="text-[16px] font-semibold leading-[1.1]">App Store</p>
-                        </div>
-                    </div>
-
-                    <div className="w-[135px] h-10 flex items-center bg-black text-white px-3 rounded-lg cursor-pointer">
-                        <FaGooglePlay size={24} className="text-white mr-2" />
-                        <div className="leading-tight text-left text-xs">
-                            <p className="text-[10px]">GET IT ON</p>
-                            <p className="text-[14px] font-semibold leading-[1.1]">Google Play</p>
-                        </div>
-                    </div>
+                    <AppStoreButton />
+                    <GooglePlayButton />
                 </div>
 
                 <p className="text-sm mt-2.5">© 2025 Books Rating</p>
