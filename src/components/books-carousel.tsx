@@ -1,9 +1,9 @@
 import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
-import { BookCover } from "./book-cover";
+import { BookCover } from "./editions/book-cover";
 import classNames from "classnames";
 import { LabelText } from "./label-text";
 import { FaStar } from "react-icons/fa";
-import { PillButton } from "./pill-button";
+import { PillButton } from "./buttons/pill-button";
 import { format } from 'date-fns';
 import type { EditionI } from "../data-structures";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -11,17 +11,19 @@ import { useNavigate } from "react-router-dom";
 
 type BooksCarouselProps = {
     editionsList: EditionI[];
-    showAllLabel: string;
+    showAllLabel?: string;
     title: ReactNode;
     isMoreEditions?: boolean;
     isBooksBySameAuthor?: boolean;
+    isHome?: boolean
 };
 
 const isMoreEditionsStyles = 'md:min-w-1/4 md:max-w-1/4 xl:min-w-1/5 xl:max-w-1/5';
 const isRelatedBooksStyles = 'md:min-w-1/3 md:max-w-1/3 lg:min-w-1/4 lg:max-w-1/4';
 const isBooksBySameAuthorStyles = 'md:min-w-1/4 md:max-w-1/4 lg:min-w-1/5 lg:max-w-1/5';
+const isHomeStyles = "min-w-2/5 max-w-2/5 sm:min-w-2/5 sm:max-w-2/5";
 
-export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAuthor, editionsList, title }: BooksCarouselProps) => {
+export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAuthor, isHome, editionsList, title }: BooksCarouselProps) => {
     const [numOfPages, setNumOfPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(0);
     const [hasOverflow, setHasOverflow] = useState(false);
@@ -82,7 +84,7 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
             <div className="flex justify-between items-center mr-8">
                 {title}
 
-                {hasOverflow && <div className="flex space-x-1 z-20">
+                {hasOverflow && <div className="hidden md:flex space-x-1 z-20">
                     {Array.from({ length: numOfPages }).map((_, i) => (
                         <div
                             key={i}
@@ -121,12 +123,13 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
                                 { [isMoreEditionsStyles]: isMoreEditions },
                                 { [isRelatedBooksStyles]: !isBooksBySameAuthor && !isMoreEditions },
                                 { [isBooksBySameAuthorStyles]: isBooksBySameAuthor },
+                                { [isHomeStyles]: isHome }
                             )}
                                 onClick={() => { handleClickOnBook(edition._id) }} tabIndex={0}
                             >
                                 <BookCover key={i} className='rounded' image={edition.cover} />
 
-                                <div className="flex flex-col mt-4">
+                                {!isHome && <div className="flex flex-col mt-4">
                                     {isMoreEditions ? (
                                         <div>
                                             <LabelText text={edition.format} />
@@ -146,19 +149,20 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
                                         </div>
                                     )}
                                 </div>
-
+                                }
                             </div>
                         ))}
                 </div>
 
-                <PillButton label={showAllLabel} className="md:hidden w-full bg-white !text-black border-2 border-black hover:!bg-gray-200" />
 
-                <div className="hidden md:flex gap-2 items-center cursor-pointer group focus:ring-3 focus:ring-offset-3 rounded w-fit" tabIndex={0}>
+                {!isHome && <PillButton label={showAllLabel || ""} className="md:hidden w-full bg-white !text-black border-2 border-black hover:!bg-gray-200" />
+                }
+                {!isHome && <div className="hidden md:flex gap-2 items-center cursor-pointer group focus:ring-3 focus:ring-offset-3 rounded w-fit" tabIndex={0}>
                     <p className="font-semibold group-hover:underline">
                         {showAllLabel}
                     </p>
                     <MdArrowForwardIos size={16} />
-                </div>
+                </div>}
             </div>
         </div>
     );
