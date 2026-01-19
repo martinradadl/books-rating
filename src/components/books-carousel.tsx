@@ -155,14 +155,18 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
                 </div>
 
 
-                {!isHome && <PillButton label={showAllLabel || ""} className="md:hidden w-full bg-white !text-black border-2 border-black hover:!bg-gray-200" />
+                {!isHome &&
+                    <>
+                        <PillButton label={showAllLabel || ""} className="md:hidden w-full bg-white !text-black border-2 border-black hover:!bg-gray-200" />
+
+                        <div className="hidden md:flex gap-2 items-center cursor-pointer group focus:ring-3 focus:ring-offset-3 rounded w-fit" tabIndex={0}>
+                            <p className="font-semibold group-hover:underline">
+                                {showAllLabel}
+                            </p>
+                            <MdArrowForwardIos size={16} />
+                        </div>
+                    </>
                 }
-                {!isHome && <div className="hidden md:flex gap-2 items-center cursor-pointer group focus:ring-3 focus:ring-offset-3 rounded w-fit" tabIndex={0}>
-                    <p className="font-semibold group-hover:underline">
-                        {showAllLabel}
-                    </p>
-                    <MdArrowForwardIos size={16} />
-                </div>}
             </div>
         </div>
     );
