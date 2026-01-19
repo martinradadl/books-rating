@@ -105,10 +105,14 @@ export const HomeDesktop = () => {
         setDiscoverBooksList(parsedDiscoverBooks)
 
         if (editionsList[4]) {
+            const mainSuggestion = editionsList[4];
+            const genresShown = Math.floor(Math.random() * 3) + 1;
+            const genres = mainSuggestion.book.relatedGenres.slice(0, genresShown).map(genre => genre.name).join(", ");
+
             setDiscoverBooksMainSuggestion({
-                img: editionsList[4].cover,
-                id: editionsList[4]._id,
-                genre: editionsList[4].book.relatedGenres[0]?.name || ""
+                img: mainSuggestion.cover,
+                id: mainSuggestion._id,
+                genres
             });
         }
     }, [editionsList])
@@ -152,14 +156,14 @@ export const HomeDesktop = () => {
                             </div>
                         </div>
 
-                        <div className="bg-[#f4f2e9] rounded pt-[15px] pb-[20px]">
+                        <div className="bg-[#f4f2e9] rounded pt-[15px] pb-5">
                             <p className="text-lg pl-[15px]">What will you discover?</p>
 
                             <DiscoverBooksList title="Best Books List" list={discoverBooksList} mainSuggestion={discoverBooksMainSuggestion} />
                             <DiscoverBooksList title="Best Books List" list={discoverBooksList} mainSuggestion={discoverBooksMainSuggestion} />
                         </div>
 
-                        <div className="my-[25px] flex flex-col gap-[12px]">
+                        <div className="my-[25px] flex flex-col gap-3">
                             <p className="text-lg">Search and browse books</p>
 
                             <HomeSearchBarDesktop />
@@ -167,8 +171,8 @@ export const HomeDesktop = () => {
                             <LinksListDesktop list={genres} columns={4} className="leading-[1.5]" />
                         </div>
 
-                        <div className="my-[24px]">
-                            <p className="mb-[10px] text-lg">Quotes</p>
+                        <div className="my-6">
+                            <p className="mb-2.5 text-lg">Quotes</p>
 
                             <div className="flex">
                                 <div className="flex w-2/3">
@@ -188,10 +192,10 @@ export const HomeDesktop = () => {
                             </div>
                         </div>
 
-                        <p className="mb-[10px] text-lg">Goodreads Choice Awards: Readers' Favorite Books 2025</p>
+                        <p className="mb-2.5 text-lg">Goodreads Choice Awards: Readers' Favorite Books 2025</p>
 
                         <div className="flex">
-                            <div className="mt-[10px] mr-[20px] w-[110px]">
+                            <div className="mt-2.5 mr-5 w-[110px]">
                                 <img src={CHOICE_AWARDS_IMG_URL} alt="Choice Awards" className="cursor-pointer" />
                             </div>
 
@@ -205,15 +209,15 @@ export const HomeDesktop = () => {
                     <div className="w-[300px] ml-2 mt-[160px]">
                         <p className="text-base">News & Interviews</p>
 
-                        <p className="text-[#00635d] my-[16px] text-[12px] font-semibold cursor-pointer hover:underline">
+                        <p className="text-[#00635d] my-4 text-xs font-semibold cursor-pointer hover:underline">
                             Readers' Most Anticipated Romantasies for 2026
                         </p>
 
                         <img src={NEWS_IMG_URL} alt="News" className="cursor-pointer" />
 
-                        <p className="text-[12px] my-[10px] text-[#767676]">120 likes</p>
+                        <p className="text-xs my-2.5 text-[#767676]">120 likes</p>
 
-                        <p className="mt-[24px] mb-[10px] text-lg">Love lists?</p>
+                        <p className="mt-6 mb-2.5 text-lg">Love lists?</p>
 
                         <BooksListPreview
                             title="Best Books of the 20th Century"
@@ -245,11 +249,11 @@ export const HomeDesktop = () => {
                         </p>
 
                         <div className="flex justify-center text-[11px] gap-3.5">
-                            <button className="px-[12px] py-[4px] bg-[#F4F1EA] rounded border border-[#D6D0C4] cursor-pointer hover:bg-[#D6D2C4]">
+                            <button className="px-3 py-1 bg-[#F4F1EA] rounded border border-[#D6D0C4] cursor-pointer hover:bg-[#D6D2C4]">
                                 Author program
                             </button>
 
-                            <button className="px-[12px] py-[4px] bg-[#F4F1EA] rounded border border-[#D6D0C4] cursor-pointer hover:bg-[#D6D2C4]">
+                            <button className="px-3 py-1 bg-[#F4F1EA] rounded border border-[#D6D0C4] cursor-pointer hover:bg-[#D6D2C4]">
                                 Advertise
                             </button>
                         </div>

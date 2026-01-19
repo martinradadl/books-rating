@@ -124,13 +124,13 @@ export const HomeMobile = () => {
 
                 <LinksListMobile list={quotesLists} />
 
-                <p className="uppercase text-sm font-semibold my-[12px]">
+                <p className="uppercase text-sm font-semibold my-3">
                     Goodreads Choice Awards: The Best Books 2025
                 </p>
 
                 <img src={MOBILE_CHOICE_AWARDS_IMG} alt="Choice Awards" className="mr-[30px]" />
 
-                <p className="mt-[5px] text-[#00635D] text-sm mb-[24px] cursor-pointer hover:underline w-fit">See the winners</p>
+                <p className="mt-[5px] text-[#00635D] text-sm mb-6 cursor-pointer hover:underline w-fit">See the winners</p>
             </div>
         </div>
     )
