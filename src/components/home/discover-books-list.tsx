@@ -4,7 +4,7 @@ import { BookCover } from "../editions/book-cover";
 export interface DiscoverBooksItemProps {
     img: string;
     id: string;
-    genre?: string;
+    genres?: string;
 }
 
 interface DiscoverBooksListProps {
@@ -52,7 +52,10 @@ export const DiscoverBooksList = ({ title, list, mainSuggestion }: DiscoverBooks
                     />
                 </div>
 
-                <p className="text-xs font-semibold">{mainSuggestion.genre || ""}</p>
+                <p className="text-xs font-semibold">
+                    {mainSuggestion.genres || ""}
+
+                </p>
             </div>
         </div>
     )
