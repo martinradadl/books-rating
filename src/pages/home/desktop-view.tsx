@@ -28,14 +28,12 @@ export const HomeDesktop = () => {
         dispatch(editionsActions.getAll());
     }, [dispatch])
 
-    const discoverBooksList: DiscoverBooksItemProps[] = useMemo(() => {
-        console.log("on discoverBooksList")
-
-        return editionsList.slice(0, 4).map(edition => ({
+    const discoverBooksList: DiscoverBooksItemProps[] = useMemo(() => (
+        editionsList.slice(0, 4).map(edition => ({
             img: edition.cover,
             id: edition._id
         }))
-    }, [editionsListStringified]) // eslint-disable-line
+    ), [editionsListStringified]) // eslint-disable-line
 
 
     const discoverBooksMainSuggestion = useMemo(() => {
