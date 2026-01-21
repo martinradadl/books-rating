@@ -1,6 +1,6 @@
 import classNames from "classnames";
-import { LabelText } from "./label-text";
 import { StarRating } from "./star-rating";
+import { LabelText } from "../label-text";
 
 type TotalRatingBarProps = {
   rating: number;

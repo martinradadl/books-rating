@@ -1,4 +1,4 @@
-import { LabelText } from "./label-text";
+import { LabelText } from "../label-text";
 
 interface Rating {
   stars: number;
