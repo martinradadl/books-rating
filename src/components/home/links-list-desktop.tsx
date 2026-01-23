@@ -1,13 +1,20 @@
 import classNames from "classnames";
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+
+interface LinksListItem {
+    name: string;
+    urlPath: string;
+}
 
 interface LinksListDesktopProps {
-    list: string[];
+    list: LinksListItem[];
     columns?: number;
     className?: string;
 }
 
 export const LinksListDesktop = ({ list, columns, className }: LinksListDesktopProps) => {
+    const navigate = useNavigate();
     const dividedList = useMemo(() => {
         const columnsSize = Math.ceil(list.length / (columns || 1));
         const result: typeof list[] = [];
@@ -19,6 +26,10 @@ export const LinksListDesktop = ({ list, columns, className }: LinksListDesktopP
         return result;
     }, [JSON.stringify(list), columns]); // eslint-disable-line
 
+    const handleOnClick = (urlPath: string) => {
+        navigate(urlPath)
+    }
+
     return (
         <div className="flex text-[#00635d] text-sm">
             {dividedList.map((column, i) => {
@@ -26,7 +37,10 @@ export const LinksListDesktop = ({ list, columns, className }: LinksListDesktopP
                     <div className="flex flex-col flex-1" key={i}>
                         {column.map((item) => {
                             return (
-                                <p className={classNames("hover:underline cursor-pointer w-fit", className)} key={item}>{item}</p>
+                                <p className={classNames("hover:underline cursor-pointer w-fit", className)} key={item.name}
+                                    onClick={() => { handleOnClick(item.urlPath) }}>
+                                    {item.name}
+                                </p>
                             )
                         })}
                     </div>
