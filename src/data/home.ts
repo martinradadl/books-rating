@@ -1,36 +1,3 @@
-const genres = [
-  "Art",
-  "Biography",
-  "Business",
-  "Children's",
-  "Christian",
-  "Classics",
-  "Comics",
-  "Cookbooks",
-  "Ebooks",
-  "Fantasy",
-  "Fiction",
-  "Graphic Novels",
-  "Historical Fiction",
-  "History",
-  "Horror",
-  "Memoir",
-  "Music",
-  "Mystery",
-  "Nonfiction",
-  "Poetry",
-  "Psychology",
-  "Romance",
-  "Science",
-  "Science Fiction",
-  "Self Help",
-  "Sports",
-  "Thriller",
-  "Travel",
-  "Young Adult",
-  "More genres",
-];
-
 const quotesThemes = [
   "Best quotes",
   "Love quotes",
@@ -66,6 +33,16 @@ const parsedAwardsCategories = awardsCategories.map(
   (category) => `Readers' Favorite ${category}`
 );
 
+const quotesThemesLinksList = quotesThemes.map((quoteTheme) => ({
+  name: quoteTheme,
+  urlPath: "",
+}));
+
+const awardsCategoriesLinksList = parsedAwardsCategories.map((category) => ({
+  name: category,
+  urlPath: "",
+}));
+
 const exampleQuote =
   "“Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.";
 const quoteAuthor = "Albert Einstein";
@@ -76,9 +53,8 @@ const CHOICE_AWARDS_IMG_URL =
 const NEWS_IMG_URL = "https://images.gr-assets.com/blogs/1766018789p7/3052.jpg";
 
 export const HOME_DATA = {
-  genres,
-  quotesThemes,
-  parsedAwardsCategories,
+  quotesThemesLinksList,
+  awardsCategoriesLinksList,
   exampleQuote,
   quoteAuthor,
   CHOICE_AWARDS_IMG_URL,

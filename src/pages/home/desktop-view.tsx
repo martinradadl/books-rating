@@ -10,22 +10,38 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import type { RootState } from "../../redux/store"
 import editionsActions from "../../redux/actions/editions"
 import { HOME_DATA } from "../../data/home"
+import genresActions from "../../redux/actions/genres"
 
+const {
+    exampleQuote,
+    quoteAuthor,
+    CHOICE_AWARDS_IMG_URL,
+    NEWS_IMG_URL,
+    quotesThemesLinksList,
+    awardsCategoriesLinksList
+} = HOME_DATA;
 
 export const HomeDesktop = () => {
     const dispatch = useAppDispatch();
     const { editionsList, status } = useAppSelector((state: RootState) => state.editions)
+    const { genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres)
     const editionsListStringified = JSON.stringify(editionsList);
-    const { genres,
-        quotesThemes,
-        parsedAwardsCategories,
-        exampleQuote,
-        quoteAuthor,
-        CHOICE_AWARDS_IMG_URL,
-        NEWS_IMG_URL, } = HOME_DATA;
+
+    const genresLinksList = () => {
+        const linksList = genresList.map(genre => (
+            {
+                name: genre.name,
+                urlPath: `genres/${genre.urlPath}`
+            }
+        ))
+        linksList.push({ name: "More genres", urlPath: "" })
+        return linksList;
+    }
+
 
     useEffect(() => {
         dispatch(editionsActions.getAll());
+        dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
     }, [dispatch])
 
     const discoverBooksList: DiscoverBooksItemProps[] = useMemo(() => (
@@ -52,7 +68,7 @@ export const HomeDesktop = () => {
     }, [editionsListStringified]) // eslint-disable-line
 
 
-    if (status === "loading") {
+    if (status === "loading" || genresStatus === "loading") {
         return (
             <div className="flex justify-center items-center h-96">
                 <p className="text-4xl font-semibold">Loading page...</p>
@@ -103,7 +119,7 @@ export const HomeDesktop = () => {
 
                             <HomeSearchBarDesktop />
 
-                            <LinksListDesktop list={genres} columns={4} className="leading-[1.5]" />
+                            <LinksListDesktop list={genresLinksList()} columns={4} className="leading-[1.5]" />
                         </div>
 
                         <div className="my-6">
@@ -122,7 +138,7 @@ export const HomeDesktop = () => {
                                 </div>
 
                                 <div className="w-1/3">
-                                    <LinksListDesktop list={quotesThemes} className="leading-[1.5]" />
+                                    <LinksListDesktop list={quotesThemesLinksList} className="leading-[1.5]" />
                                 </div>
                             </div>
                         </div>
@@ -135,7 +151,7 @@ export const HomeDesktop = () => {
                             </div>
 
                             <div className="flex flex-1">
-                                <LinksListDesktop list={parsedAwardsCategories} columns={2} className="mb-[0.8em]" />
+                                <LinksListDesktop list={awardsCategoriesLinksList} columns={2} className="mb-[0.8em]" />
                             </div>
                         </div>
 
