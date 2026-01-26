@@ -55,6 +55,24 @@ describe("Genre Actions", () => {
       expect(genresState.genresList).toEqual(fakeGenresList);
       expect(genresState.error).toBe("");
     });
+
+    it("query params passed, should return genres list when status is 200", async () => {
+      vi.mocked(axios.get).mockResolvedValueOnce({
+        status: 200,
+        data: fakeGenresList,
+      });
+
+      await dispatch(
+        actions.getAll({ limit: 10, page: 1, sortBy: "occurrence" })
+      );
+
+      const state = store.getState() as RootState;
+      const genresState = state.genres;
+
+      expect(genresState.status).toBe("idle");
+      expect(genresState.genresList).toEqual(fakeGenresList);
+      expect(genresState.error).toBe("");
+    });
   });
 
   describe("getById", () => {
