@@ -9,6 +9,7 @@ export interface GenreI {
   _id: string;
   name: string;
   description: string;
+  urlPath?: string;
 }
 
 export interface CharacterI {

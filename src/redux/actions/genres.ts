@@ -3,17 +3,30 @@ import axios from "axios";
 import { API_URL } from "../../helpers/env";
 import type { GenreI } from "../../data-structures";
 
-const getAll = createAsyncThunk("genres/getAll", async () => {
-  try {
-    const response = await axios.get(`${API_URL}/genres`);
-    return response.data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
+const getAll = createAsyncThunk(
+  "genres/getAll",
+  async ({
+    limit,
+    page,
+    sortBy,
+  }: {
+    limit?: number;
+    page?: number;
+    sortBy?: string;
+  }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/genres?limit=${limit}&page=${page}&sortBy=${sortBy}`
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to fetch genres");
     }
-    throw new Error("Failed to fetch genres");
   }
-});
+);
 
 const getById = createAsyncThunk("genres/getById", async (id) => {
   try {
