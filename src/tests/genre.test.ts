@@ -30,7 +30,7 @@ describe("Genre Actions", () => {
         new Error("Failed to fetch genres")
       );
 
-      await dispatch(actions.getAll());
+      await dispatch(actions.getAll({}));
 
       const state = store.getState() as RootState;
       const genresState = state.genres;
@@ -46,7 +46,7 @@ describe("Genre Actions", () => {
         data: fakeGenresList,
       });
 
-      await dispatch(actions.getAll());
+      await dispatch(actions.getAll({}));
 
       const state = store.getState() as RootState;
       const genresState = state.genres;
