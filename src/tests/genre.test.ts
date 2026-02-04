@@ -27,7 +27,7 @@ describe("Genre Actions", () => {
 
     it("should return empty genres list and set error message when status is not 200", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch genres")
+        new Error("Failed to fetch genres"),
       );
 
       await dispatch(actions.getAll({}));
@@ -47,7 +47,7 @@ describe("Genre Actions", () => {
       });
 
       await dispatch(
-        actions.getAll({ limit: 10, page: 1, sortBy: "occurrence" })
+        actions.getAll({ limit: 10, page: 1, sortBy: "occurrence" }),
       );
 
       const state = store.getState() as RootState;
@@ -77,7 +77,7 @@ describe("Genre Actions", () => {
 
     it("should throw error message when status is not 200 and set selecterGenre to null", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch genre")
+        new Error("Failed to fetch genre"),
       );
 
       await dispatch(actions.getById());
@@ -107,7 +107,7 @@ describe("Genre Actions", () => {
     });
   });
 
-  describe("getById", () => {
+  describe("Add", () => {
     let store: ReturnType<typeof configureStore>;
     let dispatch: AppDispatch;
 
@@ -125,7 +125,7 @@ describe("Genre Actions", () => {
 
     it("should throw error message when status is not 200 and set selecterGenre to null", async () => {
       vi.mocked(axios.post).mockRejectedValueOnce(
-        new Error("Failed to add genre")
+        new Error("Failed to add genre"),
       );
 
       await dispatch(actions.add(fakeGenre));
