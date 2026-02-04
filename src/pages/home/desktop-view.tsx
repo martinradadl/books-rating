@@ -10,7 +10,6 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import type { RootState } from "../../redux/store"
 import editionsActions from "../../redux/actions/editions"
 import { HOME_DATA } from "../../data/home"
-import genresActions from "../../redux/actions/genres"
 
 const {
     exampleQuote,
@@ -41,7 +40,6 @@ export const HomeDesktop = () => {
 
     useEffect(() => {
         dispatch(editionsActions.getAll());
-        dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
     }, [dispatch])
 
     const discoverBooksList: DiscoverBooksItemProps[] = useMemo(() => (

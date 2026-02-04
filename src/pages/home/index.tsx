@@ -1,15 +1,33 @@
+import { useDispatch } from "react-redux"
 import { HomeDesktop } from "./desktop-view"
 import { HomeMobile } from "./mobile-view"
+import { useEffect, useState } from "react"
+import genresActions from "../../redux/actions/genres"
+import type { AppDispatch } from "../../redux/store"
 
 export const Home = () => {
-    return (
-        <div>
-            <div className="lg:hidden">
-                <HomeMobile />
-            </div>
-            <div className="hidden lg:block">
-                <HomeDesktop />
-            </div>
-        </div>
-    )
+    const dispatch = useDispatch<AppDispatch>();
+    const [isDesktop, setIsDesktop] = useState(
+        window.innerWidth >= 1024
+    );
+
+    useEffect(() => {
+        const onResize = () => {
+            setIsDesktop(window.innerWidth >= 1024);
+        };
+
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+    }, []);
+
+    useEffect(() => {
+        dispatch(
+            genresActions.getAll({
+                limit: isDesktop ? 27 : 9,
+                sortBy: "occurrence",
+            })
+        );
+    }, [dispatch, isDesktop]);
+
+    return isDesktop ? <HomeDesktop /> : <HomeMobile />;
 }
