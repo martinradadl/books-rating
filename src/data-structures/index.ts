@@ -45,3 +45,12 @@ export interface EditionI {
   ASIN: string;
   language: string;
 }
+
+export interface BookListI {
+  _id: string;
+  title: string;
+  description?: string;
+  books?: EditionI[];
+  bookLists?: BookListI[];
+  urlPath?: string;
+}
