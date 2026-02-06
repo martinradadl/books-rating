@@ -117,7 +117,7 @@ export const BookEdition = () => {
 
         <div className="flex flex-col md:flex-2 lg:flex-3 flex-1 overflow-y-auto lg:pl-8">
           <div className="flex flex-col items-center md:items-start">
-            <p className="text-5xl font-semibold">{title}</p>
+            <p className="text-5xl font-semibold text-center">{title}</p>
 
             <p className="text-4xl cursor-pointer hover:underline focus:ring-3 focus:ring-offset-2 rounded" tabIndex={0}>
               {author?.name}

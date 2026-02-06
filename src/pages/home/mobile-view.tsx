@@ -1,6 +1,7 @@
 import type { RootState } from "../../redux/store";
 import { useEffect } from "react";
 import editionsActions from "../../redux/actions/editions";
+import bookListsActions from "../../redux/actions/book-lists";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { FaQuoteLeft } from "react-icons/fa"
 import { BooksCarousel } from "../../components/books-carousel";
@@ -9,29 +10,10 @@ import { ProfilePic } from "../../components/profile-pic";
 import { GooglePlayButton } from "../../components/buttons/google-play-button";
 import { HomeAuthContainerMobile } from "../../components/auth/home-auth-mobile";
 import { HomeSearchBarMobile } from "../../components/home/search-bar-mobile";
-import { LinksListMobile } from "../../components/home/links-list-mobile";
+import { LinksListMobileItem } from "../../components/home/links-list-mobile-item";
+import { useNavigate } from "react-router-dom";
 
 
-const mainLists = [
-    "Fiction book lists",
-    "Best audiobooks ever",
-    "Best children’s books",
-    "Best novels of all time",
-    "Romance book lists",
-    "See more lists"
-]
-const genres = [
-    "Fiction",
-    "Ebook",
-    "Comics",
-    "Christian",
-    "Cookbooks",
-    "Children's",
-    "Memoir",
-    "Young Adult",
-    "Nonfiction",
-    "More genres"
-]
 const quotesLists = [
     "Best quotes",
     "Love quotes",
@@ -48,15 +30,22 @@ const quotesLists = [
 const MOBILE_HOME_INTRO_IMG = "https://www.goodreads.com/assets/home/homepage_promos/reading_challenge_2026/HomepageMasthead_Mobile@2x.png"
 const MOBILE_CHOICE_AWARDS_IMG = "https://s.gr-assets.com/assets/award/2025/signed-out-hp/bottom-placement-mobile-f633ce2277b115cb3cc06838feac9e17.png"
 
+
 export const HomeMobile = () => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const { editionsList, status } = useAppSelector((state: RootState) => state.editions)
+    const { listOfBookLists, latestReleases, status: bookListsStatus } = useAppSelector((state: RootState) => state.bookLists)
+    const { genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres)
+
 
     useEffect(() => {
         dispatch(editionsActions.getAll());
+        dispatch(bookListsActions.getAll({}));
+        dispatch(bookListsActions.getLatestReleases({ limit: 8 }))
     }, [dispatch])
 
-    if (status === "loading") {
+    if (status === "loading" || bookListsStatus === "loading" || genresStatus === "loading") {
         return (
             <div className="flex justify-center items-center h-96">
                 <p className="text-4xl font-semibold">Loading page...</p>
@@ -84,32 +73,56 @@ export const HomeMobile = () => {
                 />
 
                 <BooksCarousel
-                    title={<p className="font-semibold my-2">NEW RELEASES THIS MONTH</p>}
-                    editionsList={editionsList}
+                    title={<p className="font-semibold my-2">LATEST RELEASES</p>}
+                    editionsList={latestReleases}
                     isHome
                 />
 
-                <BooksCarousel
-                    title={<p className="font-semibold my-2">LISTS</p>}
-                    editionsList={editionsList}
-                    isHome
-                />
+                <ul className="flex flex-wrap">
+                    {listOfBookLists.map((bookList, index) => {
+                        if (index === 0) {
+                            return (
+                                <div key={index}>
+                                    <BooksCarousel
+                                        title={<p className="font-semibold my-2">LISTS</p>}
+                                        editionsList={bookList.books || []}
+                                        isHome
+                                    />
 
-                <div className="flex place-content-between w-full cursor-pointer">
-                    <div className="flex flex-col">
-                        <p className="text-base">Best Books of the 20th Century</p>
-                        <p className="text-sm text-gray-400">7,807 books</p>
-                    </div>
-                    <div className="font-extrabold">
-                        <MdArrowForwardIos className="scale-120" size={16} />
-                    </div>
-                </div>
+                                    <div className="flex place-content-between w-full cursor-pointer mb-6"
+                                        onClick={() => navigate(`/list/${bookList.urlPath}`)}>
+                                        <div className="flex flex-col">
+                                            <p className="text-base">{bookList.title}</p>
+                                            <p className="text-sm text-gray-400">{bookList.books?.length} books</p>
+                                        </div>
+                                        <div className="font-extrabold">
+                                            <MdArrowForwardIos className="scale-120" size={16} />
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        }
 
-                <LinksListMobile list={mainLists} className="pt-6" />
+                        return <li key={index} className="w-1/2 flex">
+                            <LinksListMobileItem title={bookList.title} url={`genres/${bookList.urlPath}`} />
+                        </li>
+                    })
+                    }
+                </ul>
 
                 <p className="font-semibold my-2">GENRES</p>
 
-                <LinksListMobile list={genres} />
+                <ul className="flex flex-wrap">
+                    {genresList.map((genre, index) => (
+                        <li key={index} className="w-1/2 flex">
+                            <LinksListMobileItem title={genre.name} url={`genres/${genre.urlPath}`} />
+                        </li>
+                    ))}
+
+                    <li key="more" className="w-1/2 flex">
+                        <LinksListMobileItem title="More genres" url="genres/more" />
+                    </li>
+                </ul>
 
                 <p className="font-semibold my-2">QUOTES</p>
 
@@ -122,7 +135,13 @@ export const HomeMobile = () => {
                     </div>
                 </div>
 
-                <LinksListMobile list={quotesLists} />
+                <ul className="flex flex-wrap">
+                    {quotesLists.map((quotesList, index) => (
+                        <li key={index} className="w-1/2 flex">
+                            <LinksListMobileItem title={quotesList} url="" />
+                        </li>
+                    ))}
+                </ul>
 
                 <p className="uppercase text-sm font-semibold my-3">
                     Goodreads Choice Awards: The Best Books 2025
