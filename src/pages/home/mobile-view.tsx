@@ -41,7 +41,6 @@ export const HomeMobile = () => {
 
     useEffect(() => {
         dispatch(editionsActions.getAll());
-        dispatch(bookListsActions.getAll({}));
         dispatch(bookListsActions.getLatestReleases({ limit: 8 }))
     }, [dispatch])
 
@@ -104,7 +103,7 @@ export const HomeMobile = () => {
                         }
 
                         return <li key={index} className="w-1/2 flex">
-                            <LinksListMobileItem title={bookList.title} url={`genres/${bookList.urlPath}`} />
+                            <LinksListMobileItem title={bookList.title} url={`list/${bookList.urlPath}`} />
                         </li>
                     })
                     }
