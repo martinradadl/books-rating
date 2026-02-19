@@ -44,6 +44,8 @@ export interface EditionI {
   ISBN: string;
   ASIN: string;
   language: string;
+  ratingCount?: number;
+  averageRating?: number;
 }
 
 export interface BookListI {
