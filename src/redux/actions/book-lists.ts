@@ -27,7 +27,7 @@ const getById = createAsyncThunk("bookLists/getById", async (id) => {
     if (error instanceof Error) {
       throw new Error(error.message);
     }
-    throw new Error("Failed to fetch genre");
+    throw new Error("Failed to fetch book list");
   }
 });
 
@@ -43,7 +43,53 @@ const getLatestReleases = createAsyncThunk(
       if (error instanceof Error) {
         throw new Error(error.message);
       }
-      throw new Error("Failed to fetch genre");
+      throw new Error("Failed to fetch book list");
+    }
+  },
+);
+
+const getMostRatedBooks = createAsyncThunk(
+  "bookLists/getMostRatedBooks",
+  async ({
+    limit,
+    enableRecommendation,
+  }: {
+    limit?: number;
+    enableRecommendation?: boolean;
+  }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/book-lists/most-rated?limit=${limit}&&enableRecommendation=${enableRecommendation}`,
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to fetch book list");
+    }
+  },
+);
+
+const getBestRatedBooks = createAsyncThunk(
+  "bookLists/getBestRatedBooks",
+  async ({
+    limit,
+    enableRecommendation,
+  }: {
+    limit?: number;
+    enableRecommendation?: boolean;
+  }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/book-lists/best-rated?limit=${limit}&&enableRecommendation=${enableRecommendation}`,
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to fetch book list");
     }
   },
 );
@@ -52,6 +98,8 @@ const bookListsActions = {
   getAll,
   getById,
   getLatestReleases,
+  getMostRatedBooks,
+  getBestRatedBooks,
 };
 
 export default bookListsActions;
