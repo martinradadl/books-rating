@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react"
 import { HomeAuthContainerDesktop } from "../../components/auth/home-auth-desktop"
 import { HomeBackgroundImgDesktop } from "../../components/home/background-img-desktop"
-import { BooksListPreview } from "../../components/home/books-list-preview"
+import { BookListPreview } from "../../components/home/books-list-preview"
 import { DiscoverBooksList, type DiscoverBooksItemProps } from "../../components/home/discover-books-list"
 import { LinksListDesktop } from "../../components/home/links-list-desktop"
 import { HomeSearchBarDesktop } from "../../components/home/search-bar-desktop"
@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import type { RootState } from "../../redux/store"
 import editionsActions from "../../redux/actions/editions"
 import { HOME_DATA } from "../../data/home"
+import { useNavigate } from "react-router-dom"
 
 const {
     exampleQuote,
@@ -22,8 +23,10 @@ const {
 
 export const HomeDesktop = () => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const { editionsList, status } = useAppSelector((state: RootState) => state.editions)
     const { genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres)
+    const { listOfBookLists, status: bookListsStatus } = useAppSelector((state: RootState) => state.bookLists)
     const editionsListStringified = JSON.stringify(editionsList);
 
     const genresLinksList = () => {
@@ -66,7 +69,7 @@ export const HomeDesktop = () => {
     }, [editionsListStringified]) // eslint-disable-line
 
 
-    if (status === "loading" || genresStatus === "loading") {
+    if (status === "loading" || genresStatus === "loading" || bookListsStatus === "loading") {
         return (
             <div className="flex justify-center items-center h-96">
                 <p className="text-4xl font-semibold">Loading page...</p>
@@ -168,25 +171,16 @@ export const HomeDesktop = () => {
 
                         <p className="mt-6 mb-2.5 text-lg">Love lists?</p>
 
-                        <BooksListPreview
-                            title="Best Books of the 20th Century"
-                            booksCount={6789}
-                            votersCount={45678}
-                        />
+                        {listOfBookLists.map((list) => (
+                            <BookListPreview
+                                list={list}
+                                votersCount={45678}
+                                key={list.title}
+                            />
+                        ))}
 
-                        <BooksListPreview
-                            title="Best for Book Clubs"
-                            booksCount={6789}
-                            votersCount={45678}
-                        />
-
-                        <BooksListPreview
-                            title="Best Crime & Mystery Books"
-                            booksCount={6789}
-                            votersCount={45678}
-                        />
-
-                        <p className="my-[18px] text-sm text-[#00635d] cursor-pointer hover:underline">More book lists</p>
+                        <p className="my-[18px] text-sm text-[#00635d] cursor-pointer hover:underline"
+                            onClick={() => { navigate(`list/more`) }}>More book lists</p>
 
                         <p className="text-lg">
                             Are you an author or a publisher?
