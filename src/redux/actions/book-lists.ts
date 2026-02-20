@@ -52,14 +52,14 @@ const getMostRatedBooks = createAsyncThunk(
   "bookLists/getMostRatedBooks",
   async ({
     limit,
-    enableRecommendation,
+    enableSuggestion,
   }: {
     limit?: number;
-    enableRecommendation?: boolean;
+    enableSuggestion?: boolean;
   }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/book-lists/most-rated?limit=${limit}&&enableRecommendation=${enableRecommendation}`,
+        `${API_URL}/book-lists/most-rated?limit=${limit}&&enableSuggestion=${enableSuggestion}`,
       );
       return response.data;
     } catch (error: unknown) {
@@ -75,14 +75,14 @@ const getBestRatedBooks = createAsyncThunk(
   "bookLists/getBestRatedBooks",
   async ({
     limit,
-    enableRecommendation,
+    enableSuggestion,
   }: {
     limit?: number;
-    enableRecommendation?: boolean;
+    enableSuggestion?: boolean;
   }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/book-lists/best-rated?limit=${limit}&&enableRecommendation=${enableRecommendation}`,
+        `${API_URL}/book-lists/best-rated?limit=${limit}&&enableSuggestion=${enableSuggestion}`,
       );
       return response.data;
     } catch (error: unknown) {

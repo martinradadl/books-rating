@@ -9,6 +9,7 @@ import { ProfilePic } from "../../components/profile-pic"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import type { RootState } from "../../redux/store"
 import editionsActions from "../../redux/actions/editions"
+import bookListsActions from "../../redux/actions/book-lists"
 import { HOME_DATA } from "../../data/home"
 import { useNavigate } from "react-router-dom"
 
@@ -24,10 +25,10 @@ const {
 export const HomeDesktop = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { editionsList, status } = useAppSelector((state: RootState) => state.editions)
     const { genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres)
-    const { listOfBookLists, status: bookListsStatus } = useAppSelector((state: RootState) => state.bookLists)
-    const editionsListStringified = JSON.stringify(editionsList);
+    const { listOfBookLists, mostRatedBooks, bestRatedBooks, status: bookListsStatus } = useAppSelector((state: RootState) => state.bookLists)
+    const bestRatedBooksStringified = JSON.stringify(bestRatedBooks);
+    const mostRatedBooksStringified = JSON.stringify(mostRatedBooks);
 
     const genresLinksList = () => {
         const linksList = genresList.map(genre => (
@@ -43,21 +44,23 @@ export const HomeDesktop = () => {
 
     useEffect(() => {
         dispatch(editionsActions.getAll());
+        dispatch(bookListsActions.getBestRatedBooks({ enableSuggestion: true, limit: 4 }));
     }, [dispatch])
 
-    const discoverBooksList: DiscoverBooksItemProps[] = useMemo(() => (
-        editionsList.slice(0, 4).map(edition => ({
+
+    const discoverMostRatedBooks: DiscoverBooksItemProps[] = useMemo(() => (
+        mostRatedBooks.list.slice(0, 4).map(edition => ({
             img: edition.cover,
             id: edition._id
         }))
-    ), [editionsListStringified]) // eslint-disable-line
+    ), [mostRatedBooksStringified]) // eslint-disable-line
 
+    const mostRatedBooksSuggestion = useMemo(() => {
 
-    const discoverBooksMainSuggestion = useMemo(() => {
-        if (editionsList[4]) {
-            const mainSuggestion = editionsList[4];
-            const genresShown = Math.floor(Math.random() * 3) + 1;
-            const genres = mainSuggestion.book.relatedGenres.slice(0, genresShown).map(genre => genre.name).join(", ");
+        if (mostRatedBooks.suggestion) {
+            const mainSuggestion = mostRatedBooks.suggestion;
+            const totalGenresShown = Math.floor(Math.random() * 3) + 1;
+            const genres = mainSuggestion.book.relatedGenres.slice(0, totalGenresShown).map(genre => genre.name).join(", ");
 
             return {
                 img: mainSuggestion.cover,
@@ -66,7 +69,30 @@ export const HomeDesktop = () => {
             };
         }
         return { img: "", id: "", genres: "" }
-    }, [editionsListStringified]) // eslint-disable-line
+    }, [mostRatedBooksStringified]) // eslint-disable-line
+
+    const discoverBestRatedBooks: DiscoverBooksItemProps[] = useMemo(() => (
+        bestRatedBooks.list.slice(0, 4).map(edition => ({
+            img: edition.cover,
+            id: edition._id
+        }))
+    ), [bestRatedBooksStringified]) // eslint-disable-line
+
+    const bestRatedBooksSuggestion = useMemo(() => {
+
+        if (bestRatedBooks.suggestion) {
+            const mainSuggestion = bestRatedBooks.suggestion;
+            const totalGenresShown = Math.floor(Math.random() * 3) + 1;
+            const genres = mainSuggestion.book.relatedGenres.slice(0, totalGenresShown).map(genre => genre.name).join(", ");
+
+            return {
+                img: mainSuggestion.cover,
+                id: mainSuggestion._id,
+                genres
+            };
+        }
+        return { img: "", id: "", genres: "" }
+    }, [bestRatedBooksStringified]) // eslint-disable-line
 
 
     if (status === "loading" || genresStatus === "loading" || bookListsStatus === "loading") {
@@ -94,7 +120,7 @@ export const HomeDesktop = () => {
                                     Deciding what to read next?
                                 </p>
                                 <p className="text-sm my-[18px]">
-                                    You're in the right place. Tell us what titles or genres you've enjoyed in the past, and we'll give you surprisingly insightful recommendations.
+                                    You're in the right place. Tell us what titles or genres you've enjoyed in the past, and we'll give you surprisingly insightful suggestions.
                                 </p>
                             </div>
 
@@ -111,8 +137,8 @@ export const HomeDesktop = () => {
                         <div className="bg-[#f4f2e9] rounded pt-[15px] pb-5">
                             <p className="text-lg pl-[15px]">What will you discover?</p>
 
-                            <DiscoverBooksList title="Best Books List" list={discoverBooksList} mainSuggestion={discoverBooksMainSuggestion} />
-                            <DiscoverBooksList title="Best Books List" list={discoverBooksList} mainSuggestion={discoverBooksMainSuggestion} />
+                            <DiscoverBooksList title="Most Rated Books" list={discoverMostRatedBooks} mainSuggestion={mostRatedBooksSuggestion} />
+                            <DiscoverBooksList title="Best Rated Books" list={discoverBestRatedBooks} mainSuggestion={bestRatedBooksSuggestion} />
                         </div>
 
                         <div className="my-[25px] flex flex-col gap-3">

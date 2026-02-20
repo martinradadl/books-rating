@@ -6,8 +6,8 @@ interface BookListsState {
   listOfBookLists: BookListI[];
   selectedBookList: BookListI | null;
   latestReleases: EditionI[];
-  mostRatedBooks: { list: EditionI[]; recommendation: EditionI | null };
-  bestRatedBooks: { list: EditionI[]; recommendation: EditionI | null };
+  mostRatedBooks: { list: EditionI[]; suggestion: EditionI | null };
+  bestRatedBooks: { list: EditionI[]; suggestion: EditionI | null };
   status: string;
   error: string;
 }
@@ -16,8 +16,8 @@ const initialState: BookListsState = {
   listOfBookLists: [],
   selectedBookList: null,
   latestReleases: [],
-  mostRatedBooks: { list: [], recommendation: null },
-  bestRatedBooks: { list: [], recommendation: null },
+  mostRatedBooks: { list: [], suggestion: null },
+  bestRatedBooks: { list: [], suggestion: null },
   status: "idle",
   error: "",
 };
@@ -75,7 +75,7 @@ const bookListsSlice = createSlice({
         state.status = "idle";
         state.error =
           action.error.message || "Failed to fetch most rated books";
-        state.mostRatedBooks = { list: [], recommendation: null };
+        state.mostRatedBooks = { list: [], suggestion: null };
       })
       .addCase(actions.getBestRatedBooks.pending, (state) => {
         state.status = "loading";
@@ -88,7 +88,7 @@ const bookListsSlice = createSlice({
         state.status = "idle";
         state.error =
           action.error.message || "Failed to fetch best rated books";
-        state.bestRatedBooks = { list: [], recommendation: null };
+        state.bestRatedBooks = { list: [], suggestion: null };
       });
   },
 });

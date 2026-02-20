@@ -29,7 +29,7 @@ export const Home = () => {
             })
         );
         dispatch(bookListsActions.getAll({ limit: isDesktop ? 3 : 5 }));
-
+        dispatch(bookListsActions.getMostRatedBooks({ enableSuggestion: isDesktop, limit: isDesktop ? 4 : 10 }));
     }, [dispatch, isDesktop]);
 
     return isDesktop ? <HomeDesktop /> : <HomeMobile />;
