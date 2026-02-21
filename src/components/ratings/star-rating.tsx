@@ -40,7 +40,9 @@ export const StarRating: React.FC<StarRatingProps> = ({
   return (
     <div className="flex items-center space-x-1">
       {[...Array(5)].map((_, index) => {
-        const isFilled = (ratingDecimalPart > 0 ? index : index + 1) <= (interactive ? hoverRating : ratingIntegerPart);
+        const starScore = index + 1;
+        const currentRating = interactive ? hoverRating : Math.ceil(rating);
+        const isFilled = starScore <= currentRating;
 
         return (
           <div
@@ -60,7 +62,7 @@ export const StarRating: React.FC<StarRatingProps> = ({
                 )}
                 size={starsSize || 30}
                 style={
-                  ratingDecimalPart > 0 && (index === ratingIntegerPart)
+                  ratingDecimalPart > 0 && (starScore === ratingIntegerPart + 1)
                     ? { clipPath: `inset(0% ${100 - (ratingDecimalPart * 100)}% 0% 0%)` }
                     : undefined
                 }
