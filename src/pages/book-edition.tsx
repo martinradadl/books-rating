@@ -24,8 +24,6 @@ import { format } from 'date-fns';
 import { BookActions } from "../components/editions/book-actions";
 import { TotalRatingBar } from "../components/ratings/total-rating-bar";
 
-const rating = 4.2;
-const ratingsCount = 5234567;
 const reviewsCount = 123456;
 
 const currentlyReadingCount = 227534;
@@ -44,7 +42,7 @@ const ratings = [
 
 export const BookEdition = () => {
   const { selectedEdition, status, moreEditionsFromBook, relatedBooks, booksBySameAuthor } = useAppSelector((state: RootState) => state.editions)
-  const { title, book, description, pagesCount, format: editionFormat, published, ISBN, ASIN, language, cover } = selectedEdition || {};
+  const { title, book, description, pagesCount, format: editionFormat, published, ISBN, ASIN, language, cover, averageRating = 0, ratingCount = 0 } = selectedEdition || {};
   const { author, firstPublished, relatedGenres } = book || {};
 
   const formattedDate = (date: Date) => format(date, 'MMMM dd, yyyy')
@@ -117,7 +115,7 @@ export const BookEdition = () => {
 
         <div className="flex flex-col md:flex-2 lg:flex-3 flex-1 overflow-y-auto lg:pl-8">
           <div className="flex flex-col items-center md:items-start">
-            <p className="text-5xl font-semibold text-center">{title}</p>
+            <p className="text-5xl font-semibold text-center md:text-left">{title}</p>
 
             <p className="text-4xl cursor-pointer hover:underline focus:ring-3 focus:ring-offset-2 rounded" tabIndex={0}>
               {author?.name}
@@ -125,8 +123,8 @@ export const BookEdition = () => {
 
             <TotalRatingBar
               {...{
-                rating,
-                ratingsCount,
+                ratingCount,
+                averageRating,
                 reviewsCount,
                 className: 'cursor-pointer'
               }}
@@ -299,8 +297,8 @@ export const BookEdition = () => {
 
           <TotalRatingBar
             {...{
-              rating,
-              ratingsCount,
+              ratingCount,
+              averageRating,
               reviewsCount,
             }}
           />

@@ -1,5 +1,6 @@
+import classNames from "classnames";
 import { useState } from "react";
-import { FaStar, FaRegStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 
 type StarRatingProps = {
   rating?: number;
@@ -14,13 +15,12 @@ export const StarRating: React.FC<StarRatingProps> = ({
   onChange,
   starsSize,
 }) => {
-  const [selectedRating, setSelectedRating] = useState<number>(rating);
   const [hoverRating, setHoverRating] = useState<number>(0);
 
   const handleClick = (index: number) => {
     if (!interactive) return;
     const newRating = index + 1;
-    setSelectedRating(newRating);
+    setHoverRating(newRating);
     onChange?.(newRating);
   };
 
@@ -34,12 +34,15 @@ export const StarRating: React.FC<StarRatingProps> = ({
     setHoverRating(0);
   };
 
-  const displayedRating = interactive ? hoverRating || selectedRating : rating;
+  const ratingIntegerPart = Math.floor(rating);
+  const ratingDecimalPart = rating - ratingIntegerPart;
 
   return (
     <div className="flex items-center space-x-1">
       {[...Array(5)].map((_, index) => {
-        const isFilled = index < displayedRating;
+        const starScore = index + 1;
+        const currentRating = interactive ? hoverRating : Math.ceil(rating);
+        const isFilled = starScore <= currentRating;
 
         return (
           <div
@@ -50,19 +53,26 @@ export const StarRating: React.FC<StarRatingProps> = ({
             className={interactive ? "focus:ring-2 focus:ring-offset-3 rounded-full" : ""}
             tabIndex={0}
           >
-            {isFilled ? (
+            <div className="relative">
               <FaStar
-                className={`${interactive ? "cursor-pointer" : ""
-                  } text-yellow-500`}
+                className={classNames(
+                  "absolute left-0 top-0 text-yellow-500",
+                  { "cursor-pointer": interactive },
+                  { "hidden": !isFilled }
+                )}
                 size={starsSize || 30}
+                style={
+                  ratingDecimalPart > 0 && (starScore === ratingIntegerPart + 1)
+                    ? { clipPath: `inset(0% ${100 - (ratingDecimalPart * 100)}% 0% 0%)` }
+                    : undefined
+                }
               />
-            ) : (
-              <FaRegStar
+              <FaStar
                 className={`${interactive ? "cursor-pointer" : ""
                   } text-gray-400`}
                 size={starsSize || 30}
               />
-            )}
+            </div>
           </div>
         );
       })}

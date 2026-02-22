@@ -34,14 +34,13 @@ const MOBILE_CHOICE_AWARDS_IMG = "https://s.gr-assets.com/assets/award/2025/sign
 export const HomeMobile = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { editionsList, status } = useAppSelector((state: RootState) => state.editions)
-    const { listOfBookLists, latestReleases, status: bookListsStatus } = useAppSelector((state: RootState) => state.bookLists)
+    const { status } = useAppSelector((state: RootState) => state.editions)
+    const { listOfBookLists, latestReleases, mostRatedBooks, status: bookListsStatus } = useAppSelector((state: RootState) => state.bookLists)
     const { genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres)
 
 
     useEffect(() => {
         dispatch(editionsActions.getAll());
-        dispatch(bookListsActions.getAll({}));
         dispatch(bookListsActions.getLatestReleases({ limit: 8 }))
     }, [dispatch])
 
@@ -67,8 +66,8 @@ export const HomeMobile = () => {
                 </div>
 
                 <BooksCarousel
-                    title={<p className="font-semibold mb-2">MOST READ THIS WEEK</p>}
-                    editionsList={editionsList}
+                    title={<p className="font-semibold mb-2">MOST RATED BOOKS</p>}
+                    editionsList={mostRatedBooks.list}
                     isHome
                 />
 
@@ -104,7 +103,7 @@ export const HomeMobile = () => {
                         }
 
                         return <li key={index} className="w-1/2 flex">
-                            <LinksListMobileItem title={bookList.title} url={`genres/${bookList.urlPath}`} />
+                            <LinksListMobileItem title={bookList.title} url={`list/${bookList.urlPath}`} />
                         </li>
                     })
                     }

@@ -144,7 +144,10 @@ export const BooksCarousel = ({ showAllLabel, isMoreEditions, isBooksBySameAutho
                                                     className='text-yellow-500'
                                                     size={14}
                                                 />
-                                                <p className="text-sm font-bold pl-1">4.26</p>
+                                                <div className="flex">
+                                                    <p className="text-sm font-bold pl-1">{edition.averageRating?.toFixed(2)}</p>
+                                                    <LabelText text={`\u00A0· ${edition.ratingCount}`} />
+                                                </div>
                                             </div>
                                         </div>
                                     )}
