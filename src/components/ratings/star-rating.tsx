@@ -1,28 +1,54 @@
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
+import ConfirmModal from "../modals/confirm-modal";
+import ratingsActions from "../../redux/actions/ratings";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import type { RootState } from "../../redux/store";
+
 
 type StarRatingProps = {
   rating?: number;
   interactive?: boolean;
-  onChange?: (rating: number) => void;
+  userRating?: number;
+  setUserRating?: React.Dispatch<React.SetStateAction<number>>;
   starsSize?: number;
 };
 
 export const StarRating: React.FC<StarRatingProps> = ({
   rating = 0,
   interactive = false,
-  onChange,
+  userRating,
+  setUserRating,
   starsSize,
 }) => {
   const [hoverRating, setHoverRating] = useState<number>(0);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [newUserRating, setNewUserRating] = useState(0);
+  const { selectedEdition } = useAppSelector((state: RootState) => state.editions);
+  const dispatch = useAppDispatch();
+
 
   const handleClick = (index: number) => {
     if (!interactive) return;
-    const newRating = index + 1;
-    setHoverRating(newRating);
-    onChange?.(newRating);
+    setNewUserRating(index + 1);
+    setHoverRating(newUserRating);
+    setIsConfirmModalOpen(true);
   };
+
+  const handleConfirmNewUserRating = () => {
+    dispatch(ratingsActions.add({ book: selectedEdition?.book._id || "", score: newUserRating }))
+    setUserRating?.(newUserRating);
+    setIsConfirmModalOpen(false);
+  }
+
+  const handleCancelNewUserRating = () => {
+    setIsConfirmModalOpen(false);
+    setHoverRating(0)
+  }
+
+  useEffect(() => {
+  }, [isConfirmModalOpen])
 
   const handleMouseEnter = (index: number) => {
     if (!interactive) return;
@@ -41,7 +67,7 @@ export const StarRating: React.FC<StarRatingProps> = ({
     <div className="flex items-center space-x-1">
       {[...Array(5)].map((_, index) => {
         const starScore = index + 1;
-        const currentRating = interactive ? hoverRating : Math.ceil(rating);
+        const currentRating = interactive ? (hoverRating > 0 ? hoverRating : userRating || 0) : Math.ceil(rating);
         const isFilled = starScore <= currentRating;
 
         return (
@@ -73,6 +99,7 @@ export const StarRating: React.FC<StarRatingProps> = ({
                 size={starsSize || 30}
               />
             </div>
+            <ConfirmModal isOpen={isConfirmModalOpen} title="Confirm new rating" onConfirm={handleConfirmNewUserRating} onCancel={handleCancelNewUserRating} />
           </div>
         );
       })}
