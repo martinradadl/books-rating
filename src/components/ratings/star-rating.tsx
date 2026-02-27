@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import ConfirmModal from "../modals/confirm-modal";
 import ratingsActions from "../../redux/actions/ratings";
@@ -47,9 +47,6 @@ export const StarRating: React.FC<StarRatingProps> = ({
     setHoverRating(0)
   }
 
-  useEffect(() => {
-  }, [isConfirmModalOpen])
-
   const handleMouseEnter = (index: number) => {
     if (!interactive) return;
     setHoverRating(index + 1);
@@ -62,12 +59,12 @@ export const StarRating: React.FC<StarRatingProps> = ({
 
   const ratingIntegerPart = Math.floor(rating);
   const ratingDecimalPart = rating - ratingIntegerPart;
+  const currentRating = interactive ? (hoverRating > 0 ? hoverRating : userRating || 0) : Math.ceil(rating);
 
   return (
     <div className="flex items-center space-x-1">
       {[...Array(5)].map((_, index) => {
         const starScore = index + 1;
-        const currentRating = interactive ? (hoverRating > 0 ? hoverRating : userRating || 0) : Math.ceil(rating);
         const isFilled = starScore <= currentRating;
 
         return (
