@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { formatNumberShort } from "../../helpers/utils"
+import { formatNumberShort, numberToLocaleString } from "../../helpers/utils"
 import { LabelText } from "../label-text"
 import { StarRating } from "../ratings/star-rating"
 import { ExpandableContent } from "../expandable-content"
@@ -72,11 +72,11 @@ I read Fahrenheit 451 over ten years ago in my early teens. At the time, I remem
 
                 <div className="flex mt-2">
                     <p className="font-semibold text-gray-600 cursor-pointer hover:underline focus:ring-2 rounded" tabIndex={0}>
-                        {likesCount.toLocaleString()} likes
+                        {numberToLocaleString(likesCount)} likes
                     </p>
                     <p className="mx-2"> - </p>
                     <p className="font-semibold text-gray-600 cursor-pointer hover:underline focus:ring-2 rounded" tabIndex={0}>
-                        {commentsCount.toLocaleString()} comments
+                        {numberToLocaleString(commentsCount)} comments
                     </p>
                 </div>
 

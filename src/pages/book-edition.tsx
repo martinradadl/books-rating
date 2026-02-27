@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { StarRating } from "../components/ratings/star-rating";
 import { MdMenuBook } from "react-icons/md";
-import { formatNumberShort } from "../helpers/utils";
+import { formatNumberShort, numberToLocaleString } from "../helpers/utils";
 import { LabelText } from "../components/label-text";
 import { ExpandableContent } from "../components/expandable-content";
 import { BooksCarousel } from "../components/books-carousel";
@@ -32,14 +32,6 @@ const wantToReadCount = 2859419;
 const authorBooksCount = 1657;
 const authorFollowersCount = 49622;
 
-const ratings = [
-  { stars: 5, count: 2508803 },
-  { stars: 4, count: 1744045 },
-  { stars: 3, count: 744695 },
-  { stars: 2, count: 196673 },
-  { stars: 1, count: 104662 }
-];
-
 export const BookEdition = () => {
   const { selectedEdition, status, moreEditionsFromBook, relatedBooks, booksBySameAuthor } = useAppSelector((state: RootState) => state.editions)
   const { title, book, description, pagesCount, format: editionFormat, published, ISBN, ASIN, language, cover, averageRating = 0, ratingCount = 0 } = selectedEdition || {};
@@ -64,13 +56,14 @@ export const BookEdition = () => {
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showFullAuthorDescription, setShowFullAuthorDescription] = useState(false);
+  const [userRating, setUserRating] = useState(0);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     return () => {
       dispatch(editionsActions.cleanUp());
     }
-  }, [dispatch, params.id])
+  }, [dispatch])
 
   useEffect(() => {
     if (params.id) {
@@ -86,13 +79,8 @@ export const BookEdition = () => {
 
   useEffect(() => {
     if (selectedEdition?.book.author._id && selectedEdition?.book._id) {
-      dispatch(editionsActions.getBooksBySameAuthor({ authorId: selectedEdition?.book.author._id, bookId: selectedEdition?.book._id }));
-    }
-  }, [dispatch, selectedEdition?.book._id, selectedEdition?.book.author._id]);
-
-  useEffect(() => {
-    if (selectedEdition?.book.author._id && selectedEdition?.book._id) {
       dispatch(editionsActions.getRelatedBooks({ authorId: selectedEdition?.book.author._id, bookId: selectedEdition?.book._id }));
+      dispatch(editionsActions.getBooksBySameAuthor({ authorId: selectedEdition?.book.author._id, bookId: selectedEdition?.book._id }));
     }
   }, [dispatch, selectedEdition?.book._id, selectedEdition?.book.author._id]);
 
@@ -110,7 +98,7 @@ export const BookEdition = () => {
         <div className="w-full md:flex-1 md:sticky md:top-26 self-start flex flex-col gap-4 items-center">
           <BookCover className="w-48 xl:w-7/10" image={cover || ""} />
 
-          <BookActions />
+          <BookActions userRating={userRating} setUserRating={setUserRating} />
         </div>
 
         <div className="flex flex-col md:flex-2 lg:flex-3 flex-1 overflow-y-auto lg:pl-8">
@@ -283,7 +271,7 @@ export const BookEdition = () => {
 
             <div className="flex gap-6 items-center">
               <div className="flex flex-col items-center gap-2">
-                <StarRating interactive />
+                <StarRating interactive userRating={userRating} setUserRating={setUserRating} />
                 <LabelText text="Rate this book" className="cursor-pointer" />
               </div>
 
@@ -303,11 +291,11 @@ export const BookEdition = () => {
             }}
           />
 
-          <RatingDistribution ratings={ratings} />
+          <RatingDistribution bookId={book?._id || ""} />
 
           <SearchReviewBar />
 
-          <LabelText text={`Displaying 1 - 20 of ${reviewsCount.toLocaleString()} reviews`} />
+          <LabelText text={`Displaying 1 - 20 of ${numberToLocaleString(reviewsCount)} reviews`} />
 
           <Review />
 

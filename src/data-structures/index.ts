@@ -56,3 +56,9 @@ export interface BookListI {
   bookLists?: BookListI[];
   urlPath?: string;
 }
+
+export interface RatingI {
+  _id?: string;
+  book: string;
+  score: number;
+}

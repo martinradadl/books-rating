@@ -27,7 +27,7 @@ describe("Setting Actions", () => {
 
     it("should return empty settings list and set error message when status is not 200", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch settings")
+        new Error("Failed to fetch settings"),
       );
 
       await dispatch(actions.getAll());
@@ -75,7 +75,7 @@ describe("Setting Actions", () => {
 
     it("should throw error message when status is not 200 and set selecterSetting to null", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch setting")
+        new Error("Failed to fetch setting"),
       );
 
       await dispatch(actions.getById());
@@ -105,7 +105,7 @@ describe("Setting Actions", () => {
     });
   });
 
-  describe("getById", () => {
+  describe("add", () => {
     let store: ReturnType<typeof configureStore>;
     let dispatch: AppDispatch;
 
@@ -123,7 +123,7 @@ describe("Setting Actions", () => {
 
     it("should throw error message when status is not 200 and set selecterSetting to null", async () => {
       vi.mocked(axios.post).mockRejectedValueOnce(
-        new Error("Failed to add setting")
+        new Error("Failed to add setting"),
       );
 
       await dispatch(actions.add(fakeSetting));

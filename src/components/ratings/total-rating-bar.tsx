@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { StarRating } from "./star-rating";
 import { LabelText } from "../label-text";
+import { numberToLocaleString } from "../../helpers/utils";
 
 type TotalRatingBarProps = {
   averageRating: number;
@@ -25,9 +26,9 @@ export const TotalRatingBar = ({
       </div>
 
       <div className="flex gap-2">
-        <LabelText text={`${ratingCount.toLocaleString("en-US")} ratings`} />
+        <LabelText text={`${numberToLocaleString(ratingCount, "en-US")} ratings`} />
         <LabelText text={"·"} />
-        <LabelText text={`${reviewsCount.toLocaleString("en-US")} reviews`} />
+        <LabelText text={`${numberToLocaleString(reviewsCount, "en-US")} reviews`} />
       </div>
     </div>
   );

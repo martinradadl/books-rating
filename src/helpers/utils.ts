@@ -7,3 +7,7 @@ export const formatNumberShort = (n: number) => {
   }
   return n.toString();
 };
+
+export const numberToLocaleString = (number: number, params?: string) => {
+  return number.toLocaleString(params);
+};
