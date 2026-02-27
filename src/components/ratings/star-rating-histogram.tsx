@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import type { RootState } from "../../redux/store";
 import { LabelText } from "../label-text";
 import ratingsActions from "../../redux/actions/ratings";
+import { numberToLocaleString } from "../../helpers/utils";
 
 interface RatingDistributionProps {
   bookId: string;
@@ -13,7 +14,9 @@ export const RatingDistribution = ({ bookId }: RatingDistributionProps) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(ratingsActions.getRatingDistributionByScore(bookId))
+    if (bookId) {
+      dispatch(ratingsActions.getRatingDistributionByScore(bookId))
+    }
   }, [dispatch, bookId])
 
   return (
@@ -38,7 +41,7 @@ export const RatingDistribution = ({ bookId }: RatingDistributionProps) => {
             </div>
 
             <div className="w-32 text-left text-gray-700 group-hover:underline">
-              <LabelText text={`${distribution[score].toLocaleString()} (${Math.round(percent)}%)`} />
+              <LabelText text={`${numberToLocaleString(distribution[score])} (${Math.round(percent)}%)`} />
             </div>
           </div>
         );
