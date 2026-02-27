@@ -5,9 +5,11 @@ import { LabelText } from "../label-text";
 
 type BookActionsProps = {
     showOnMobileView?: boolean;
+    userRating?: number;
+    setUserRating?: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export const BookActions = ({ showOnMobileView }: BookActionsProps) => {
+export const BookActions = ({ showOnMobileView, userRating, setUserRating }: BookActionsProps) => {
     const dynamicStyles = showOnMobileView ? 'md:hidden flex' : 'hidden md:flex ';
 
     return <div className={classNames("flex-col gap-4 items-center pb-4 w-full max-w-[260px] m-auto", dynamicStyles)}>
@@ -20,7 +22,7 @@ export const BookActions = ({ showOnMobileView }: BookActionsProps) => {
             </button>
         </div>
 
-        <StarRating interactive />
+        <StarRating interactive userRating={userRating} setUserRating={setUserRating} />
         <LabelText text="Rate this book" className="cursor-pointer" />
     </div>
 }
