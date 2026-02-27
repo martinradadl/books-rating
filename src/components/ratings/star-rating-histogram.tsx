@@ -1,26 +1,31 @@
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import type { RootState } from "../../redux/store";
 import { LabelText } from "../label-text";
-
-interface Rating {
-  stars: number;
-  count: number;
-}
+import ratingsActions from "../../redux/actions/ratings";
 
 interface RatingDistributionProps {
-  ratings: Rating[];
+  bookId: string;
 }
 
-export const RatingDistribution = ({ ratings }: RatingDistributionProps) => {
-  const total = ratings.reduce((sum, rating) => sum + rating.count, 0);
+export const RatingDistribution = ({ bookId }: RatingDistributionProps) => {
+  const { distribution } = useAppSelector((state: RootState) => state.ratings)
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(ratingsActions.getRatingDistributionByScore(bookId))
+  }, [dispatch, bookId])
 
   return (
     <div className="w-full max-w-xl space-y-4">
-      {ratings.map((rating) => {
-        const percent = ((rating.count / total) * 100);
+      {[5, 4, 3, 2, 1].map((score) => {
+        const ratingCount = distribution[score];
+        const percent = ((ratingCount / distribution.total) * 100);
 
         return (
-          <div key={rating.stars} className="flex items-center cursor-pointer my-4 group focus:ring-3 focus:ring-offset-3 rounded-full" tabIndex={0}>
+          <div key={score} className="flex items-center cursor-pointer my-4 group focus:ring-3 focus:ring-offset-3 rounded-full" tabIndex={0}>
             <div className="w-16 underline text-base font-bold">
-              {rating.stars} {rating.stars === 1 ? "star" : "stars"}
+              {score} {score === 1 ? "star" : "stars"}
             </div>
 
             <div className="flex-1 px-1 py-3 rounded-full group-hover:bg-gray-300">
@@ -33,7 +38,7 @@ export const RatingDistribution = ({ ratings }: RatingDistributionProps) => {
             </div>
 
             <div className="w-32 text-left text-gray-700 group-hover:underline">
-              <LabelText text={`${rating.count.toLocaleString()} (${Math.round(percent)}%)`} />
+              <LabelText text={`${distribution[score].toLocaleString()} (${Math.round(percent)}%)`} />
             </div>
           </div>
         );
