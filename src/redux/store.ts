@@ -6,6 +6,7 @@ import settingsReducer from "./reducers/settings";
 import booksReducer from "./reducers/books";
 import editionsReducer from "./reducers/editions";
 import bookListsReducer from "./reducers/book-list";
+import RatingsReducer from "./reducers/ratings";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     books: booksReducer,
     editions: editionsReducer,
     bookLists: bookListsReducer,
+    ratings: RatingsReducer,
   },
 });
 
