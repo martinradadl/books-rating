@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { StarRating } from "../components/ratings/star-rating";
 import { MdMenuBook } from "react-icons/md";
-import { formatNumberShort } from "../helpers/utils";
+import { formatNumberShort, numberToLocaleString } from "../helpers/utils";
 import { LabelText } from "../components/label-text";
 import { ExpandableContent } from "../components/expandable-content";
 import { BooksCarousel } from "../components/books-carousel";
@@ -295,7 +295,7 @@ export const BookEdition = () => {
 
           <SearchReviewBar />
 
-          <LabelText text={`Displaying 1 - 20 of ${reviewsCount.toLocaleString()} reviews`} />
+          <LabelText text={`Displaying 1 - 20 of ${numberToLocaleString(reviewsCount)} reviews`} />
 
           <Review />
 
