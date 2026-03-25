@@ -79,7 +79,7 @@ describe("Book List Actions", () => {
         new Error("Failed to fetch bookList"),
       );
 
-      await dispatch(actions.getById());
+      await dispatch(actions.getByTitle({ titleUrl: "fake-title" }));
 
       const state = store.getState() as RootState;
       const bookListsState = state.bookLists;
@@ -95,7 +95,7 @@ describe("Book List Actions", () => {
         data: fakeBookList,
       });
 
-      await dispatch(actions.getById());
+      await dispatch(actions.getByTitle({ titleUrl: "fake-title" }));
 
       const state = store.getState() as RootState;
       const bookListsState = state.bookLists;

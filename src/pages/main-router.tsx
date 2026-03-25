@@ -10,7 +10,7 @@ export const MainRouter = () => {
             <Route path="/" element={<Home />} />
             <Route path="/edition/:id" element={<BookEdition />} />
             <Route path="/genres/:name" element={<Genre />} />
-            <Route path="/list/:name" element={<BookList />} />
+            <Route path="/list/:title" element={<BookList />} />
         </Routes>
     )
 }

@@ -40,14 +40,14 @@ const bookListsSlice = createSlice({
         state.error = action.error.message || "Failed to fetch book lists";
         state.listOfBookLists = [];
       })
-      .addCase(actions.getById.pending, (state) => {
+      .addCase(actions.getByTitle.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(actions.getById.fulfilled, (state, action) => {
+      .addCase(actions.getByTitle.fulfilled, (state, action) => {
         state.status = "idle";
         state.selectedBookList = action.payload;
       })
-      .addCase(actions.getById.rejected, (state, action) => {
+      .addCase(actions.getByTitle.rejected, (state, action) => {
         state.status = "idle";
         state.error = action.error.message || "Failed to fetch book list";
         state.selectedBookList = null;
