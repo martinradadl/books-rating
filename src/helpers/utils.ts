@@ -11,3 +11,6 @@ export const formatNumberShort = (n: number) => {
 export const numberToLocaleString = (number: number, params?: string) => {
   return number.toLocaleString(params);
 };
+
+export const sequentialRange = (start: number, end: number) =>
+  Array.from({ length: end - start + 1 }, (_, i) => start + i);

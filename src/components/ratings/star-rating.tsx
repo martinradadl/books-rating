@@ -13,6 +13,7 @@ type StarRatingProps = {
   userRating?: number;
   setUserRating?: React.Dispatch<React.SetStateAction<number>>;
   starsSize?: number;
+  isSmall?: boolean;
 };
 
 export const StarRating: React.FC<StarRatingProps> = ({
@@ -21,6 +22,7 @@ export const StarRating: React.FC<StarRatingProps> = ({
   userRating,
   setUserRating,
   starsSize,
+  isSmall
 }) => {
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -62,7 +64,7 @@ export const StarRating: React.FC<StarRatingProps> = ({
   const currentRating = interactive ? (hoverRating > 0 ? hoverRating : userRating || 0) : Math.ceil(rating);
 
   return (
-    <div className="flex items-center space-x-1">
+    <div className={classNames("flex items-center", isSmall ? "space-x-0.5" : "space-x-1")}>
       {[...Array(5)].map((_, index) => {
         const starScore = index + 1;
         const isFilled = starScore <= currentRating;
