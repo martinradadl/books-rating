@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { BookListItem } from "../components/book-lists/item";
 import { HOME_DATA } from "../data/home";
 import { sequentialRange } from "../helpers/utils";
@@ -7,6 +7,9 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import type { RootState } from "../redux/store";
 import { useParams } from "react-router-dom";
 import bookListsActions from "../redux/actions/book-lists";
+import debounce from "lodash.debounce";
+import { FaSpinner } from "react-icons/fa";
+import { BookListItemSkeleton } from "../components/book-lists/item-skeleton";
 
 const {
     NEWS_IMG_URL,
@@ -14,22 +17,21 @@ const {
 
 const showFilters = true;
 const decades = [1960, 1970, 1980, 1990, 2000, 2010, 2020];
-const pageLimit = 3;
+const pageLimit = 2;
 
 export const BookList = () => {
-    const [currentPage, setCurrentPage] = useState(1);
     const dispatch = useAppDispatch();
     const params = useParams();
-    const { selectedBookList } = useAppSelector(((state: RootState) => state.bookLists));
+    const { selectedBookList, status } = useAppSelector(((state: RootState) => state.bookLists));
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [isRequestingNextPage, setIsRequestingNextPage] = useState(false);
+    const [isViewportSwitching, setIsViewportSwitching] = useState(false);
+    const [loadSkeleton, setLoadSkeleton] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
     const booksCount = selectedBookList?.booksCount || 0;
     const totalPages = Math.ceil(booksCount / pageLimit);
-
-    useEffect(() => {
-        if (params.title) {
-            dispatch(bookListsActions.getByTitle({ titleUrl: params.title, limit: pageLimit, page: currentPage }))
-        }
-    }, [dispatch, params.title, currentPage])
 
     const pagesShown = useCallback(({
         basePagesCount = 6,
@@ -79,13 +81,77 @@ export const BookList = () => {
     const handlePreviousPage = () => {
         if (currentPage > 1) {
             setCurrentPage((prev) => prev - 1)
+            if (!isMobile) {
+                setLoadSkeleton(true);
+            }
         }
     }
 
     const handleNextPage = () => {
         if (currentPage < totalPages) {
+            setIsRequestingNextPage(true);
             setCurrentPage((prev) => prev + 1)
+            if (!isMobile) {
+                setLoadSkeleton(true);
+            }
         }
+    }
+
+    const handleChangePage = (page: number) => {
+        setCurrentPage(page);
+        if (!isMobile) {
+            setLoadSkeleton(true);
+        }
+    }
+
+    const debouncedGetByTitle = useMemo(
+        () => (
+            debounce((args) => {
+                dispatch(bookListsActions.getByTitle(args))
+            }, 500)
+        )
+        , [dispatch])
+
+    useEffect(() => {
+        const resizeListener = () => {
+            setIsMobile(window.innerWidth < 1024);
+        };
+
+        const debouncedResizeListener = debounce(resizeListener, 100);
+
+        window.addEventListener('resize', debouncedResizeListener);
+
+        return () => {
+            window.removeEventListener('resize', debouncedResizeListener);
+        };
+    }, []);
+
+    useEffect(() => {
+        setIsViewportSwitching(true);
+        setCurrentPage(1);
+    }, [isMobile])
+
+
+    useEffect(() => {
+        if (params.title) {
+            debouncedGetByTitle({ titleUrl: params.title, limit: pageLimit, page: currentPage, isMobile })
+        }
+    }, [dispatch, params.title, currentPage, isMobile, debouncedGetByTitle])
+
+    useEffect(() => {
+        if (status !== "loading") {
+            setIsRequestingNextPage(false);
+            setIsViewportSwitching(false);
+            setLoadSkeleton(false);
+        }
+    }, [status]);
+
+    if (status === "loading" && !selectedBookList) {
+        return (
+            <div className="flex justify-center items-center min-h-[500px]">
+                <FaSpinner size={20} className="animate-spin" />
+            </div>
+        )
     }
 
     return <div className="flex justify-center mt-5">
@@ -117,9 +183,19 @@ export const BookList = () => {
                 </div>
             </div>
 
-            {selectedBookList?.books?.map((item, index) => (
-                <BookListItem index={(currentPage - 1) * pageLimit + index + 1} item={item} />
-            ))}
+            {isViewportSwitching ?
+                <div className="flex justify-center items-center min-h-[500px]">
+                    <FaSpinner size={20} className="animate-spin" />
+                </div>
+                :
+                selectedBookList?.books?.map((item, index) => (
+
+                    loadSkeleton ?
+                        <BookListItemSkeleton />
+                        :
+                        <BookListItem key={index} index={(isMobile ? 0 : (currentPage - 1) * pageLimit) + index + 1} item={item} />
+                ))
+            }
 
             <div className="hidden lg:block py-2.5 border-t border-[#CCCCCC]">
                 <div className="flex text-xs gap-1">
@@ -136,7 +212,7 @@ export const BookList = () => {
                                 className={classNames({
                                     "text-[#00635d] cursor-pointer hover:underline": currentPage !== page,
                                 })}
-                                onClick={() => setCurrentPage(page)}
+                                onClick={() => handleChangePage(page)}
                             >
                                 {page}
                             </p>
@@ -152,8 +228,12 @@ export const BookList = () => {
             </div>
 
             <div className="p-2.5 lg:hidden">
-                <button className="w-full text-sm flex justify-center items-center bg-[#F4F1EA] border border-[#D6D0C4] rounded py-2 px-3 cursor-pointer hover:underline">
-                    Load More
+                <button className={classNames("w-full text-sm flex justify-center items-center bg-[#F4F1EA] border border-[#D6D0C4] rounded py-2 px-3 cursor-pointer hover:underline",
+                    { "hidden": currentPage >= totalPages && status !== "loading" && !isRequestingNextPage }
+                )}
+                    onClick={handleNextPage}>
+                    {status === "loading" ?
+                        <FaSpinner size={20} className="animate-spin" /> : "Load More"}
                 </button>
             </div>
         </div>
