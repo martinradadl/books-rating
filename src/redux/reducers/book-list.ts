@@ -46,15 +46,17 @@ const bookListsSlice = createSlice({
       .addCase(actions.getByTitle.fulfilled, (state, action) => {
         state.status = "idle";
 
+        const updatedBooksMobile = [
+          ...(action.payload.isFirstPage
+            ? []
+            : state.selectedBookList?.books || []),
+          ...action.payload.data.books,
+        ];
+
         const updatedSelectedBooklist = action?.payload?.isMobile
           ? {
               ...action.payload.data,
-              books: [
-                ...(action.payload.isFirstPage
-                  ? []
-                  : state.selectedBookList?.books || []),
-                ...action.payload.data.books,
-              ],
+              books: updatedBooksMobile,
             }
           : action?.payload?.data;
 
