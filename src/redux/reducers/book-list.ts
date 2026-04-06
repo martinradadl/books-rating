@@ -18,7 +18,7 @@ const initialState: BookListsState = {
   latestReleases: [],
   mostRatedBooks: { list: [], suggestion: null },
   bestRatedBooks: { list: [], suggestion: null },
-  status: "idle",
+  status: "loading",
   error: "",
 };
 
@@ -40,14 +40,29 @@ const bookListsSlice = createSlice({
         state.error = action.error.message || "Failed to fetch book lists";
         state.listOfBookLists = [];
       })
-      .addCase(actions.getById.pending, (state) => {
+      .addCase(actions.getByTitle.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(actions.getById.fulfilled, (state, action) => {
+      .addCase(actions.getByTitle.fulfilled, (state, action) => {
         state.status = "idle";
-        state.selectedBookList = action.payload;
+
+        const updatedBooksMobile = [
+          ...(action.payload.isFirstPage
+            ? []
+            : state.selectedBookList?.books || []),
+          ...action.payload.data.books,
+        ];
+
+        const updatedSelectedBooklist = action?.payload?.isMobile
+          ? {
+              ...action.payload.data,
+              books: updatedBooksMobile,
+            }
+          : action?.payload?.data;
+
+        state.selectedBookList = updatedSelectedBooklist;
       })
-      .addCase(actions.getById.rejected, (state, action) => {
+      .addCase(actions.getByTitle.rejected, (state, action) => {
         state.status = "idle";
         state.error = action.error.message || "Failed to fetch book list";
         state.selectedBookList = null;

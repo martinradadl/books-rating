@@ -19,17 +19,33 @@ const getAll = createAsyncThunk(
   },
 );
 
-const getById = createAsyncThunk("bookLists/getById", async (id) => {
-  try {
-    const response = await axios.get(`${API_URL}/book-lists/${id}`);
-    return response.data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
+const getByTitle = createAsyncThunk(
+  "bookLists/getByTitle",
+  async ({
+    titleUrl,
+    limit,
+    page,
+    isMobile,
+  }: {
+    titleUrl: string;
+    limit?: number;
+    page?: number;
+    isMobile?: boolean;
+  }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/book-lists/${titleUrl}?limit=${limit}&page=${page}`,
+      );
+
+      return { data: response.data, isMobile, isFirstPage: page === 1 };
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to fetch book list");
     }
-    throw new Error("Failed to fetch book list");
-  }
-});
+  },
+);
 
 const getLatestReleases = createAsyncThunk(
   "bookLists/getLatestReleases",
@@ -96,7 +112,7 @@ const getBestRatedBooks = createAsyncThunk(
 
 const bookListsActions = {
   getAll,
-  getById,
+  getByTitle,
   getLatestReleases,
   getMostRatedBooks,
   getBestRatedBooks,

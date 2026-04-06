@@ -55,6 +55,7 @@ export interface BookListI {
   books?: EditionI[];
   bookLists?: BookListI[];
   urlPath?: string;
+  booksCount?: number;
 }
 
 export interface RatingI {
