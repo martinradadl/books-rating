@@ -18,7 +18,7 @@ const initialState: BookListsState = {
   latestReleases: [],
   mostRatedBooks: { list: [], suggestion: null },
   bestRatedBooks: { list: [], suggestion: null },
-  status: "idle",
+  status: "loading",
   error: "",
 };
 
@@ -45,7 +45,20 @@ const bookListsSlice = createSlice({
       })
       .addCase(actions.getByTitle.fulfilled, (state, action) => {
         state.status = "idle";
-        state.selectedBookList = action.payload;
+
+        const updatedSelectedBooklist = action?.payload?.isMobile
+          ? {
+              ...action.payload.data,
+              books: [
+                ...(action.payload.isFirstPage
+                  ? []
+                  : state.selectedBookList?.books || []),
+                ...action.payload.data.books,
+              ],
+            }
+          : action?.payload?.data;
+
+        state.selectedBookList = updatedSelectedBooklist;
       })
       .addCase(actions.getByTitle.rejected, (state, action) => {
         state.status = "idle";
