@@ -5,6 +5,7 @@ import type { GenreI } from "../../data-structures";
 interface GenresState {
   genresList: GenreI[];
   selectedGenre: GenreI | null;
+  relatedGenres: GenreI[];
   status: string;
   error: string;
 }
@@ -12,6 +13,7 @@ interface GenresState {
 const initialState: GenresState = {
   genresList: [],
   selectedGenre: null,
+  relatedGenres: [],
   status: "idle",
   error: "",
 };
@@ -45,6 +47,30 @@ const genresSlice = createSlice({
         state.status = "idle";
         state.error = action.error.message || "Failed to fetch genre";
         state.selectedGenre = null;
+      })
+      .addCase(actions.getByUrlSlug.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(actions.getByUrlSlug.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.selectedGenre = action.payload;
+      })
+      .addCase(actions.getByUrlSlug.rejected, (state, action) => {
+        state.status = "idle";
+        state.error = action.error.message || "Failed to fetch genre";
+        state.selectedGenre = null;
+      })
+      .addCase(actions.getRelatedGenres.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(actions.getRelatedGenres.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.relatedGenres = action.payload;
+      })
+      .addCase(actions.getRelatedGenres.rejected, (state, action) => {
+        state.status = "idle";
+        state.error = action.error.message || "Failed to fetch genres";
+        state.relatedGenres = [];
       })
       .addCase(actions.add.pending, (state) => {
         state.status = "loading";
