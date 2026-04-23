@@ -32,7 +32,7 @@ const getMoreEditionsFromBook = createAsyncThunk(
   async ({ id, bookId }: { id: string; bookId: string }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/editions/more-editions?editionId=${id}&bookId=${bookId}`,
+        `${API_URL}/editions/more-editions?editionId=${id}&bookId=${bookId}`
       );
       return response.data;
     } catch (error: unknown) {
@@ -41,7 +41,7 @@ const getMoreEditionsFromBook = createAsyncThunk(
       }
       throw new Error("Failed to fetch more editions");
     }
-  },
+  }
 );
 
 const getBooksBySameAuthor = createAsyncThunk(
@@ -49,7 +49,7 @@ const getBooksBySameAuthor = createAsyncThunk(
   async ({ authorId, bookId }: { authorId: string; bookId: string }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/editions/same-author?authorId=${authorId}&bookId=${bookId}`,
+        `${API_URL}/editions/same-author?authorId=${authorId}&bookId=${bookId}`
       );
       return response.data;
     } catch (error: unknown) {
@@ -58,7 +58,7 @@ const getBooksBySameAuthor = createAsyncThunk(
       }
       throw new Error("Failed to fetch books by same author");
     }
-  },
+  }
 );
 
 const getRelatedBooks = createAsyncThunk(
@@ -66,7 +66,7 @@ const getRelatedBooks = createAsyncThunk(
   async ({ authorId, bookId }: { authorId: string; bookId: string }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/editions/related-books?authorId=${authorId}&bookId=${bookId}`,
+        `${API_URL}/editions/related-books?authorId=${authorId}&bookId=${bookId}`
       );
       return response.data;
     } catch (error: unknown) {
@@ -75,7 +75,7 @@ const getRelatedBooks = createAsyncThunk(
       }
       throw new Error("Failed to fetch related books");
     }
-  },
+  }
 );
 
 const getLatestReleases = createAsyncThunk(
@@ -83,7 +83,7 @@ const getLatestReleases = createAsyncThunk(
   async ({ limit, genreSlug }: { limit?: number; genreSlug?: string }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/editions/latest-releases?limit=${limit}&genre=${genreSlug}`,
+        `${API_URL}/editions/latest-releases?limit=${limit}&genre=${genreSlug}`
       );
       return response.data;
     } catch (error: unknown) {
@@ -92,7 +92,7 @@ const getLatestReleases = createAsyncThunk(
       }
       throw new Error("Failed to fetch book list");
     }
-  },
+  }
 );
 
 const getMostRatedBooks = createAsyncThunk(
@@ -108,7 +108,7 @@ const getMostRatedBooks = createAsyncThunk(
   }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/editions/most-rated?limit=${limit}&enableSuggestion=${enableSuggestion}&genre=${genreSlug}`,
+        `${API_URL}/editions/most-rated?limit=${limit}&enableSuggestion=${enableSuggestion}&genre=${genreSlug}`
       );
       return response.data;
     } catch (error: unknown) {
@@ -117,7 +117,7 @@ const getMostRatedBooks = createAsyncThunk(
       }
       throw new Error("Failed to fetch book list");
     }
-  },
+  }
 );
 
 const getBestRatedBooks = createAsyncThunk(
@@ -133,7 +133,7 @@ const getBestRatedBooks = createAsyncThunk(
   }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/editions/best-rated?limit=${limit}&enableSuggestion=${enableSuggestion}&genre=${genreSlug}`,
+        `${API_URL}/editions/best-rated?limit=${limit}&enableSuggestion=${enableSuggestion}&genre=${genreSlug}`
       );
       return response.data;
     } catch (error: unknown) {
@@ -142,7 +142,7 @@ const getBestRatedBooks = createAsyncThunk(
       }
       throw new Error("Failed to fetch book list");
     }
-  },
+  }
 );
 
 const add = createAsyncThunk<EditionI, EditionI>(
@@ -157,7 +157,7 @@ const add = createAsyncThunk<EditionI, EditionI>(
       }
       throw new Error("Failed to add edition");
     }
-  },
+  }
 );
 
 const cleanUp = createAction("editions/cleanUp");
