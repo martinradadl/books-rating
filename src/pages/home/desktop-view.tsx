@@ -9,9 +9,9 @@ import { ProfilePic } from "../../components/profile-pic"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import type { RootState } from "../../redux/store"
 import editionsActions from "../../redux/actions/editions"
-import bookListsActions from "../../redux/actions/book-lists"
 import { HOME_DATA } from "../../data/home"
 import { useNavigate } from "react-router-dom"
+import { Loading } from "../../components/loading"
 
 const {
     exampleQuote,
@@ -26,7 +26,8 @@ export const HomeDesktop = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres)
-    const { listOfBookLists, mostRatedBooks, bestRatedBooks, status: bookListsStatus } = useAppSelector((state: RootState) => state.bookLists)
+    const { mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions)
+    const { listOfBookLists, status: bookListsStatus } = useAppSelector((state: RootState) => state.bookLists)
     const bestRatedBooksStringified = JSON.stringify(bestRatedBooks);
     const mostRatedBooksStringified = JSON.stringify(mostRatedBooks);
 
@@ -34,7 +35,7 @@ export const HomeDesktop = () => {
         const linksList = genresList.map(genre => (
             {
                 name: genre.name,
-                urlPath: `genres/${genre.urlPath}`
+                urlPath: `genres/${genre.slug}`
             }
         ))
         linksList.push({ name: "More genres", urlPath: "" })
@@ -44,7 +45,7 @@ export const HomeDesktop = () => {
 
     useEffect(() => {
         dispatch(editionsActions.getAll());
-        dispatch(bookListsActions.getBestRatedBooks({ enableSuggestion: true, limit: 4 }));
+        dispatch(editionsActions.getBestRatedBooks({ enableSuggestion: true, limit: 4 }));
     }, [dispatch])
 
 
@@ -95,12 +96,10 @@ export const HomeDesktop = () => {
     }, [bestRatedBooksStringified]) // eslint-disable-line
 
 
-    if (status === "loading" || genresStatus === "loading" || bookListsStatus === "loading") {
-        return (
-            <div className="flex justify-center items-center h-96">
-                <p className="text-4xl font-semibold">Loading page...</p>
-            </div>
-        )
+    if (editionsStatus === "loading"
+        || genresStatus === "loading"
+        || bookListsStatus === "loading") {
+        return <Loading />
     }
 
     return (

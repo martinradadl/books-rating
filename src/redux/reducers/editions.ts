@@ -8,6 +8,9 @@ interface EditionsState {
   moreEditionsFromBook: EditionI[];
   booksBySameAuthor: EditionI[];
   relatedBooks: EditionI[];
+  latestReleases: EditionI[];
+  mostRatedBooks: { list: EditionI[]; suggestion: EditionI | null };
+  bestRatedBooks: { list: EditionI[]; suggestion: EditionI | null };
   status: string;
   error: string;
 }
@@ -18,6 +21,9 @@ const initialState: EditionsState = {
   moreEditionsFromBook: [],
   booksBySameAuthor: [],
   relatedBooks: [],
+  latestReleases: [],
+  mostRatedBooks: { list: [], suggestion: null },
+  bestRatedBooks: { list: [], suggestion: null },
   status: "idle",
   error: "",
 };
@@ -87,6 +93,44 @@ const editionsSlice = createSlice({
         state.status = "idle";
         state.error = action.error.message || "Failed to fetch editions";
         state.relatedBooks = [];
+      })
+      .addCase(actions.getLatestReleases.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(actions.getLatestReleases.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.latestReleases = action.payload;
+      })
+      .addCase(actions.getLatestReleases.rejected, (state, action) => {
+        state.status = "idle";
+        state.error = action.error.message || "Failed to fetch latest releases";
+        state.latestReleases = [];
+      })
+      .addCase(actions.getMostRatedBooks.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(actions.getMostRatedBooks.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.mostRatedBooks = action.payload;
+      })
+      .addCase(actions.getMostRatedBooks.rejected, (state, action) => {
+        state.status = "idle";
+        state.error =
+          action.error.message || "Failed to fetch most rated books";
+        state.mostRatedBooks = { list: [], suggestion: null };
+      })
+      .addCase(actions.getBestRatedBooks.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(actions.getBestRatedBooks.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.bestRatedBooks = action.payload;
+      })
+      .addCase(actions.getBestRatedBooks.rejected, (state, action) => {
+        state.status = "idle";
+        state.error =
+          action.error.message || "Failed to fetch best rated books";
+        state.bestRatedBooks = { list: [], suggestion: null };
       })
       .addCase(actions.add.pending, (state) => {
         state.status = "loading";

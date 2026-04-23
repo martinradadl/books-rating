@@ -5,7 +5,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import bookListsReducer from "../redux/reducers/book-list";
 import type { AppDispatch, RootState } from "../redux/store";
 import { fakeBookList, fakeBookListsList } from "./fake-data/book-lists";
-import { fakeEditionsList } from "./fake-data/edition";
 
 vi.mock("axios");
 
@@ -102,54 +101,6 @@ describe("Book List Actions", () => {
 
       expect(bookListsState.status).toBe("idle");
       expect(bookListsState.selectedBookList).toEqual(fakeBookList);
-      expect(bookListsState.error).toBe("");
-    });
-  });
-
-  describe("getLatestReleases", () => {
-    let store: ReturnType<typeof configureStore>;
-    let dispatch: AppDispatch;
-
-    beforeEach(() => {
-      vi.resetAllMocks();
-
-      store = configureStore({
-        reducer: {
-          bookLists: bookListsReducer,
-        },
-      });
-
-      dispatch = store.dispatch;
-    });
-
-    it("should throw error message when status is not 200 and set latestReleases to an empty array", async () => {
-      vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch bookList"),
-      );
-
-      await dispatch(actions.getLatestReleases({ limit: 4 }));
-
-      const state = store.getState() as RootState;
-      const bookListsState = state.bookLists;
-
-      expect(bookListsState.status).toBe("idle");
-      expect(bookListsState.latestReleases).toEqual([]);
-      expect(bookListsState.error).toBe("Failed to fetch bookList");
-    });
-
-    it("should return latest releases when status is 200", async () => {
-      vi.mocked(axios.get).mockResolvedValueOnce({
-        status: 200,
-        data: fakeEditionsList,
-      });
-
-      await dispatch(actions.getLatestReleases({ limit: 4 }));
-
-      const state = store.getState() as RootState;
-      const bookListsState = state.bookLists;
-
-      expect(bookListsState.status).toBe("idle");
-      expect(bookListsState.latestReleases).toEqual(fakeEditionsList);
       expect(bookListsState.error).toBe("");
     });
   });
