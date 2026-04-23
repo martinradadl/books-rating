@@ -23,6 +23,7 @@ import { useParams } from "react-router-dom";
 import { format } from 'date-fns';
 import { BookActions } from "../components/editions/book-actions";
 import { TotalRatingBar } from "../components/ratings/total-rating-bar";
+import { Loading } from "../components/loading";
 
 const reviewsCount = 123456;
 
@@ -85,11 +86,7 @@ export const BookEdition = () => {
   }, [dispatch, selectedEdition?.book._id, selectedEdition?.book.author._id]);
 
   if (status === "loading") {
-    return (
-      <div className="flex justify-center items-center h-96">
-        <p className="text-4xl font-semibold">Loading edition...</p>
-      </div>
-    )
+    return <Loading />
   }
 
   return (

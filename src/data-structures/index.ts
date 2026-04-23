@@ -8,8 +8,8 @@ export interface AuthorI {
 export interface GenreI {
   _id: string;
   name: string;
-  description: string;
-  urlPath?: string;
+  description?: string;
+  slug?: string;
 }
 
 export interface CharacterI {

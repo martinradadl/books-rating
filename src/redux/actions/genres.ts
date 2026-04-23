@@ -16,7 +16,7 @@ const getAll = createAsyncThunk(
   }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/genres?limit=${limit}&page=${page}&sortBy=${sortBy}`
+        `${API_URL}/genres?limit=${limit}&page=${page}&sortBy=${sortBy}`,
       );
       return response.data;
     } catch (error: unknown) {
@@ -25,7 +25,7 @@ const getAll = createAsyncThunk(
       }
       throw new Error("Failed to fetch genres");
     }
-  }
+  },
 );
 
 const getById = createAsyncThunk("genres/getById", async (id) => {
@@ -40,6 +40,38 @@ const getById = createAsyncThunk("genres/getById", async (id) => {
   }
 });
 
+const getByUrlSlug = createAsyncThunk(
+  "genres/getByUrlSlug",
+  async (slug: string) => {
+    try {
+      const response = await axios.get(`${API_URL}/genres/slug/${slug}`);
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to fetch genre");
+    }
+  },
+);
+
+const getRelatedGenres = createAsyncThunk(
+  "genres/getRelatedGenres",
+  async ({ slug, limit }: { slug: string; limit?: number }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/genres/related-genres/${slug}?limit=${limit}`,
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to fetch genre");
+    }
+  },
+);
+
 const add = createAsyncThunk<GenreI, GenreI>(
   "genres/add",
   async (newGenre: GenreI) => {
@@ -52,12 +84,14 @@ const add = createAsyncThunk<GenreI, GenreI>(
       }
       throw new Error("Failed to add genre");
     }
-  }
+  },
 );
 
 const genresActions = {
   getAll,
   getById,
+  getByUrlSlug,
+  getRelatedGenres,
   add,
 };
 

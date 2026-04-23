@@ -78,6 +78,73 @@ const getRelatedBooks = createAsyncThunk(
   }
 );
 
+const getLatestReleases = createAsyncThunk(
+  "bookLists/getLatestReleases",
+  async ({ limit, genreSlug }: { limit?: number; genreSlug?: string }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/editions/latest-releases?limit=${limit}&genre=${genreSlug}`
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to fetch book list");
+    }
+  }
+);
+
+const getMostRatedBooks = createAsyncThunk(
+  "bookLists/getMostRatedBooks",
+  async ({
+    limit,
+    enableSuggestion,
+    genreSlug,
+  }: {
+    limit?: number;
+    enableSuggestion?: boolean;
+    genreSlug?: string;
+  }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/editions/most-rated?limit=${limit}&enableSuggestion=${enableSuggestion}&genre=${genreSlug}`
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to fetch book list");
+    }
+  }
+);
+
+const getBestRatedBooks = createAsyncThunk(
+  "bookLists/getBestRatedBooks",
+  async ({
+    limit,
+    enableSuggestion,
+    genreSlug,
+  }: {
+    limit?: number;
+    enableSuggestion?: boolean;
+    genreSlug?: string;
+  }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/editions/best-rated?limit=${limit}&enableSuggestion=${enableSuggestion}&genre=${genreSlug}`
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to fetch book list");
+    }
+  }
+);
+
 const add = createAsyncThunk<EditionI, EditionI>(
   "editions/add",
   async (newEdition: EditionI) => {
@@ -101,6 +168,9 @@ const editionsActions = {
   getMoreEditionsFromBook,
   getBooksBySameAuthor,
   getRelatedBooks,
+  getLatestReleases,
+  getMostRatedBooks,
+  getBestRatedBooks,
   add,
   cleanUp,
 };

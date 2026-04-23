@@ -1,7 +1,6 @@
 import type { RootState } from "../../redux/store";
 import { useEffect } from "react";
 import editionsActions from "../../redux/actions/editions";
-import bookListsActions from "../../redux/actions/book-lists";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { FaQuoteLeft } from "react-icons/fa"
 import { BooksCarousel } from "../../components/books-carousel";
@@ -12,6 +11,7 @@ import { HomeAuthContainerMobile } from "../../components/auth/home-auth-mobile"
 import { HomeSearchBarMobile } from "../../components/home/search-bar-mobile";
 import { LinksListMobileItem } from "../../components/home/links-list-mobile-item";
 import { useNavigate } from "react-router-dom";
+import { Loading } from "../../components/loading";
 
 
 const quotesLists = [
@@ -34,22 +34,18 @@ const MOBILE_CHOICE_AWARDS_IMG = "https://s.gr-assets.com/assets/award/2025/sign
 export const HomeMobile = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { status } = useAppSelector((state: RootState) => state.editions)
-    const { listOfBookLists, latestReleases, mostRatedBooks, status: bookListsStatus } = useAppSelector((state: RootState) => state.bookLists)
+    const { mostRatedBooks, latestReleases, status: editionsStatus } = useAppSelector((state: RootState) => state.editions)
+    const { listOfBookLists, status: bookListsStatus } = useAppSelector((state: RootState) => state.bookLists)
     const { genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres)
 
 
     useEffect(() => {
         dispatch(editionsActions.getAll());
-        dispatch(bookListsActions.getLatestReleases({ limit: 8 }))
+        dispatch(editionsActions.getLatestReleases({ limit: 8 }))
     }, [dispatch])
 
-    if (status === "loading" || bookListsStatus === "loading" || genresStatus === "loading") {
-        return (
-            <div className="flex justify-center items-center h-96">
-                <p className="text-4xl font-semibold">Loading page...</p>
-            </div>
-        )
+    if (editionsStatus === "loading" || bookListsStatus === "loading" || genresStatus === "loading") {
+        return <Loading />
     }
 
     return (
@@ -114,7 +110,7 @@ export const HomeMobile = () => {
                 <ul className="flex flex-wrap">
                     {genresList.map((genre, index) => (
                         <li key={index} className="w-1/2 flex">
-                            <LinksListMobileItem title={genre.name} url={`genres/${genre.urlPath}`} />
+                            <LinksListMobileItem title={genre.name} url={`genres/${genre.slug}`} />
                         </li>
                     ))}
 
