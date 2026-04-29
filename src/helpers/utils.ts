@@ -14,3 +14,12 @@ export const numberToLocaleString = (number: number, params?: string) => {
 
 export const sequentialRange = (start: number, end: number) =>
   Array.from({ length: end - start + 1 }, (_, i) => start + i);
+
+export const urlSlugToCapitalizedText = (slug: string) =>
+  slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+export const textToUrlSlug = (text: string): string =>
+  text.toLowerCase().trim().replace(/\s+/g, "-");
