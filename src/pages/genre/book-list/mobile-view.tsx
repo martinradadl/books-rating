@@ -1,0 +1,68 @@
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import genresActions from "../../../redux/actions/genres";
+import type { RootState } from "../../../redux/store";
+import { Loading } from "../../../components/loading";
+import { MoreGenresSelect } from "../../../components/genres/more-genres-select";
+import type { GenreBookListRouteParams } from ".";
+import { GenreBookListItemsMobile } from "../../../components/genres/list-items-mobile";
+import { urlSlugToCapitalizedText } from "../../../helpers/utils";
+
+
+export const GenreBookListMobile = () => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const params = useParams<GenreBookListRouteParams>();
+
+    const { genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
+    const { latestReleases, mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions);
+
+    const bookListsMap = {
+        "latest-releases": latestReleases,
+        "most-rated": mostRatedBooks.list,
+        "best-rated": bestRatedBooks.list,
+    };
+    const selectedList = (params.list && bookListsMap[params.list]) || []
+    const genreName = urlSlugToCapitalizedText(params.genre || "")
+    const listName = urlSlugToCapitalizedText(params.list || "")
+
+    const handleClickOnGenresPage = () => {
+        navigate("/genres");
+    }
+
+    const handleClickOnSelectedGenre = () => {
+        navigate(`/genres/${params.genre}`);
+    }
+
+    useEffect(() => {
+        dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
+    }, [dispatch])
+
+    if (genresStatus === "loading" || editionsStatus === "loading") {
+        return <Loading />
+    }
+
+    return (
+        <div className="p-3">
+            <p className="mb-2 text-sm">
+                <span className="text-[#00635d] cursor-pointer hover:underline"
+                    onClick={handleClickOnGenresPage}>Genres</span>
+                <span>{" > "}</span>
+                <span className="text-[#00635d] cursor-pointer hover:underline"
+                    onClick={handleClickOnSelectedGenre}>{genreName}</span>
+                <span>{" > "}</span>
+                <span>{listName}</span>
+            </p>
+
+            <p className="font-bold text-2xl mb-2.5">
+                {listName !== "Latest Releases" ?
+                    `${listName} ${genreName} Books` : `${genreName} ${listName}`}
+            </p>
+
+            <GenreBookListItemsMobile editions={selectedList} />
+
+            <MoreGenresSelect genresList={genresList} />
+        </div>
+    )
+}
