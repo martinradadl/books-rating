@@ -1,26 +1,16 @@
 import { useDispatch } from "react-redux"
 import { HomeDesktop } from "./desktop-view"
 import { HomeMobile } from "./mobile-view"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import genresActions from "../../redux/actions/genres"
 import bookListsActions from "../../redux/actions/book-lists"
 import editionsActions from "../../redux/actions/editions"
 import type { AppDispatch } from "../../redux/store"
+import { useIsDesktop } from "../../hooks/is-desktop"
 
 export const Home = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const [isDesktop, setIsDesktop] = useState(
-        window.innerWidth >= 1024
-    );
-
-    useEffect(() => {
-        const onResize = () => {
-            setIsDesktop(window.innerWidth >= 1024);
-        };
-
-        window.addEventListener("resize", onResize);
-        return () => window.removeEventListener("resize", onResize);
-    }, []);
+    const isDesktop = useIsDesktop();
 
     useEffect(() => {
         dispatch(

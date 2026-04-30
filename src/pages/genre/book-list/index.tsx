@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { GenreBookListDesktop } from "./desktop-view";
 import { GenreBookListMobile } from "./mobile-view";
 import { useParams } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/hooks";
 import editionsActions from "../../../redux/actions/editions";
+import { useIsDesktop } from "../../../hooks/is-desktop";
 
 export type GenreBookListRouteParams = {
     list: "latest-releases" | "most-rated" | "best-rated";
@@ -15,19 +16,7 @@ export const GenreBookList = () => {
     const params = useParams<GenreBookListRouteParams>();
     const dispatch = useAppDispatch();
 
-    const [isDesktop, setIsDesktop] = useState(
-        window.innerWidth >= 1024
-    );
-
-
-    useEffect(() => {
-        const onResize = () => {
-            setIsDesktop(window.innerWidth >= 1024);
-        };
-
-        window.addEventListener("resize", onResize);
-        return () => window.removeEventListener("resize", onResize);
-    }, []);
+    const isDesktop = useIsDesktop();
 
     useEffect(() => {
         if (!params.list) return;
