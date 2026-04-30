@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { urlSlugToCapitalizedText } from "../../../helpers/utils"
 import type { GenreBookListRouteParams } from ".";
 import { GENRE_DATA } from "../../../data/genre";
@@ -8,13 +8,15 @@ import { BookListItem } from "../../../components/book-lists/item";
 import type { EditionI } from "../../../data-structures";
 import { useAppSelector } from "../../../redux/hooks";
 import type { RootState } from "../../../redux/store";
+import { useMemo } from "react";
+import { useNavigateTo } from "../../../hooks/navigateTo";
 
 const { SAMPLE_QUOTE, SAMPLE_QUOTE_AUTHOR } = GENRE_DATA
 
 export const GenreBookListDesktop = () => {
-    const navigate = useNavigate();
     const params = useParams<GenreBookListRouteParams>();
     const { latestReleases, mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions);
+    const { handleClickOnGenresPage, handleClickOnSelectedGenre } = useNavigateTo(params);
 
     const bookListsMap = {
         "latest-releases": latestReleases,
@@ -23,16 +25,8 @@ export const GenreBookListDesktop = () => {
     };
     const selectedList = (params.list && bookListsMap[params.list]) || []
 
-    const genreName = urlSlugToCapitalizedText(params.genre || "")
-    const listName = urlSlugToCapitalizedText(params.list || "")
-
-    const handleClickOnGenresPage = () => {
-        navigate("/genres");
-    }
-
-    const handleClickOnSelectedGenre = () => {
-        navigate(`/genres/${params.genre}`);
-    }
+    const genreName = useMemo(() => urlSlugToCapitalizedText(params.genre || ""), [params.genre]);
+    const listName = useMemo(() => urlSlugToCapitalizedText(params.list || ""), [params.list]);
 
     if (editionsStatus === "loading") {
         return <Loading />
@@ -57,7 +51,7 @@ export const GenreBookListDesktop = () => {
                 </p>
 
                 {selectedList.map((item: EditionI, index: number) => (
-                    <BookListItem key={index} index={index} item={item} isListByGenre/>
+                    <BookListItem key={index} index={index} item={item} isListByGenre />
                 ))}
             </div>
             <div className="w-[300px] ml-2">

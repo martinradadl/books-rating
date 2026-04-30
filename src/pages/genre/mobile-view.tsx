@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import genresActions from "../../redux/actions/genres";
 import { Loading } from "../../components/loading";
 import { MoreGenresSelect } from "../../components/genres/more-genres-select";
+import { useNavigateTo } from "../../hooks/navigateTo";
 
 
 export const GenreMobile = () => {
@@ -14,15 +15,12 @@ export const GenreMobile = () => {
     const dispatch = useAppDispatch();
     const { selectedGenre, relatedGenres, genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
     const { latestReleases, mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions);
+    const { handleClickOnGenresPage } = useNavigateTo({});
     const { name } = selectedGenre || {};
 
     useEffect(() => {
         dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
     }, [dispatch])
-
-    const handleClickOnGenresPage = () => {
-        navigate("/genres");
-    }
 
     const handleClickOnRelatedGenre = (slug: string) => {
         navigate(`/genres/${slug}`)
