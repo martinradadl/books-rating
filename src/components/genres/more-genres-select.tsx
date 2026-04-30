@@ -9,12 +9,7 @@ export const MoreGenresSelect = ({ genresList }: MoreGenresSelectProps) => {
     const navigate = useNavigate();
 
     const handleChangeGenre = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedOption = genresList.find(
-            (genre) => genre.name === e.target.value
-        );
-        if (selectedOption) {
-            navigate(`/genres/${selectedOption.slug}`);
-        }
+        navigate(`/genres/${e.target.value}`);
     }
 
     return (
@@ -29,7 +24,7 @@ export const MoreGenresSelect = ({ genresList }: MoreGenresSelectProps) => {
                 </option>
 
                 {genresList.map((genre) => (
-                    <option key={genre.name} value={genre.name}>
+                    <option key={genre.name} value={genre.slug}>
                         {genre.name}
                     </option>
                 ))}
