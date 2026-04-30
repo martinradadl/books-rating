@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import type { EditionI } from "../../data-structures";
 import { BookCover } from "../editions/book-cover";
 import { textToUrlSlug } from "../../helpers/utils";
+import { useMemo } from "react";
 
 interface GenreBookListPreviewDesktopProps {
     title: string;
@@ -11,7 +12,7 @@ interface GenreBookListPreviewDesktopProps {
 export const GenreBookListPreviewDesktop = ({ title, editions }: GenreBookListPreviewDesktopProps) => {
     const navigate = useNavigate();
     const params = useParams();
-    const listSlug = textToUrlSlug(title || "");
+    const listSlug = useMemo(() => textToUrlSlug(title || ""), [title]);
 
 
     const handleClickOnEdition = (editionId: string) => {
