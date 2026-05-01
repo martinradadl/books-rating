@@ -8,7 +8,7 @@ import { MoreGenresSelect } from "../../../components/genres/more-genres-select"
 import type { GenreBookListRouteParams } from ".";
 import { GenreBookListItemsMobile } from "../../../components/genres/list-items-mobile";
 import { urlSlugToCapitalizedText } from "../../../helpers/utils";
-import { useNavigateTo } from "../../../hooks/navigateTo";
+import { useNavigateToGenres } from "../../../hooks/navigateToGenres";
 
 
 export const GenreBookListMobile = () => {
@@ -17,7 +17,7 @@ export const GenreBookListMobile = () => {
 
     const { genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
     const { latestReleases, mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions);
-    const { handleClickOnGenresPage, handleClickOnSelectedGenre } = useNavigateTo(params);
+    const { handleNavigateToGenres } = useNavigateToGenres();
 
     const bookListsMap = {
         "latest-releases": latestReleases,
@@ -42,10 +42,10 @@ export const GenreBookListMobile = () => {
         <div className="p-3">
             <p className="mb-2 text-sm">
                 <span className="text-[#00635d] cursor-pointer hover:underline"
-                    onClick={handleClickOnGenresPage}>Genres</span>
+                    onClick={() => { handleNavigateToGenres() }}>Genres</span>
                 <span>{" > "}</span>
                 <span className="text-[#00635d] cursor-pointer hover:underline"
-                    onClick={handleClickOnSelectedGenre}>{genreName}</span>
+                    onClick={() => { handleNavigateToGenres(params.genre) }}>{genreName}</span>
                 <span>{" > "}</span>
                 <span>{listName}</span>
             </p>

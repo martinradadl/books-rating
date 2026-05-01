@@ -9,14 +9,14 @@ import type { EditionI } from "../../../data-structures";
 import { useAppSelector } from "../../../redux/hooks";
 import type { RootState } from "../../../redux/store";
 import { useMemo } from "react";
-import { useNavigateTo } from "../../../hooks/navigateTo";
+import { useNavigateToGenres } from "../../../hooks/navigateToGenres";
 
 const { SAMPLE_QUOTE, SAMPLE_QUOTE_AUTHOR } = GENRE_DATA
 
 export const GenreBookListDesktop = () => {
     const params = useParams<GenreBookListRouteParams>();
     const { latestReleases, mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions);
-    const { handleClickOnGenresPage, handleClickOnSelectedGenre } = useNavigateTo(params);
+    const { handleNavigateToGenres } = useNavigateToGenres();
 
     const bookListsMap = {
         "latest-releases": latestReleases,
@@ -37,10 +37,14 @@ export const GenreBookListDesktop = () => {
             <div className="w-[643px] pl-2 pr-2.5">
                 <p className="text-xs">
                     <span className="text-[#00635d] cursor-pointer hover:underline"
-                        onClick={handleClickOnGenresPage}>Genres</span>
+                        onClick={() => { handleNavigateToGenres() }}>
+                        Genres
+                    </span>
                     <span>{" > "}</span>
                     <span className="text-[#00635d] cursor-pointer hover:underline"
-                        onClick={handleClickOnSelectedGenre}>{genreName}</span>
+                        onClick={() => { handleNavigateToGenres(params.genre); }}>
+                        {genreName}
+                    </span>
                     <span>{" > "}</span>
                     <span>{listName}</span>
                 </p>
