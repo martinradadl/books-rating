@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GenreListPreviewDesktop } from "../../components/genres/list-preview-desktop";
+import { GenreBookListPreviewDesktop } from "../../components/genres/list-preview-desktop";
 import { ProfilePic } from "../../components/profile-pic";
 import { useAppSelector } from "../../redux/hooks";
 import type { RootState } from "../../redux/store";
@@ -55,11 +55,11 @@ export const GenreDesktop = () => {
                 )}
             </p>
 
-            <GenreListPreviewDesktop title="Latest Releases" editions={latestReleases} />
+            <GenreBookListPreviewDesktop title="Latest Releases" editions={latestReleases} />
 
-            <GenreListPreviewDesktop title="Most Rated" editions={mostRatedBooks.list} />
+            <GenreBookListPreviewDesktop title="Most Rated" editions={mostRatedBooks.list} />
 
-            <GenreListPreviewDesktop title="Best Rated" editions={bestRatedBooks.list} />
+            <GenreBookListPreviewDesktop title="Best Rated" editions={bestRatedBooks.list} />
         </div>
 
         <div className="w-[300px] ml-2">

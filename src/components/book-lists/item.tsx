@@ -9,28 +9,31 @@ import type { EditionI } from "../../data-structures";
 interface BookListItemProps {
     index: number;
     item: EditionI;
+    isListByGenre?: boolean
 }
 
 const reviewsCount = 678;
 
 
-export const BookListItem = ({ item, index }: BookListItemProps) => {
+export const BookListItem = ({ item, index, isListByGenre }: BookListItemProps) => {
     const navigate = useNavigate();
     const { _id, cover, title, averageRating, ratingCount = 123, book } = item;
-    const authorName = book.author.name;
+    const authorName = book.author?.name;
+    const publishedYear = new Date(book.firstPublished).getFullYear();
 
     const handleClickOnEdition = () => {
         navigate(`/edition/${_id}`)
     }
 
     return <div className="border-t border-[#CCCCCC] lg:flex">
-        <p className="text-[#999999] lg:text-[#181818] m-2.5 lg:m-0 lg:p-[5px] lg:w-10 text-sm font-bold lg:text-base">
-            {index} <span className="lg:hidden">.</span>
-        </p>
+        {!isListByGenre &&
+            <p className="text-[#999999] lg:text-[#181818] m-2.5 lg:m-0 lg:p-[5px] lg:w-10 text-sm font-bold lg:text-base">
+                {index} <span className="lg:hidden">.</span>
+            </p>}
 
         <div className="mb-[15px] lg:mb-0 flex lg:flex-1 lg:mt-[5px]">
             <div onClick={handleClickOnEdition}>
-                <BookCover image={cover} className="w-[75px] lg:w-[50px] ml-2.5 mb-[15px] lg:mx-[5px] cursor-pointer" />
+                <BookCover image={cover} className="w-[75px] lg:w-[50px] ml-2.5 mb-[15px] lg:mx-[5px] cursor-pointer" withoutRoundedCorners />
             </div>
 
             <div className="mx-2.5 lg:mx-0 lg:flex lg:flex-1">
@@ -47,14 +50,16 @@ export const BookListItem = ({ item, index }: BookListItemProps) => {
                     </p>
 
                     <div className="text-[11px] flex items-center gap-1 mb-2.5 text-[#999999] leading-none lg:leading-[19px]">
-                        <StarRating rating={averageRating} starsSize={15} isSmall />
+                        {
+                            !isListByGenre &&
+                            <StarRating rating={averageRating} starsSize={15} isSmall />
+                        }
 
                         <p className="whitespace-nowrap">
                             {averageRating?.toFixed(2)}{" "}
                             <span className="hidden lg:inline">avg rating</span>
                         </p>
 
-                        <p className="lg:hidden whitespace-nowrap">·</p>
                         <p className="hidden lg:inline whitespace-nowrap">—</p>
 
                         <p className="whitespace-nowrap">
@@ -66,6 +71,12 @@ export const BookListItem = ({ item, index }: BookListItemProps) => {
                         <p className="lg:hidden whitespace-nowrap">
                             {`${numberToLocaleString(reviewsCount, "en-US")} reviews`}
                         </p>
+                        {isListByGenre && <>
+                            <p className="hidden lg:inline whitespace-nowrap">—</p>
+                            <p className="hidden lg:inline whitespace-nowrap">published</p>
+                            <p className="hidden lg:inline whitespace-nowrap">{publishedYear}</p>
+                        </>
+                        }
                     </div>
                 </div>
 

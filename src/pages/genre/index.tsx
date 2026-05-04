@@ -1,26 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { GenreDesktop } from "./desktop-view";
 import { GenreMobile } from "./mobile-view";
 import { useAppDispatch } from "../../redux/hooks";
 import { useParams } from "react-router-dom";
 import genresActions from "../../redux/actions/genres";
 import editionsActions from "../../redux/actions/editions";
+import { useIsDesktop } from "../../hooks/is-desktop";
 
 export const Genre = () => {
     const dispatch = useAppDispatch();
     const params = useParams();
-    const [isDesktop, setIsDesktop] = useState(
-        window.innerWidth >= 1024
-    );
-
-    useEffect(() => {
-        const onResize = () => {
-            setIsDesktop(window.innerWidth >= 1024);
-        };
-
-        window.addEventListener("resize", onResize);
-        return () => window.removeEventListener("resize", onResize);
-    }, []);
+    const isDesktop = useIsDesktop();
 
     useEffect(() => {
         dispatch(genresActions.getByUrlSlug(params.name || ""))

@@ -1,41 +1,29 @@
 import { MdSearch } from "react-icons/md"
 import { useNavigate } from "react-router-dom";
-import { GenreListPreviewMobile } from "../../components/genres/list-preview-mobile";
+import { GenreBookListItemsMobile } from "../../components/genres/list-items-mobile";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import type { RootState } from "../../redux/store";
 import { useEffect } from "react";
 import genresActions from "../../redux/actions/genres";
 import { Loading } from "../../components/loading";
+import { MoreGenresSelect } from "../../components/genres/more-genres-select";
+import { useNavigateToGenres } from "../../hooks/navigateToGenres";
 
 
 export const GenreMobile = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-
-
     const { selectedGenre, relatedGenres, genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
     const { latestReleases, mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions);
+    const { handleNavigateToGenres } = useNavigateToGenres();
     const { name } = selectedGenre || {};
 
     useEffect(() => {
-        dispatch(genresActions.getAll({ limit: 16 }));
+        dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
     }, [dispatch])
-
-    const handleClickOnGenresPage = () => {
-        navigate("/genres/home"); // Update route when main genres page is available
-    }
 
     const handleClickOnRelatedGenre = (slug: string) => {
         navigate(`/genres/${slug}`)
-    }
-
-    const handleChangeGenre = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selected = genresList.find(
-            (genre) => genre.name === e.target.value
-        );
-        if (selected) {
-            navigate(`/genres/${selected.slug}`);
-        }
     }
 
     if (genresStatus === "loading" || editionsStatus === "loading") {
@@ -56,9 +44,9 @@ export const GenreMobile = () => {
 
         <p className="mb-2 text-sm">
             <span className="text-[#00635d] cursor-pointer hover:underline"
-                onClick={handleClickOnGenresPage}>Genres</span>
+                onClick={() => handleNavigateToGenres()}>Genres</span>
             <span>{" > "}</span>
-            <span className="text-[#00635d] cursor-pointer hover:underline">{name}</span>
+            <span>{name}</span>
         </p>
 
         <p className="font-bold text-2xl mb-2.5">{name}</p>
@@ -67,7 +55,7 @@ export const GenreMobile = () => {
             Add to Favorite Genres
         </button>
 
-        <GenreListPreviewMobile title="Latest Releases" editions={latestReleases} />
+        <GenreBookListItemsMobile title="Latest Releases" editions={latestReleases} isPreview />
 
         <p className="my-3 pt-2 border-t border-[#D8D8D8] text-sm font-bold uppercase">Related Genres</p>
 
@@ -84,9 +72,9 @@ export const GenreMobile = () => {
             </ul>
         </div>
 
-        <GenreListPreviewMobile title="Most Rated" editions={mostRatedBooks.list} />
+        <GenreBookListItemsMobile title="Most Rated" editions={mostRatedBooks.list} isPreview />
 
-        <GenreListPreviewMobile title="Best Rated" editions={bestRatedBooks.list} />
+        <GenreBookListItemsMobile title="Best Rated" editions={bestRatedBooks.list} isPreview />
 
         <p className="my-3 pt-2 border-t border-[#D8D8D8] text-sm font-bold uppercase">Quotes</p>
 
@@ -104,22 +92,6 @@ export const GenreMobile = () => {
             </button>
         </div>
 
-        <div className="my-3 text-sm">
-            <select className="w-full border border-[#D6D0C4] pl-2 pr-8 rounded-[3px] h-8"
-                name="genre"
-                defaultValue=""
-                onChange={handleChangeGenre}
-            >
-                <option value="" disabled>
-                    More Genres
-                </option>
-
-                {genresList.map((genre) => (
-                    <option key={genre.name} value={genre.name}>
-                        {genre.name}
-                    </option>
-                ))}
-            </select>
-        </div>
+        <MoreGenresSelect genresList={genresList} />
     </div>
 }

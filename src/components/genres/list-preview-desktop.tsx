@@ -1,17 +1,26 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import type { EditionI } from "../../data-structures";
 import { BookCover } from "../editions/book-cover";
+import { textToUrlSlug } from "../../helpers/utils";
+import { useMemo } from "react";
 
-interface GenreListPreviewDesktopProps {
+interface GenreBookListPreviewDesktopProps {
     title: string;
     editions: EditionI[];
 }
 
-export const GenreListPreviewDesktop = ({ title, editions }: GenreListPreviewDesktopProps) => {
+export const GenreBookListPreviewDesktop = ({ title, editions }: GenreBookListPreviewDesktopProps) => {
     const navigate = useNavigate();
+    const params = useParams();
+    const listSlug = useMemo(() => textToUrlSlug(title || ""), [title]);
+
 
     const handleClickOnEdition = (editionId: string) => {
         navigate(`/edition/${editionId}`)
+    }
+
+    const handleClickOnMore = () => {
+        navigate(`/genres/${listSlug}/${params.name}`)
     }
 
     return <div>
@@ -33,7 +42,8 @@ export const GenreListPreviewDesktop = ({ title, editions }: GenreListPreviewDes
         </div>
 
         <div className="flex justify-end">
-            <p className="text-[13px] font-bold text-[#00635d] cursor-pointer hover:underline">
+            <p className="text-[13px] font-bold text-[#00635d] cursor-pointer hover:underline"
+                onClick={handleClickOnMore}>
                 {`More ${title.toLocaleLowerCase()}...`}
             </p>
         </div>
