@@ -115,7 +115,7 @@ export const HomeMobile = () => {
                     ))}
 
                     <li key="more" className="w-1/2 flex">
-                        <LinksListMobileItem title="More genres" url="genres/more" />
+                        <LinksListMobileItem title="More genres" url="genres" />
                     </li>
                 </ul>
 

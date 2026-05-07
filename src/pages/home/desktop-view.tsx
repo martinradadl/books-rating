@@ -38,7 +38,7 @@ export const HomeDesktop = () => {
                 urlPath: `genres/${genre.slug}`
             }
         ))
-        linksList.push({ name: "More genres", urlPath: "" })
+        linksList.push({ name: "More genres", urlPath: "genres" })
         return linksList;
     }
 
