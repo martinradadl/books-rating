@@ -6,10 +6,12 @@ import { useMemo } from "react";
 interface GenreBookListItemsMobileProps {
     title?: string;
     editions: EditionI[];
-    isPreview?: boolean
+    buttonLabel: string;
+    isPreview?: boolean;
+    isRandomGenre?: boolean
 }
 
-export const GenreBookListItemsMobile = ({ title, editions, isPreview }: GenreBookListItemsMobileProps) => {
+export const GenreBookListItemsMobile = ({ title, editions, isPreview, buttonLabel, isRandomGenre }: GenreBookListItemsMobileProps) => {
     const navigate = useNavigate();
     const params = useParams();
     const listSlug = useMemo(() => textToUrlSlug(title || ""), [title]);
@@ -19,7 +21,11 @@ export const GenreBookListItemsMobile = ({ title, editions, isPreview }: GenreBo
     }
 
     const handleClickOnViewAll = () => {
-        navigate(`/genres/${listSlug}/${params.name}`)
+        if (isRandomGenre) {
+            navigate(`/genres/${listSlug}`)
+        } else {
+            navigate(`/genres/${listSlug}/${params.name}`);
+        }
     }
 
     return <div>
@@ -52,7 +58,7 @@ export const GenreBookListItemsMobile = ({ title, editions, isPreview }: GenreBo
             <div className="flex">
                 <button className="w-full max-w-[495px] text-sm leading-3.5 my-3 mx-auto px-3 py-2 rounded-[3px] bg-[#F4F1EA] border border-[#D6D0C4] cursor-pointer hover:bg-[#E8E0D0]"
                     onClick={handleClickOnViewAll}>
-                    View all
+                    {buttonLabel}
                 </button>
             </div>
         }

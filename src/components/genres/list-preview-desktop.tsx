@@ -7,12 +7,13 @@ import { useMemo } from "react";
 interface GenreBookListPreviewDesktopProps {
     title: string;
     editions: EditionI[];
+    isRandomGenre?: boolean;
 }
 
-export const GenreBookListPreviewDesktop = ({ title, editions }: GenreBookListPreviewDesktopProps) => {
+export const GenreBookListPreviewDesktop = ({ title, editions, isRandomGenre }: GenreBookListPreviewDesktopProps) => {
     const navigate = useNavigate();
     const params = useParams();
-    const listSlug = useMemo(() => textToUrlSlug(title || ""), [title]);
+    const genreSlug = useMemo(() => textToUrlSlug(title || ""), [title]);
 
 
     const handleClickOnEdition = (editionId: string) => {
@@ -20,7 +21,11 @@ export const GenreBookListPreviewDesktop = ({ title, editions }: GenreBookListPr
     }
 
     const handleClickOnMore = () => {
-        navigate(`/genres/${listSlug}/${params.name}`)
+        if (isRandomGenre) {
+            navigate(`/genres/${genreSlug}`)
+        } else {
+            navigate(`/genres/${genreSlug}/${params.name}`);
+        }
     }
 
     return <div>
