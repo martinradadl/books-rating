@@ -55,7 +55,7 @@ export const GenreBookListMobile = () => {
                     `${listName} ${genreName} Books` : `${genreName} ${listName}`}
             </p>
 
-            <GenreBookListItemsMobile editions={selectedList} />
+            <GenreBookListItemsMobile editions={selectedList} buttonLabel="View all" />
 
             <MoreGenresSelect genresList={genresList} />
         </div>
