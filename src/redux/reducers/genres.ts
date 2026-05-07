@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import actions from "../actions/genres";
-import type { GenreI } from "../../data-structures";
+import type { EditionI, GenreI } from "../../data-structures";
 
 interface GenresState {
   genresList: GenreI[];
   selectedGenre: GenreI | null;
   relatedGenres: GenreI[];
+  discoverList: { genre: GenreI; editions: EditionI[] }[];
   status: string;
   error: string;
 }
@@ -14,6 +15,7 @@ const initialState: GenresState = {
   genresList: [],
   selectedGenre: null,
   relatedGenres: [],
+  discoverList: [],
   status: "idle",
   error: "",
 };
@@ -71,6 +73,18 @@ const genresSlice = createSlice({
         state.status = "idle";
         state.error = action.error.message || "Failed to fetch genres";
         state.relatedGenres = [];
+      })
+      .addCase(actions.getDiscoverList.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(actions.getDiscoverList.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.discoverList = action.payload;
+      })
+      .addCase(actions.getDiscoverList.rejected, (state, action) => {
+        state.status = "idle";
+        state.error = action.error.message || "Failed to fetch list";
+        state.discoverList = [];
       })
       .addCase(actions.add.pending, (state) => {
         state.status = "loading";
