@@ -4,7 +4,7 @@ import actions from "../redux/actions/genres";
 import { configureStore } from "@reduxjs/toolkit";
 import genresReducer from "../redux/reducers/genres";
 import type { AppDispatch, RootState } from "../redux/store";
-import { fakeGenre, fakeGenresList } from "./fake-data/genre";
+import { fakeDiscoverList, fakeGenre, fakeGenresList } from "./fake-data/genre";
 
 vi.mock("axios");
 
@@ -27,7 +27,7 @@ describe("Genre Actions", () => {
 
     it("should return empty genres list and set error message when status is not 200", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch genres"),
+        new Error("Failed to fetch genres")
       );
 
       await dispatch(actions.getAll({}));
@@ -47,7 +47,7 @@ describe("Genre Actions", () => {
       });
 
       await dispatch(
-        actions.getAll({ limit: 10, page: 1, sortBy: "occurrence" }),
+        actions.getAll({ limit: 10, page: 1, sortBy: "occurrence" })
       );
 
       const state = store.getState() as RootState;
@@ -77,7 +77,7 @@ describe("Genre Actions", () => {
 
     it("should throw error message when status is not 200 and set selecterGenre to null", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch genre"),
+        new Error("Failed to fetch genre")
       );
 
       await dispatch(actions.getById());
@@ -125,7 +125,7 @@ describe("Genre Actions", () => {
 
     it("should throw error message when status is not 200 and set selecterGenre to null", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch genre"),
+        new Error("Failed to fetch genre")
       );
 
       await dispatch(actions.getByUrlSlug("fake-slug"));
@@ -171,9 +171,9 @@ describe("Genre Actions", () => {
       dispatch = store.dispatch;
     });
 
-    it("should throw error message when status is not 200 and set relatedGenres to null", async () => {
+    it("should throw error message when status is not 200 and set relatedGenres to an empty array", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch genres"),
+        new Error("Failed to fetch genres")
       );
 
       await dispatch(actions.getRelatedGenres({ slug: "fake-slug" }));
@@ -203,6 +203,54 @@ describe("Genre Actions", () => {
     });
   });
 
+  describe("getDiscoverList", () => {
+    let store: ReturnType<typeof configureStore>;
+    let dispatch: AppDispatch;
+
+    beforeEach(() => {
+      vi.resetAllMocks();
+
+      store = configureStore({
+        reducer: {
+          genres: genresReducer,
+        },
+      });
+
+      dispatch = store.dispatch;
+    });
+
+    it("should throw error message when status is not 200 and set discoverList to an empty array", async () => {
+      vi.mocked(axios.get).mockRejectedValueOnce(
+        new Error("Failed to fetch list")
+      );
+
+      await dispatch(actions.getDiscoverList({}));
+
+      const state = store.getState() as RootState;
+      const genresState = state.genres;
+
+      expect(genresState.status).toBe("idle");
+      expect(genresState.discoverList).toEqual([]);
+      expect(genresState.error).toBe("Failed to fetch list");
+    });
+
+    it("should return discover list when status is 200", async () => {
+      vi.mocked(axios.get).mockResolvedValueOnce({
+        status: 200,
+        data: fakeDiscoverList,
+      });
+
+      await dispatch(actions.getDiscoverList({}));
+
+      const state = store.getState() as RootState;
+      const genresState = state.genres;
+
+      expect(genresState.status).toBe("idle");
+      expect(genresState.discoverList).toEqual(fakeDiscoverList);
+      expect(genresState.error).toBe("");
+    });
+  });
+
   describe("Add", () => {
     let store: ReturnType<typeof configureStore>;
     let dispatch: AppDispatch;
@@ -221,7 +269,7 @@ describe("Genre Actions", () => {
 
     it("should throw error message when status is not 200 and set selecterGenre to null", async () => {
       vi.mocked(axios.post).mockRejectedValueOnce(
-        new Error("Failed to add genre"),
+        new Error("Failed to add genre")
       );
 
       await dispatch(actions.add(fakeGenre));

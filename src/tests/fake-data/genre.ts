@@ -1,4 +1,5 @@
 import type { GenreI } from "../../data-structures";
+import { fakeEdition, fakeEdition2 } from "./edition";
 
 export const fakeGenre: GenreI = {
   _id: "fakeId",
@@ -13,3 +14,8 @@ export const fakeGenre2: GenreI = {
 };
 
 export const fakeGenresList = [fakeGenre, fakeGenre2];
+
+export const fakeDiscoverList = [
+  { genre: fakeGenre, editions: [fakeEdition] },
+  { genre: fakeGenre2, editions: [fakeEdition2] },
+];
