@@ -3,6 +3,7 @@ import type { EditionI } from "../../data-structures";
 import { BookCover } from "../editions/book-cover";
 import { textToUrlSlug } from "../../helpers/utils";
 import { useMemo } from "react";
+import { useNavigateToGenres } from "../../hooks/navigateToGenres";
 interface GenreBookListItemsMobileProps {
     title?: string;
     editions: EditionI[];
@@ -15,17 +16,11 @@ export const GenreBookListItemsMobile = ({ title, editions, isPreview, buttonLab
     const navigate = useNavigate();
     const params = useParams();
     const listSlug = useMemo(() => textToUrlSlug(title || ""), [title]);
+    const { handleViewFullContent } = useNavigateToGenres();
+
 
     const handleClickOnEdition = (editionId: string) => {
         navigate(`/edition/${editionId}`)
-    }
-
-    const handleClickOnViewAll = () => {
-        if (isRandomGenre) {
-            navigate(`/genres/${listSlug}`)
-        } else {
-            navigate(`/genres/${listSlug}/${params.name}`);
-        }
     }
 
     return <div>
@@ -57,7 +52,7 @@ export const GenreBookListItemsMobile = ({ title, editions, isPreview, buttonLab
         {isPreview &&
             <div className="flex">
                 <button className="w-full max-w-[495px] text-sm leading-3.5 my-3 mx-auto px-3 py-2 rounded-[3px] bg-[#F4F1EA] border border-[#D6D0C4] cursor-pointer hover:bg-[#E8E0D0]"
-                    onClick={handleClickOnViewAll}>
+                    onClick={() => { handleViewFullContent(listSlug, params.name, isRandomGenre) }}>
                     {buttonLabel}
                 </button>
             </div>
