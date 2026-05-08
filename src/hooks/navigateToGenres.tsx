@@ -8,5 +8,13 @@ export const useNavigateToGenres = () => {
         navigate(genre ? `/genres/${genre}` : "/genres");
     };
 
-    return { handleNavigateToGenres };
+    const handleViewFullContent = (titleSlug: string, genreSlug?: string, isRandomGenre?: boolean) => {
+        if (isRandomGenre) {
+            navigate(`/genres/${titleSlug}`)
+        } else {
+            navigate(`/genres/${titleSlug}/${genreSlug}`);
+        }
+    }
+
+    return { handleNavigateToGenres, handleViewFullContent };
 };

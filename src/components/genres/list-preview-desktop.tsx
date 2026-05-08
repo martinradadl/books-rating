@@ -3,25 +3,25 @@ import type { EditionI } from "../../data-structures";
 import { BookCover } from "../editions/book-cover";
 import { textToUrlSlug } from "../../helpers/utils";
 import { useMemo } from "react";
+import { useNavigateToGenres } from "../../hooks/navigateToGenres";
 
 interface GenreBookListPreviewDesktopProps {
     title: string;
     editions: EditionI[];
+    isRandomGenre?: boolean;
 }
 
-export const GenreBookListPreviewDesktop = ({ title, editions }: GenreBookListPreviewDesktopProps) => {
+export const GenreBookListPreviewDesktop = ({ title, editions, isRandomGenre }: GenreBookListPreviewDesktopProps) => {
     const navigate = useNavigate();
     const params = useParams();
-    const listSlug = useMemo(() => textToUrlSlug(title || ""), [title]);
+    const titleSlug = useMemo(() => textToUrlSlug(title || ""), [title]);
+    const { handleViewFullContent } = useNavigateToGenres();
 
 
     const handleClickOnEdition = (editionId: string) => {
         navigate(`/edition/${editionId}`)
     }
 
-    const handleClickOnMore = () => {
-        navigate(`/genres/${listSlug}/${params.name}`)
-    }
 
     return <div>
         <div className="h-7 flex items-center mb-2.5 border-b border-[#D8D8D8]">
@@ -43,7 +43,7 @@ export const GenreBookListPreviewDesktop = ({ title, editions }: GenreBookListPr
 
         <div className="flex justify-end">
             <p className="text-[13px] font-bold text-[#00635d] cursor-pointer hover:underline"
-                onClick={handleClickOnMore}>
+                onClick={() => { handleViewFullContent(titleSlug, params.name, isRandomGenre) }}>
                 {`More ${title.toLocaleLowerCase()}...`}
             </p>
         </div>

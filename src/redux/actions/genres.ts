@@ -16,7 +16,7 @@ const getAll = createAsyncThunk(
   }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/genres?limit=${limit}&page=${page}&sortBy=${sortBy}`,
+        `${API_URL}/genres?limit=${limit}&page=${page}&sortBy=${sortBy}`
       );
       return response.data;
     } catch (error: unknown) {
@@ -25,7 +25,7 @@ const getAll = createAsyncThunk(
       }
       throw new Error("Failed to fetch genres");
     }
-  },
+  }
 );
 
 const getById = createAsyncThunk("genres/getById", async (id) => {
@@ -52,7 +52,7 @@ const getByUrlSlug = createAsyncThunk(
       }
       throw new Error("Failed to fetch genre");
     }
-  },
+  }
 );
 
 const getRelatedGenres = createAsyncThunk(
@@ -60,7 +60,7 @@ const getRelatedGenres = createAsyncThunk(
   async ({ slug, limit }: { slug: string; limit?: number }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/genres/related-genres/${slug}?limit=${limit}`,
+        `${API_URL}/genres/related-genres/${slug}?limit=${limit}`
       );
       return response.data;
     } catch (error: unknown) {
@@ -69,7 +69,30 @@ const getRelatedGenres = createAsyncThunk(
       }
       throw new Error("Failed to fetch genre");
     }
-  },
+  }
+);
+
+const getDiscoverList = createAsyncThunk(
+  "genres/getDiscoverList",
+  async ({
+    genresLimit,
+    editionsLimit,
+  }: {
+    genresLimit?: number;
+    editionsLimit?: number;
+  }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/genres/discover?genresLimit=${genresLimit}&editionsLimit=${editionsLimit}`
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to fetch genre");
+    }
+  }
 );
 
 const add = createAsyncThunk<GenreI, GenreI>(
@@ -84,7 +107,7 @@ const add = createAsyncThunk<GenreI, GenreI>(
       }
       throw new Error("Failed to add genre");
     }
-  },
+  }
 );
 
 const genresActions = {
@@ -93,6 +116,7 @@ const genresActions = {
   getByUrlSlug,
   getRelatedGenres,
   add,
+  getDiscoverList,
 };
 
 export default genresActions;

@@ -28,19 +28,19 @@ export const HomeDesktop = () => {
     const { genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres)
     const { mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions)
     const { listOfBookLists, status: bookListsStatus } = useAppSelector((state: RootState) => state.bookLists)
-    const bestRatedBooksStringified = JSON.stringify(bestRatedBooks);
-    const mostRatedBooksStringified = JSON.stringify(mostRatedBooks);
+    const bestRatedBooksStringified = useMemo(() => JSON.stringify(bestRatedBooks), [bestRatedBooks]);
+    const mostRatedBooksStringified = useMemo(() => JSON.stringify(mostRatedBooks), [mostRatedBooks]);
 
-    const genresLinksList = () => {
+    const genresLinksList = useMemo(() => {
         const linksList = genresList.map(genre => (
             {
                 name: genre.name,
                 urlPath: `genres/${genre.slug}`
             }
         ))
-        linksList.push({ name: "More genres", urlPath: "" })
+        linksList.push({ name: "More genres", urlPath: "genres" })
         return linksList;
-    }
+    }, [genresList])
 
 
     useEffect(() => {
@@ -145,7 +145,7 @@ export const HomeDesktop = () => {
 
                             <HomeSearchBarDesktop />
 
-                            <LinksListDesktop list={genresLinksList()} columns={4} className="leading-[1.5]" />
+                            <LinksListDesktop list={genresLinksList} columns={4} className="leading-[1.5]" />
                         </div>
 
                         <div className="my-6">

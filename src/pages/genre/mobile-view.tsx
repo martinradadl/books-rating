@@ -1,4 +1,3 @@
-import { MdSearch } from "react-icons/md"
 import { useNavigate } from "react-router-dom";
 import { GenreBookListItemsMobile } from "../../components/genres/list-items-mobile";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -8,6 +7,7 @@ import genresActions from "../../redux/actions/genres";
 import { Loading } from "../../components/loading";
 import { MoreGenresSelect } from "../../components/genres/more-genres-select";
 import { useNavigateToGenres } from "../../hooks/navigateToGenres";
+import { GenresSearchBarMobile } from "../../components/genres/search-bar-mobile";
 
 
 export const GenreMobile = () => {
@@ -31,16 +31,7 @@ export const GenreMobile = () => {
     }
 
     return <div className="p-3">
-        <div className="relative w-full mb-2.5">
-            <div className="absolute inset-y-0 left-0.5 px-1 flex items-center text-gray-700 cursor-pointer">
-                <MdSearch size={24} />
-            </div>
-            <input
-                type="text"
-                placeholder="Find a genre by name"
-                className="w-full text-sm py-2 px-8 border border-[#ccc] rounded leading-[1.2]"
-            />
-        </div>
+        <GenresSearchBarMobile />
 
         <p className="mb-2 text-sm">
             <span className="text-[#00635d] cursor-pointer hover:underline"
@@ -55,7 +46,12 @@ export const GenreMobile = () => {
             Add to Favorite Genres
         </button>
 
-        <GenreBookListItemsMobile title="Latest Releases" editions={latestReleases} isPreview />
+        <GenreBookListItemsMobile
+            title="Latest Releases"
+            editions={latestReleases}
+            buttonLabel="View all"
+            isPreview
+        />
 
         <p className="my-3 pt-2 border-t border-[#D8D8D8] text-sm font-bold uppercase">Related Genres</p>
 
@@ -72,9 +68,19 @@ export const GenreMobile = () => {
             </ul>
         </div>
 
-        <GenreBookListItemsMobile title="Most Rated" editions={mostRatedBooks.list} isPreview />
+        <GenreBookListItemsMobile
+            title="Most Rated"
+            editions={mostRatedBooks.list}
+            buttonLabel="View all"
+            isPreview
+        />
 
-        <GenreBookListItemsMobile title="Best Rated" editions={bestRatedBooks.list} isPreview />
+        <GenreBookListItemsMobile
+            title="Best Rated"
+            editions={bestRatedBooks.list}
+            buttonLabel="View all"
+            isPreview
+        />
 
         <p className="my-3 pt-2 border-t border-[#D8D8D8] text-sm font-bold uppercase">Quotes</p>
 
