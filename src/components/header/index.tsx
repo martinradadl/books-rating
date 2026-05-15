@@ -1,38 +1,14 @@
 import classNames from "classnames";
-import { useEffect, useState } from "react";
 import { MdArrowForwardIos, MdSearch } from "react-icons/md"
 import { useLocation, useNavigate } from "react-router-dom";
+import { NavBar } from "./nav-bar";
 
-const tabs = [
-    'Home',
-    'My Books',
-    'Browse ▼',
-    'Community ▼'
-]
+
 
 export const Header = () => {
-    const [showTabs, setShowTabs] = useState(true);
-    const [lastScrollY, setLastScrollY] = useState(0);
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const isHomePage = pathname === '/';
-
-    useEffect(() => {
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-
-            if (currentScrollY > 300 && currentScrollY > lastScrollY) {
-                setShowTabs(false);
-            } else if (lastScrollY - currentScrollY > 30) {
-                setShowTabs(true);
-            }
-
-            setLastScrollY(currentScrollY);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [lastScrollY]);
 
 
     return (
@@ -65,16 +41,10 @@ export const Header = () => {
                         Books Rating
                     </p>
 
-                    <div className={classNames("hidden xl:flex items-center h-full",
-                        { "xl:hidden": isHomePage }
-                    )}>
-                        {tabs.map((label, i) => (
-                            <button key={i} className="px-4 h-full flex items-center cursor-pointer hover:bg-black hover:text-white">{label}</button>
-                        ))}
-                    </div>
+                    <NavBar isHomePage={isHomePage} isXl />
 
                     <div className={classNames("hidden md:flex flex-1 h-[32px] items-center",
-                        { "md:hidden": isHomePage }
+                        { "lg:hidden": isHomePage }
                     )}>
                         <div className="relative w-[392px] pl-4">
                             <input
@@ -89,13 +59,13 @@ export const Header = () => {
                     </div>
 
                     <button className={classNames('md:hidden bg-black text-white text-sm items-center rounded py-2 px-3 mr-2 cursor-pointer hover:bg-gray-600',
-                        { "md:hidden": isHomePage }
+                        { "lg:hidden": isHomePage }
                     )}>
                         Sign Up
                     </button>
 
                     <div className={classNames("hidden md:flex h-full",
-                        { "md:hidden": isHomePage }
+                        { "lg:hidden": isHomePage }
                     )}>
                         <p className="text-gray-800 px-3 h-full flex items-center hover:bg-black hover:text-white cursor-pointer">Sign in</p>
                         <p className="text-gray-800 px-3 h-full flex items-center xl:hidden hover:bg-black hover:text-white cursor-pointer">Join</p>
@@ -103,19 +73,7 @@ export const Header = () => {
                 </div>
             </div>
 
-            <div className={classNames("xl:hidden flex md:justify-center border-b-1 border-gray-300 whitespace-nowrap transition-[50px] duration-300",
-                { 'h-[50px] opacity-100 pointer-events-auto': showTabs },
-                { 'h-0 opacity-0 pointer-events-none': !showTabs },
-                { "lg:hidden": isHomePage })
-            }>
-                {tabs.map((label, i) => (
-                    (!isHomePage || label !== 'Home') && (
-                        <button key={i} className='flex flex-1 md:flex-none px-8 cursor-pointer hover:bg-black hover:text-white items-center justify-center'>
-                            {label}
-                        </button>
-                    )
-                ))}
-            </div>
+            <NavBar isHomePage={isHomePage} />
         </div>
     )
 }
