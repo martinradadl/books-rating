@@ -2,6 +2,11 @@ import { BrowseGenresList } from "../components/header/browse-genres-list";
 import type { NavBarDropdownProps } from "../components/header/nav-bar-dropdown";
 import type { ReactNode } from "react";
 
+interface DropdownMenuI {
+  items: NavBarDropdownProps["items"];
+  extraContent?: ReactNode
+}
+
 const browseDropDownItems = [
   { name: "Genres", urlPath: "/genres" },
   { name: "New Releases", urlPath: undefined },
@@ -12,11 +17,6 @@ const communityDropdownItems = [
   { name: "Quotes", urlPath: undefined },
   { name: "Ask the Author", urlPath: undefined },
 ];
-
-interface DropdownMenuI {
-  items: NavBarDropdownProps["items"];
-  extraContent?: ReactNode
-}
 
 const dropdownMenus: Record<string, DropdownMenuI> = {
   Browse: { items: browseDropDownItems, extraContent: <BrowseGenresList /> },
