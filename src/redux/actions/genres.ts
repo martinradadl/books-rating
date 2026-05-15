@@ -9,16 +9,18 @@ const getAll = createAsyncThunk(
     limit,
     page,
     sortBy,
+    isBrowseGenresList,
   }: {
     limit?: number;
     page?: number;
     sortBy?: string;
+    isBrowseGenresList?: boolean;
   }) => {
     try {
       const response = await axios.get(
         `${API_URL}/genres?limit=${limit}&page=${page}&sortBy=${sortBy}`
       );
-      return response.data;
+      return { data: response.data, isBrowseGenresList };
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new Error(error.message);
