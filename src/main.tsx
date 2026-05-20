@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { Header } from "./components/header.tsx";
+import { Header } from "./components/header";
 import { Footer } from "./components/footer.tsx";
 import { MainRouter } from "./pages/main-router.tsx";
 import { Provider } from "react-redux";
