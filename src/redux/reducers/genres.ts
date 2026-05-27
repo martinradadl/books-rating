@@ -8,6 +8,7 @@ interface GenresState {
   selectedGenre: GenreI | null;
   relatedGenres: GenreI[];
   discoverList: { genre: GenreI; editions: EditionI[] }[];
+  searchResults: GenreI[];
   status: string;
   browseGenresListStatus: string;
   browseGenresListRequested: boolean;
@@ -20,6 +21,7 @@ const initialState: GenresState = {
   selectedGenre: null,
   relatedGenres: [],
   discoverList: [],
+  searchResults: [],
   status: "idle",
   browseGenresListStatus: "idle",
   browseGenresListRequested: false,
@@ -48,7 +50,7 @@ const genresSlice = createSlice({
           state.browseGenresList = action.payload.data;
           state.browseGenresListRequested = true;
         }
-          state.browseGenresListStatus = "idle";
+        state.browseGenresListStatus = "idle";
       })
       .addCase(actions.getAll.rejected, (state, action) => {
         if (action.meta.arg.isBrowseGenresList) {
@@ -108,6 +110,15 @@ const genresSlice = createSlice({
         state.status = "idle";
         state.error = action.error.message || "Failed to fetch list";
         state.discoverList = [];
+      })
+      .addCase(actions.searchByName.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.searchResults = action.payload;
+      })
+      .addCase(actions.searchByName.rejected, (state, action) => {
+        state.status = "idle";
+        state.error = action.error.message || "Failed to search genres";
+        state.searchResults = [];
       })
       .addCase(actions.add.pending, (state) => {
         state.status = "loading";
