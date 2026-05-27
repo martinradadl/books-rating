@@ -2,21 +2,38 @@ import { useNavigate } from "react-router-dom";
 import { GenreBookListItemsMobile } from "../../components/genres/list-items-mobile";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import type { RootState } from "../../redux/store";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import genresActions from "../../redux/actions/genres";
 import { Loading } from "../../components/loading";
 import { MoreGenresSelect } from "../../components/genres/more-genres-select";
 import { useNavigateToGenres } from "../../hooks/navigateToGenres";
 import { GenresSearchBarMobile } from "../../components/genres/search-bar-mobile";
+import { AutocompleteInput } from "../../components/autocomplete";
+import { GenreAutocompleteItem } from "../../components/autocomplete/genre-results-item";
 
 
 export const GenreMobile = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { selectedGenre, relatedGenres, genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
+    const { selectedGenre, relatedGenres, genresList, searchResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
     const { latestReleases, mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions);
     const { handleNavigateToGenres } = useNavigateToGenres();
     const { name } = selectedGenre || {};
+    const [searchValue, setSearchValue] = useState("");
+    const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
+    const autocompleteRef = useRef<HTMLDivElement>(null);
+
+
+    const handleOnChangeSearch = async (value: string) => {
+        setSearchValue(value);
+        await dispatch(genresActions.searchByName({ query: value }));
+
+        if (!isAutocompleteOpen && value) {
+            setIsAutocompleteOpen(true)
+        } else if (isAutocompleteOpen && !value) {
+            setIsAutocompleteOpen(false)
+        }
+    }
 
     useEffect(() => {
         dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
@@ -31,7 +48,15 @@ export const GenreMobile = () => {
     }
 
     return <div className="p-3">
-        <GenresSearchBarMobile />
+        <div ref={autocompleteRef}>
+            <AutocompleteInput
+                inputComponent={<GenresSearchBarMobile onChange={handleOnChangeSearch} />}
+                ItemListComponent={GenreAutocompleteItem}
+                items={searchResults}
+                inputValue={searchValue}
+                isOpen={isAutocompleteOpen}
+            />
+        </div>
 
         <p className="mb-2 text-sm">
             <span className="text-[#00635d] cursor-pointer hover:underline"

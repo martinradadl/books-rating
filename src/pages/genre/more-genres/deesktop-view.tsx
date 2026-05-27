@@ -1,13 +1,50 @@
+import { useEffect, useRef, useState } from "react";
 import { GenreBookListPreviewDesktop } from "../../../components/genres/list-preview-desktop";
 import { Loading } from "../../../components/loading";
 import { useNavigateToGenres } from "../../../hooks/navigateToGenres";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import type { RootState } from "../../../redux/store";
+import { AutocompleteInput } from "../../../components/autocomplete";
+import { GenreAutocompleteItem } from "../../../components/autocomplete/genre-results-item";
+import genresActions from "../../../redux/actions/genres";
+
 
 export const MoreGenresDesktop = () => {
-    const { genresList, discoverList, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
+    const dispatch = useAppDispatch();
+    const { genresList, discoverList, searchResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
     const { handleNavigateToGenres } = useNavigateToGenres();
+    const [searchValue, setSearchValue] = useState("");
+    const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
+    const autocompleteRef = useRef<HTMLDivElement>(null);
 
+
+    const handleOnChangeSearch = async (value: string) => {
+        setSearchValue(value);
+        await dispatch(genresActions.searchByName({ query: value }));
+
+        if (!isAutocompleteOpen && value) {
+            setIsAutocompleteOpen(true)
+        } else if (isAutocompleteOpen && !value) {
+            setIsAutocompleteOpen(false)
+        }
+    }
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                autocompleteRef.current &&
+                !autocompleteRef.current.contains(event.target as Node)
+            ) {
+                setIsAutocompleteOpen(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [])
 
     if (genresStatus === "loading") {
         return <Loading />
@@ -18,16 +55,23 @@ export const MoreGenresDesktop = () => {
             <div className="w-[643px] pl-2 pr-2.5">
                 <p className="mt-2.5 mb-[25px] text-2xl font-bold">Genres</p>
 
-                <div className="bg-[#eeeeee] p-2.5 mb-3 rounded-[3px] text-sm">
-                    <input
-                        type="text"
-                        placeholder="Find a genre by name"
-                        className="w-[508px] py-2 px-8 border border-[#DCD6CC] rounded-[3px] leading-[1.2] bg-white"
-                    />
-
-                    <button className="ml-1 py-2 px-3 bg-[#F4F1EA] border border-[#D6D0C4] rounded-[3px] hover:bg-[#DBD6C8]">
-                        Find Genre
-                    </button>
+                <div className="bg-[#eeeeee] p-2.5 mb-3 rounded-[3px] text-sm flex">
+                    <div ref={autocompleteRef}>
+                        <AutocompleteInput
+                            inputComponent={
+                                <input
+                                    type="text"
+                                    placeholder="Find a genre by name"
+                                    onChange={(e) => handleOnChangeSearch(e.target.value)}
+                                    className="w-[508px] py-2 px-8 border border-[#DCD6CC] rounded-[3px] leading-[1.2] bg-white"
+                                />
+                            }
+                            ItemListComponent={GenreAutocompleteItem}
+                            items={searchResults}
+                            inputValue={searchValue}
+                            isOpen={isAutocompleteOpen}
+                        />
+                    </div>
                 </div>
 
                 {discoverList.map((list, index) => (
