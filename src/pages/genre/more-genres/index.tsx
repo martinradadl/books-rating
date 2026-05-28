@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useAppDispatch } from "../../../redux/hooks";
 import { useIsDesktop } from "../../../hooks/is-desktop";
 import genresActions from "../../../redux/actions/genres";
-import { MoreGenresDesktop } from "./deesktop-view";
+import { MoreGenresDesktop } from "./desktop-view";
 import { MoreGenresMobile } from "./mobile-view";
 
 export const MoreGenres = () => {
