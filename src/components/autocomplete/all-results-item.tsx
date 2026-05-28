@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { textToUrlSlug } from "../../helpers/utils";
 
 interface AllResultsItem {
     inputValue: string;
@@ -8,7 +9,8 @@ export const AllResultsItem = ({ inputValue }: AllResultsItem) => {
     const navigate = useNavigate();
 
     const handleOnClick = () => {
-        navigate("/search")
+        const inputValueSlug = textToUrlSlug(inputValue)
+        navigate(`/search?${inputValueSlug}`)
     }
 
     return (
