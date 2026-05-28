@@ -10,6 +10,7 @@ import { useNavigateToGenres } from "../../hooks/navigateToGenres";
 import { GenresSearchBarMobile } from "../../components/genres/search-bar-mobile";
 import { AutocompleteInput } from "../../components/autocomplete";
 import { GenreAutocompleteItem } from "../../components/autocomplete/genre-results-item";
+import debounce from "lodash.debounce";
 
 
 export const GenreMobile = () => {
@@ -35,6 +36,8 @@ export const GenreMobile = () => {
         }
     }
 
+    const debouncedHandleOnChangeSearch = debounce(handleOnChangeSearch, 100);
+
     useEffect(() => {
         dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
     }, [dispatch])
@@ -50,7 +53,7 @@ export const GenreMobile = () => {
     return <div className="p-3">
         <div ref={autocompleteRef}>
             <AutocompleteInput
-                inputComponent={<GenresSearchBarMobile onChange={handleOnChangeSearch} />}
+                inputComponent={<GenresSearchBarMobile onChange={debouncedHandleOnChangeSearch} />}
                 ItemListComponent={GenreAutocompleteItem}
                 items={searchResults}
                 inputValue={searchValue}

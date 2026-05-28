@@ -8,6 +8,7 @@ import type { RootState } from "../../../redux/store";
 import { AutocompleteInput } from "../../../components/autocomplete";
 import { GenreAutocompleteItem } from "../../../components/autocomplete/genre-results-item";
 import genresActions from "../../../redux/actions/genres";
+import debounce from "lodash.debounce";
 
 
 export const MoreGenresMobile = () => {
@@ -27,6 +28,8 @@ export const MoreGenresMobile = () => {
             setIsAutocompleteOpen(false)
         }
     }
+
+    const debouncedHandleOnChangeSearch = debounce(handleOnChangeSearch, 100);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -53,7 +56,7 @@ export const MoreGenresMobile = () => {
         <div className="p-3">
             <div ref={autocompleteRef}>
                 <AutocompleteInput
-                    inputComponent={<GenresSearchBarMobile onChange={handleOnChangeSearch} />}
+                    inputComponent={<GenresSearchBarMobile onChange={debouncedHandleOnChangeSearch} />}
                     ItemListComponent={GenreAutocompleteItem}
                     items={searchResults}
                     inputValue={searchValue}

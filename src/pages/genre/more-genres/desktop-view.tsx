@@ -7,6 +7,7 @@ import type { RootState } from "../../../redux/store";
 import { AutocompleteInput } from "../../../components/autocomplete";
 import { GenreAutocompleteItem } from "../../../components/autocomplete/genre-results-item";
 import genresActions from "../../../redux/actions/genres";
+import debounce from "lodash.debounce";
 
 
 export const MoreGenresDesktop = () => {
@@ -28,6 +29,9 @@ export const MoreGenresDesktop = () => {
             setIsAutocompleteOpen(false)
         }
     }
+
+    const debouncedHandleOnChangeSearch = debounce(handleOnChangeSearch, 100);
+
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -62,7 +66,7 @@ export const MoreGenresDesktop = () => {
                                 <input
                                     type="text"
                                     placeholder="Find a genre by name"
-                                    onChange={(e) => handleOnChangeSearch(e.target.value)}
+                                    onChange={(e) => debouncedHandleOnChangeSearch(e.target.value)}
                                     className="w-[508px] py-2 px-8 border border-[#DCD6CC] rounded-[3px] leading-[1.2] bg-white"
                                 />
                             }
