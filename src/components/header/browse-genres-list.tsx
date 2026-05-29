@@ -2,12 +2,13 @@ import { useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import type { RootState } from "../../redux/store";
 import { Loading } from "../loading";
-import { useNavigate } from "react-router-dom";
 import genresActions from "../../redux/actions/genres";
 
+interface BrowseGenresListProps {
+    handleOnClick: (urlPath: string) => void;
+}
 
-export const BrowseGenresList = () => {
-    const navigate = useNavigate();
+export const BrowseGenresList = ({ handleOnClick }: BrowseGenresListProps) => {
     const dispatch = useAppDispatch();
     const { browseGenresList, browseGenresListStatus, browseGenresListRequested } = useAppSelector((state: RootState) => state.genres)
 
@@ -30,12 +31,6 @@ export const BrowseGenresList = () => {
         return list;
     }, [browseGenresList]);
 
-    const handleClickOnItem = (urlPath: string) => {
-        console.log("clicked")
-        navigate(urlPath)
-    }
-
-
     if (browseGenresListStatus === "loading") {
         return <Loading />
     }
@@ -47,7 +42,7 @@ export const BrowseGenresList = () => {
             {genresList.map((item) => {
                 return (
                     <p className={"text-sm w-fit p-2 hover:underline cursor-pointer"} key={item.name}
-                        onClick={() => { handleClickOnItem(`/genres/${item.slug}`) }}>
+                        onClick={() => { handleOnClick(`/genres/${item.slug}`) }}>
                         {item.name}
                     </p>
                 )

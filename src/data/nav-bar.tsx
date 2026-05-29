@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 interface DropdownMenuI {
   items: NavBarDropdownProps["items"];
-  extraContent?: ReactNode
+  extraContent?: (handleOnclick: (urlPath: string) => void) => ReactNode
 }
 
 const browseDropDownItems = [
@@ -19,7 +19,10 @@ const communityDropdownItems = [
 ];
 
 const dropdownMenus: Record<string, DropdownMenuI> = {
-  Browse: { items: browseDropDownItems, extraContent: <BrowseGenresList /> },
+  Browse: {
+    items: browseDropDownItems,
+    extraContent: (handleOnclick) => <BrowseGenresList handleOnClick={handleOnclick} />
+  },
   Community: { items: communityDropdownItems },
 };
 

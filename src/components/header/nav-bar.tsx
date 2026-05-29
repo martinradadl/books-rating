@@ -120,6 +120,7 @@ export const NavBar = ({ isHomePage, isXl }: NavBarProps) => {
                                         extraContent={
                                             dropdownMenus[label]?.extraContent
                                         }
+                                        setActiveDropdown={setActiveDropdown}
                                     />
                                 </div>
                             )}
