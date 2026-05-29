@@ -76,8 +76,8 @@ export const NavBar = ({ isHomePage, isXl }: NavBarProps) => {
             },
             {
                 "hidden xl:flex": isXl,
-                "xl:hidden": !isXl,
                 "lg:hidden": isHomePage,
+                "xl:hidden": !isXl || isHomePage,
             })
         }>
             {tabs.map((label, i) => {
