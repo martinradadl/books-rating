@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { GenreBookListItemsMobile } from "../../components/genres/list-items-mobile";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import type { RootState } from "../../redux/store";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import genresActions from "../../redux/actions/genres";
 import { Loading } from "../../components/loading";
 import { MoreGenresSelect } from "../../components/genres/more-genres-select";
@@ -10,7 +10,7 @@ import { useNavigateToGenres } from "../../hooks/navigateToGenres";
 import { GenresSearchBarMobile } from "../../components/genres/search-bar-mobile";
 import { AutocompleteInput } from "../../components/autocomplete";
 import { GenreAutocompleteItem } from "../../components/autocomplete/genre-results-item";
-import debounce from "lodash.debounce";
+import { useAutocomplete } from "../../hooks/autocomplete";
 
 
 export const GenreMobile = () => {
@@ -20,23 +20,7 @@ export const GenreMobile = () => {
     const { latestReleases, mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions);
     const { handleNavigateToGenres } = useNavigateToGenres();
     const { name } = selectedGenre || {};
-    const [searchValue, setSearchValue] = useState("");
-    const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
-    const autocompleteRef = useRef<HTMLDivElement>(null);
-
-
-    const handleOnChangeSearch = async (value: string) => {
-        setSearchValue(value);
-        await dispatch(genresActions.searchByName({ query: value }));
-
-        if (!isAutocompleteOpen && value) {
-            setIsAutocompleteOpen(true)
-        } else if (isAutocompleteOpen && !value) {
-            setIsAutocompleteOpen(false)
-        }
-    }
-
-    const debouncedHandleOnChangeSearch = debounce(handleOnChangeSearch, 100);
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
 
     useEffect(() => {
         dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));

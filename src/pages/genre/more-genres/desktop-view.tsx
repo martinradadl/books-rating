@@ -1,54 +1,19 @@
-import { useEffect, useRef, useState } from "react";
 import { GenreBookListPreviewDesktop } from "../../../components/genres/list-preview-desktop";
 import { Loading } from "../../../components/loading";
 import { useNavigateToGenres } from "../../../hooks/navigateToGenres";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useAppSelector } from "../../../redux/hooks";
 import type { RootState } from "../../../redux/store";
 import { AutocompleteInput } from "../../../components/autocomplete";
 import { GenreAutocompleteItem } from "../../../components/autocomplete/genre-results-item";
 import genresActions from "../../../redux/actions/genres";
-import debounce from "lodash.debounce";
+import { useAutocomplete } from "../../../hooks/autocomplete";
 
 
 export const MoreGenresDesktop = () => {
-    const dispatch = useAppDispatch();
     const { genresList, discoverList, searchResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
     const { handleNavigateToGenres } = useNavigateToGenres();
-    const [searchValue, setSearchValue] = useState("");
-    const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
-    const autocompleteRef = useRef<HTMLDivElement>(null);
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
 
-
-    const handleOnChangeSearch = async (value: string) => {
-        setSearchValue(value);
-        await dispatch(genresActions.searchByName({ query: value }));
-
-        if (!isAutocompleteOpen && value) {
-            setIsAutocompleteOpen(true)
-        } else if (isAutocompleteOpen && !value) {
-            setIsAutocompleteOpen(false)
-        }
-    }
-
-    const debouncedHandleOnChangeSearch = debounce(handleOnChangeSearch, 100);
-
-
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (
-                autocompleteRef.current &&
-                !autocompleteRef.current.contains(event.target as Node)
-            ) {
-                setIsAutocompleteOpen(false);
-            }
-        }
-
-        document.addEventListener("mousedown", handleClickOutside);
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [])
 
     if (genresStatus === "loading") {
         return <Loading />
