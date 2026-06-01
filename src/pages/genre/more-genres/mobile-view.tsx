@@ -4,9 +4,15 @@ import { GenresSearchBarMobile } from "../../../components/genres/search-bar-mob
 import { Loading } from "../../../components/loading";
 import { useAppSelector } from "../../../redux/hooks";
 import type { RootState } from "../../../redux/store";
+import { AutocompleteInput } from "../../../components/autocomplete";
+import { GenreAutocompleteItem } from "../../../components/autocomplete/genre-results-item";
+import genresActions from "../../../redux/actions/genres";
+import { useAutocomplete } from "../../../hooks/autocomplete";
+
 
 export const MoreGenresMobile = () => {
-    const { genresList, discoverList, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
+    const { genresList, discoverList, searchResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
 
 
     if (genresStatus === "loading") {
@@ -15,7 +21,15 @@ export const MoreGenresMobile = () => {
 
     return (
         <div className="p-3">
-            <GenresSearchBarMobile />
+            <div ref={autocompleteRef}>
+                <AutocompleteInput
+                    inputComponent={<GenresSearchBarMobile onChange={debouncedHandleOnChangeSearch} />}
+                    ItemListComponent={GenreAutocompleteItem}
+                    items={searchResults}
+                    inputValue={searchValue}
+                    isOpen={isAutocompleteOpen}
+                />
+            </div>
 
             <p className="font-bold text-2xl mb-2.5">Genres</p>
 

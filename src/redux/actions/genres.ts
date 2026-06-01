@@ -97,6 +97,23 @@ const getDiscoverList = createAsyncThunk(
   }
 );
 
+const searchByName = createAsyncThunk(
+  "genres/searchByName",
+  async ({ query, limit }: { query: string; limit?: number }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/genres/search?query=${query}&limit=${limit}`
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to search genres");
+    }
+  }
+);
+
 const add = createAsyncThunk<GenreI, GenreI>(
   "genres/add",
   async (newGenre: GenreI) => {
@@ -119,6 +136,7 @@ const genresActions = {
   getRelatedGenres,
   add,
   getDiscoverList,
+  searchByName,
 };
 
 export default genresActions;

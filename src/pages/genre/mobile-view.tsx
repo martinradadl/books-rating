@@ -8,15 +8,19 @@ import { Loading } from "../../components/loading";
 import { MoreGenresSelect } from "../../components/genres/more-genres-select";
 import { useNavigateToGenres } from "../../hooks/navigateToGenres";
 import { GenresSearchBarMobile } from "../../components/genres/search-bar-mobile";
+import { AutocompleteInput } from "../../components/autocomplete";
+import { GenreAutocompleteItem } from "../../components/autocomplete/genre-results-item";
+import { useAutocomplete } from "../../hooks/autocomplete";
 
 
 export const GenreMobile = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { selectedGenre, relatedGenres, genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
+    const { selectedGenre, relatedGenres, genresList, searchResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
     const { latestReleases, mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions);
     const { handleNavigateToGenres } = useNavigateToGenres();
     const { name } = selectedGenre || {};
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
 
     useEffect(() => {
         dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
@@ -31,7 +35,15 @@ export const GenreMobile = () => {
     }
 
     return <div className="p-3">
-        <GenresSearchBarMobile />
+        <div ref={autocompleteRef}>
+            <AutocompleteInput
+                inputComponent={<GenresSearchBarMobile onChange={debouncedHandleOnChangeSearch} />}
+                ItemListComponent={GenreAutocompleteItem}
+                items={searchResults}
+                inputValue={searchValue}
+                isOpen={isAutocompleteOpen}
+            />
+        </div>
 
         <p className="mb-2 text-sm">
             <span className="text-[#00635d] cursor-pointer hover:underline"
