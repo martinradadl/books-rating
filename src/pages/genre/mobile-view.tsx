@@ -16,11 +16,11 @@ import { useAutocomplete } from "../../hooks/autocomplete";
 export const GenreMobile = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { selectedGenre, relatedGenres, genresList, searchResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
+    const { selectedGenre, relatedGenres, genresList, autocompleteResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
     const { latestReleases, mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions);
     const { handleNavigateToGenres } = useNavigateToGenres();
     const { name } = selectedGenre || {};
-    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
 
     useEffect(() => {
         dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
@@ -39,9 +39,10 @@ export const GenreMobile = () => {
             <AutocompleteInput
                 inputComponent={<GenresSearchBarMobile onChange={debouncedHandleOnChangeSearch} />}
                 ItemListComponent={GenreAutocompleteItem}
-                items={searchResults}
+                items={autocompleteResults}
                 inputValue={searchValue}
                 isOpen={isAutocompleteOpen}
+                setIsOpen={setIsAutocompleteOpen}
             />
         </div>
 

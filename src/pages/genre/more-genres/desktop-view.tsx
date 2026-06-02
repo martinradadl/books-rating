@@ -7,12 +7,13 @@ import { AutocompleteInput } from "../../../components/autocomplete";
 import { GenreAutocompleteItem } from "../../../components/autocomplete/genre-results-item";
 import genresActions from "../../../redux/actions/genres";
 import { useAutocomplete } from "../../../hooks/autocomplete";
+import { GenresSearchBarDesktop } from "../../../components/genres/search-bar-desktop";
 
 
 export const MoreGenresDesktop = () => {
-    const { genresList, discoverList, searchResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
+    const { genresList, discoverList, autocompleteResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
     const { handleNavigateToGenres } = useNavigateToGenres();
-    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
 
 
     if (genresStatus === "loading") {
@@ -24,24 +25,18 @@ export const MoreGenresDesktop = () => {
             <div className="w-[643px] pl-2 pr-2.5">
                 <p className="mt-2.5 mb-[25px] text-2xl font-bold">Genres</p>
 
-                <div className="bg-[#eeeeee] p-2.5 mb-3 rounded-[3px] text-sm flex">
-                    <div ref={autocompleteRef}>
-                        <AutocompleteInput
-                            inputComponent={
-                                <input
-                                    type="text"
-                                    placeholder="Find a genre by name"
-                                    onChange={(e) => debouncedHandleOnChangeSearch(e.target.value)}
-                                    className="w-[508px] py-2 px-8 border border-[#DCD6CC] rounded-[3px] leading-[1.2] bg-white"
-                                />
-                            }
-                            ItemListComponent={GenreAutocompleteItem}
-                            items={searchResults}
-                            inputValue={searchValue}
-                            isOpen={isAutocompleteOpen}
-                        />
-                    </div>
+
+                <div ref={autocompleteRef}>
+                    <AutocompleteInput
+                        inputComponent={<GenresSearchBarDesktop onChange={debouncedHandleOnChangeSearch} />}
+                        ItemListComponent={GenreAutocompleteItem}
+                        items={autocompleteResults}
+                        inputValue={searchValue}
+                        isOpen={isAutocompleteOpen}
+                        setIsOpen={setIsAutocompleteOpen}
+                    />
                 </div>
+
 
                 {discoverList.map((list, index) => (
                     <GenreBookListPreviewDesktop
