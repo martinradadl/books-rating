@@ -300,9 +300,15 @@ describe("Genre Actions", () => {
     });
 
     it("should return autocomplete results when status is 200", async () => {
+      const fakeTotalCount = 2;
+      const fakeResponseData = {
+        results: fakeGenresList,
+        totalCount: fakeTotalCount,
+      };
+
       vi.mocked(axios.get).mockResolvedValueOnce({
         status: 200,
-        data: fakeGenresList,
+        data: fakeResponseData,
       });
 
       await dispatch(
@@ -313,7 +319,7 @@ describe("Genre Actions", () => {
       const genresState = state.genres;
 
       expect(genresState.status).toBe("idle");
-      expect(genresState.autocompleteResults).toEqual(fakeGenresList);
+      expect(genresState.autocompleteResults).toEqual(fakeResponseData.results);
       expect(genresState.error).toBe("");
     });
 
