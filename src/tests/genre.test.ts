@@ -267,6 +267,23 @@ describe("Genre Actions", () => {
       dispatch = store.dispatch;
     });
 
+    it("should throw error message when status is not 200 and set autocompleteResults to an empty array", async () => {
+      vi.mocked(axios.get).mockRejectedValueOnce(
+        new Error("Failed to fetch list")
+      );
+
+      await dispatch(
+        actions.searchByName({ query: "fic", isAutocomplete: true })
+      );
+
+      const state = store.getState() as RootState;
+      const genresState = state.genres;
+
+      expect(genresState.status).toBe("idle");
+      expect(genresState.autocompleteResults).toEqual([]);
+      expect(genresState.error).toBe("Failed to fetch list");
+    });
+
     it("should throw error message when status is not 200 and set searchResults to an empty array", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
         new Error("Failed to fetch list")
@@ -278,23 +295,47 @@ describe("Genre Actions", () => {
       const genresState = state.genres;
 
       expect(genresState.status).toBe("idle");
-      expect(genresState.searchResults).toEqual([]);
+      expect(genresState.searchResults).toEqual({ results: [], totalCount: 0 });
       expect(genresState.error).toBe("Failed to fetch list");
     });
 
-    it("should return search results when status is 200", async () => {
+    it("should return autocomplete results when status is 200", async () => {
       vi.mocked(axios.get).mockResolvedValueOnce({
         status: 200,
         data: fakeGenresList,
       });
 
-      await dispatch(actions.searchByName({query: "fic"}));
+      await dispatch(
+        actions.searchByName({ query: "fic", isAutocomplete: true })
+      );
 
       const state = store.getState() as RootState;
       const genresState = state.genres;
 
       expect(genresState.status).toBe("idle");
-      expect(genresState.searchResults).toEqual(fakeGenresList);
+      expect(genresState.autocompleteResults).toEqual(fakeGenresList);
+      expect(genresState.error).toBe("");
+    });
+
+    it("should return search results when status is 200", async () => {
+      const fakeTotalCount = 2;
+      const fakeResponseData = {
+        results: fakeGenresList,
+        totalCount: fakeTotalCount,
+      };
+
+      vi.mocked(axios.get).mockResolvedValueOnce({
+        status: 200,
+        data: fakeResponseData,
+      });
+
+      await dispatch(actions.searchByName({ query: "fic" }));
+
+      const state = store.getState() as RootState;
+      const genresState = state.genres;
+
+      expect(genresState.status).toBe("idle");
+      expect(genresState.searchResults).toEqual(fakeResponseData);
       expect(genresState.error).toBe("");
     });
   });

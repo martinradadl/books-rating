@@ -8,9 +8,11 @@ interface GenresState {
   selectedGenre: GenreI | null;
   relatedGenres: GenreI[];
   discoverList: { genre: GenreI; editions: EditionI[] }[];
-  searchResults: GenreI[];
+  autocompleteResults: GenreI[];
+  searchResults: { results: GenreI[]; totalCount: number };
   status: string;
   browseGenresListStatus: string;
+  autocompleteStatus: string;
   browseGenresListRequested: boolean;
   error: string;
 }
@@ -21,9 +23,11 @@ const initialState: GenresState = {
   selectedGenre: null,
   relatedGenres: [],
   discoverList: [],
-  searchResults: [],
+  autocompleteResults: [],
+  searchResults: { results: [], totalCount: 0 },
   status: "idle",
   browseGenresListStatus: "idle",
+  autocompleteStatus: "idle",
   browseGenresListRequested: false,
   error: "",
 };
@@ -111,14 +115,34 @@ const genresSlice = createSlice({
         state.error = action.error.message || "Failed to fetch list";
         state.discoverList = [];
       })
+      .addCase(actions.searchByName.pending, (state, action) => {
+        if (!action.meta.arg.isAutocomplete) {
+          state.status = "loading";
+        } else {
+          state.autocompleteStatus = "loading";
+        }
+      })
       .addCase(actions.searchByName.fulfilled, (state, action) => {
-        state.status = "idle";
-        state.searchResults = action.payload;
+        if (action.payload.isAutocomplete) {
+          state.autocompleteStatus = "idle";
+          state.autocompleteResults = action.payload.data.results;
+        } else {
+          state.status = "idle";
+          state.searchResults.results = action.payload.data.results;
+          state.searchResults.totalCount = action.payload.data.totalCount;
+        }
       })
       .addCase(actions.searchByName.rejected, (state, action) => {
-        state.status = "idle";
         state.error = action.error.message || "Failed to search genres";
-        state.searchResults = [];
+
+        if (action.meta.arg.isAutocomplete) {
+          state.autocompleteStatus = "idle";
+          state.autocompleteResults = [];
+        } else {
+          state.status = "idle";
+          state.searchResults.results = [];
+          state.searchResults.totalCount = 0;
+        }
       })
       .addCase(actions.add.pending, (state) => {
         state.status = "loading";
