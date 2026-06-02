@@ -3,14 +3,16 @@ import { textToUrlSlug } from "../../helpers/utils";
 
 interface AllResultsItem {
     inputValue: string;
+    setIsOpen: (isOpen: boolean) => void;
 }
 
-export const AllResultsItem = ({ inputValue }: AllResultsItem) => {
+export const AllResultsItem = ({ inputValue, setIsOpen }: AllResultsItem) => {
     const navigate = useNavigate();
 
     const handleOnClick = () => {
         const inputValueSlug = textToUrlSlug(inputValue)
-        navigate(`/search?${inputValueSlug}`)
+        navigate(`/genres/search?name=${inputValueSlug}`)
+        setIsOpen(false)
     }
 
     return (

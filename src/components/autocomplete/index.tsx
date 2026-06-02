@@ -5,11 +5,12 @@ interface AutocompleteInputProps<T extends { _id: string }> {
     ItemListComponent: React.ComponentType<{ item: T }>;
     items: T[];
     inputValue: string;
-    isOpen?: boolean;
+    isOpen: boolean;
+    setIsOpen: (isOpen: boolean) => void;
 }
 
 export const AutocompleteInput = <T extends { _id: string }>
-    ({ inputComponent, ItemListComponent, items, inputValue, isOpen }: AutocompleteInputProps<T>) => {
+    ({ inputComponent, ItemListComponent, items, inputValue, isOpen, setIsOpen }: AutocompleteInputProps<T>) => {
     return (
         <div>
             {inputComponent}
@@ -18,7 +19,7 @@ export const AutocompleteInput = <T extends { _id: string }>
                     {items?.map((item) => (
                         <ItemListComponent key={item._id} item={item} />
                     ))}
-                    <AllResultsItem inputValue={inputValue} />
+                    <AllResultsItem inputValue={inputValue} setIsOpen={setIsOpen} />
                 </div>}
 
         </div>
