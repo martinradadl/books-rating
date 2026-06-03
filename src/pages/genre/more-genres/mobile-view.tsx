@@ -11,8 +11,8 @@ import { useAutocomplete } from "../../../hooks/autocomplete";
 
 
 export const MoreGenresMobile = () => {
-    const { genresList, discoverList, searchResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
-    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
+    const { genresList, discoverList, autocompleteResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
 
 
     if (genresStatus === "loading") {
@@ -25,9 +25,10 @@ export const MoreGenresMobile = () => {
                 <AutocompleteInput
                     inputComponent={<GenresSearchBarMobile onChange={debouncedHandleOnChangeSearch} />}
                     ItemListComponent={GenreAutocompleteItem}
-                    items={searchResults}
+                    items={autocompleteResults}
                     inputValue={searchValue}
                     isOpen={isAutocompleteOpen}
+                    setIsOpen={setIsAutocompleteOpen}
                 />
             </div>
 

@@ -99,12 +99,23 @@ const getDiscoverList = createAsyncThunk(
 
 const searchByName = createAsyncThunk(
   "genres/searchByName",
-  async ({ query, limit }: { query: string; limit?: number }) => {
+  async ({
+    query,
+    limit,
+    page,
+    isAutocomplete,
+  }: {
+    query: string;
+    limit?: number;
+    page?: number;
+    isAutocomplete?: boolean;
+  }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/genres/search?query=${query}&limit=${limit}`
+        `${API_URL}/genres/search?query=${query}&limit=${limit}&page=${page}`
       );
-      return response.data;
+
+      return { data: response.data, isAutocomplete };
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new Error(error.message);

@@ -3,16 +3,20 @@ import { useAppDispatch } from "../redux/hooks";
 import debounce from "lodash.debounce";
 import type { AsyncThunk, AsyncThunkConfig } from "@reduxjs/toolkit";
 
-type SearchThunk = AsyncThunk<
-    unknown,
+type SearchThunk<T> = AsyncThunk<
+    T,
     {
         query: string;
         limit?: number;
+        page?: number;
+        isAutocomplete?: boolean;
     },
     AsyncThunkConfig
 >;
 
-export const useAutocomplete = (searchAction: SearchThunk) => {
+export const useAutocomplete = <T,>(
+    searchAction: SearchThunk<T>
+) => {
     const dispatch = useAppDispatch();
     const autocompleteRef = useRef<HTMLDivElement>(null);
     const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
@@ -22,7 +26,7 @@ export const useAutocomplete = (searchAction: SearchThunk) => {
     const handleOnChangeSearch = async (value: string) => {
         setSearchValue(value);
         if (value) {
-            await dispatch(searchAction({ query: value }));
+            await dispatch(searchAction({ query: value, isAutocomplete: true }));
         }
 
         if (!isAutocompleteOpen && value) {
@@ -51,5 +55,5 @@ export const useAutocomplete = (searchAction: SearchThunk) => {
         };
     }, [])
 
-    return { autocompleteRef, searchValue, debouncedHandleOnChangeSearch, isAutocompleteOpen }
+    return { autocompleteRef, searchValue, debouncedHandleOnChangeSearch, isAutocompleteOpen, setIsAutocompleteOpen }
 }
