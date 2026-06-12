@@ -12,7 +12,7 @@ import { useAutocomplete } from "../../../hooks/autocomplete";
 
 export const MoreGenresMobile = () => {
     const { genresList, discoverList, autocompleteResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
-    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen, handleClickOnAllResultsGenres } = useAutocomplete(genresActions.searchByName);
 
 
     if (genresStatus === "loading") {
@@ -29,6 +29,7 @@ export const MoreGenresMobile = () => {
                     inputValue={searchValue}
                     isOpen={isAutocompleteOpen}
                     setIsOpen={setIsAutocompleteOpen}
+                    handleClickOnAllResults={handleClickOnAllResultsGenres}
                 />
             </div>
 

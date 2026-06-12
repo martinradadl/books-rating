@@ -20,15 +20,16 @@ export const GenreMobile = () => {
     const { latestReleases, mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions);
     const { handleNavigateToGenres } = useNavigateToGenres();
     const { name } = selectedGenre || {};
-    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
-
-    useEffect(() => {
-        dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
-    }, [dispatch])
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen, handleClickOnAllResultsGenres } = useAutocomplete(genresActions.searchByName);
 
     const handleClickOnRelatedGenre = (slug: string) => {
         navigate(`/genres/${slug}`)
     }
+
+
+    useEffect(() => {
+        dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
+    }, [dispatch])
 
     if (genresStatus === "loading" || editionsStatus === "loading") {
         return <Loading />
@@ -43,6 +44,7 @@ export const GenreMobile = () => {
                 inputValue={searchValue}
                 isOpen={isAutocompleteOpen}
                 setIsOpen={setIsAutocompleteOpen}
+                handleClickOnAllResults={handleClickOnAllResultsGenres}
             />
         </div>
 

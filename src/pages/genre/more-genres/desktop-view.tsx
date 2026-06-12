@@ -9,11 +9,10 @@ import genresActions from "../../../redux/actions/genres";
 import { useAutocomplete } from "../../../hooks/autocomplete";
 import { GenresSearchBarDesktop } from "../../../components/genres/search-bar-desktop";
 
-
 export const MoreGenresDesktop = () => {
     const { genresList, discoverList, autocompleteResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
     const { handleNavigateToGenres } = useNavigateToGenres();
-    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen, handleClickOnAllResultsGenres } = useAutocomplete(genresActions.searchByName);
 
 
     if (genresStatus === "loading") {
@@ -34,6 +33,7 @@ export const MoreGenresDesktop = () => {
                         inputValue={searchValue}
                         isOpen={isAutocompleteOpen}
                         setIsOpen={setIsAutocompleteOpen}
+                        handleClickOnAllResults={handleClickOnAllResultsGenres}
                     />
                 </div>
 
