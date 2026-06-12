@@ -12,11 +12,11 @@ export const GenreAutocompleteItem = ({ item }: GenreAutocompleteItemProps) => {
     const handleOnClick = () => {
         navigate(`/genres/${slug}`)
     }
-        
-    
+
+
     return (
-        <p className="flex items-center h-[40px] px-4 font-bold text-sm cursor-pointer border-b border-[#D8D8D8] bg-white hover:bg-[#f2f2f2] z-10"
-        onClick={handleOnClick}>
+        <p className="flex items-center h-[40px] w-screen lg:w-[508px] px-4 font-bold text-sm cursor-pointer border-b border-[#D8D8D8] bg-white hover:bg-[#f2f2f2] z-10"
+            onClick={handleOnClick}>
             {name}
         </p>
     )

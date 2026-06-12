@@ -2,24 +2,35 @@ import { AllResultsItem } from "./all-results-item";
 
 interface AutocompleteInputProps<T extends { _id: string }> {
     inputComponent: React.ReactNode;
-    ItemListComponent: React.ComponentType<{ item: T }>;
+    ItemListComponent: React.ComponentType<{
+        item: T;
+        setIsOpen: (isOpen: boolean) => void
+        setIsMobileHeaderSearchBarOpen?: (isOpen: boolean) => void;
+    }>;
     items: T[];
     inputValue: string;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
+    handleClickOnAllResults: () => void;
+    setIsMobileHeaderSearchBarOpen?: (isOpen: boolean) => void;
 }
 
 export const AutocompleteInput = <T extends { _id: string }>
-    ({ inputComponent, ItemListComponent, items, inputValue, isOpen, setIsOpen }: AutocompleteInputProps<T>) => {
+    ({ inputComponent, ItemListComponent, items, inputValue, isOpen, setIsOpen, setIsMobileHeaderSearchBarOpen, handleClickOnAllResults }: AutocompleteInputProps<T>) => {
+
+
     return (
         <div>
             {inputComponent}
             {isOpen &&
-                <div className="absolute ml-[-12px] lg:ml-0 w-screen lg:w-[508px] flex flex-col justify-center lg:shadow-md">
+                <div className="absolute ml-[-12px] lg:ml-0 flex flex-col justify-center lg:shadow-md">
                     {items?.map((item) => (
-                        <ItemListComponent key={item._id} item={item} />
+                        <ItemListComponent key={item._id} item={item} setIsOpen={setIsOpen}
+                            setIsMobileHeaderSearchBarOpen={setIsMobileHeaderSearchBarOpen} />
                     ))}
-                    <AllResultsItem inputValue={inputValue} setIsOpen={setIsOpen} />
+                    <AllResultsItem
+                        inputValue={inputValue}
+                        handleOnClick={handleClickOnAllResults} />
                 </div>}
 
         </div>
