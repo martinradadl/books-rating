@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import actions from "../actions/editions";
-import type { EditionI } from "../../data-structures";
+import type { EditionI, EditionPreviewI } from "../../data-structures";
 
 interface EditionsState {
   editionsList: EditionI[];
@@ -11,6 +11,9 @@ interface EditionsState {
   latestReleases: EditionI[];
   mostRatedBooks: { list: EditionI[]; suggestion: EditionI | null };
   bestRatedBooks: { list: EditionI[]; suggestion: EditionI | null };
+  searchResults: { results: EditionPreviewI[]; totalCount: number };
+  autocompleteResults: EditionPreviewI[];
+  autocompleteStatus: string;
   status: string;
   error: string;
 }
@@ -24,7 +27,10 @@ const initialState: EditionsState = {
   latestReleases: [],
   mostRatedBooks: { list: [], suggestion: null },
   bestRatedBooks: { list: [], suggestion: null },
+  autocompleteResults: [],
+  searchResults: { results: [], totalCount: 0 },
   status: "idle",
+  autocompleteStatus: "idle",
   error: "",
 };
 
@@ -131,6 +137,35 @@ const editionsSlice = createSlice({
         state.error =
           action.error.message || "Failed to fetch best rated books";
         state.bestRatedBooks = { list: [], suggestion: null };
+      })
+      .addCase(actions.searchByTitleOrAuthor.pending, (state, action) => {
+        if (!action.meta.arg.isAutocomplete) {
+          state.status = "loading";
+        } else {
+          state.autocompleteStatus = "loading";
+        }
+      })
+      .addCase(actions.searchByTitleOrAuthor.fulfilled, (state, action) => {
+        if (action.payload.isAutocomplete) {
+          state.autocompleteStatus = "idle";
+          state.autocompleteResults = action.payload.data.results;
+        } else {
+          state.status = "idle";
+          state.searchResults.results = action.payload.data.results;
+          state.searchResults.totalCount = action.payload.data.totalCount;
+        }
+      })
+      .addCase(actions.searchByTitleOrAuthor.rejected, (state, action) => {
+        state.error = action.error.message || "Failed to search genres";
+
+        if (action.meta.arg.isAutocomplete) {
+          state.autocompleteStatus = "idle";
+          state.autocompleteResults = [];
+        } else {
+          state.status = "idle";
+          state.searchResults.results = [];
+          state.searchResults.totalCount = 0;
+        }
       })
       .addCase(actions.add.pending, (state) => {
         state.status = "loading";

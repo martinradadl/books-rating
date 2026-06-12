@@ -145,6 +145,34 @@ const getBestRatedBooks = createAsyncThunk(
   }
 );
 
+const searchByTitleOrAuthor = createAsyncThunk(
+  "editions/searchByName",
+  async ({
+    query,
+    limit,
+    page,
+    isAutocomplete,
+  }: {
+    query: string;
+    limit?: number;
+    page?: number;
+    isAutocomplete?: boolean;
+  }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/editions/search?query=${query}&limit=${limit}&page=${page}`
+      );
+
+      return { data: response.data, isAutocomplete };
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to search editions");
+    }
+  }
+);
+
 const add = createAsyncThunk<EditionI, EditionI>(
   "editions/add",
   async (newEdition: EditionI) => {
@@ -171,6 +199,7 @@ const editionsActions = {
   getLatestReleases,
   getMostRatedBooks,
   getBestRatedBooks,
+  searchByTitleOrAuthor,
   add,
   cleanUp,
 };
