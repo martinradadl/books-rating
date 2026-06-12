@@ -48,6 +48,13 @@ export interface EditionI {
   averageRating?: number;
 }
 
+export interface EditionPreviewI {
+  _id: string;
+  title: string;
+  cover: string;
+  book: BookI;
+}
+
 export interface BookListI {
   _id: string;
   title: string;
