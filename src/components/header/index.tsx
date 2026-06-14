@@ -65,7 +65,9 @@ export const Header = () => {
                 <div className={classNames("flex w-full 2xl:w-[87.5%] mx-auto h-[50px] items-center justify-between relative 2xl:max-w-[1280px]",
                     { "lg:h-fit lg:mx-0": isHomePage }
                 )}>
-                    <div className="relative">
+                    <div className={classNames("relative",
+                        { "lg:hidden": isHomePage }
+                    )}>
                         <MdSearch size={28}
                             className="md:hidden mx-2.5 cursor-pointer"
                             onClick={() => { setIsMobileSearchBarOpen(true) }} />
@@ -103,12 +105,12 @@ export const Header = () => {
 
                     <NavBar isHomePage={isHomePage} isXl />
 
-                    <div className={classNames("hidden md:flex flex-1 h-[32px] items-center",
+                    <div className={classNames("hidden md:flex flex-1 h-[32px] ml-4 items-center",
                         { "lg:hidden": isHomePage }
                     )}>
                         <AutocompleteInput
                             inputComponent={
-                                <div className="relative w-[392px] pl-4" ref={autocompleteRef}>
+                                <div className="relative w-[392px]" ref={autocompleteRef}>
                                     <input
                                         type="text"
                                         placeholder="Search books"
@@ -125,7 +127,9 @@ export const Header = () => {
                             inputValue={searchValue}
                             isOpen={isAutocompleteOpen}
                             setIsOpen={setIsAutocompleteOpen}
-                            handleClickOnAllResults={() => { handleClickOnAllResultsBooks(setIsMobileSearchBarOpen) }} />
+                            handleClickOnAllResults={handleClickOnAllResultsBooks}
+                            allResultsItemClassName="md:border-x"
+                        />
 
 
                     </div>

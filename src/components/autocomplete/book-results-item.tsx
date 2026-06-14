@@ -23,7 +23,7 @@ export const BookAutocompleteItem = ({ item, setIsOpen, setIsMobileHeaderSearchB
     }
 
     return (
-        <div className="w-screen md:w-[376px] md:ml-5 h-[55px] py-2 pl-5 pr-4 overflow-hidden border-b border-[#D8D8D8] bg-white z-50"
+        <div className="w-screen md:w-[392px] h-[55px] py-2 pl-5 pr-4 overflow-hidden border-b md:border-x border-[#D8D8D8] bg-white z-50"
             onClick={handleOnClick}
         >
             <div className={"flex cursor-pointer"}>

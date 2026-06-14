@@ -13,10 +13,11 @@ interface AutocompleteInputProps<T extends { _id: string }> {
     setIsOpen: (isOpen: boolean) => void;
     handleClickOnAllResults: () => void;
     setIsMobileHeaderSearchBarOpen?: (isOpen: boolean) => void;
+    allResultsItemClassName?: string;
 }
 
 export const AutocompleteInput = <T extends { _id: string }>
-    ({ inputComponent, ItemListComponent, items, inputValue, isOpen, setIsOpen, setIsMobileHeaderSearchBarOpen, handleClickOnAllResults }: AutocompleteInputProps<T>) => {
+    ({ inputComponent, ItemListComponent, items, inputValue, isOpen, setIsOpen, setIsMobileHeaderSearchBarOpen, handleClickOnAllResults, allResultsItemClassName }: AutocompleteInputProps<T>) => {
 
 
     return (
@@ -30,7 +31,11 @@ export const AutocompleteInput = <T extends { _id: string }>
                     ))}
                     <AllResultsItem
                         inputValue={inputValue}
-                        handleOnClick={handleClickOnAllResults} />
+                        handleOnClick={() => {
+                            handleClickOnAllResults()
+                        }}
+                        className={allResultsItemClassName}
+                    />
                 </div>}
 
         </div>
