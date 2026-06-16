@@ -106,11 +106,12 @@ export const Header = () => {
                     <NavBar isHomePage={isHomePage} isXl />
 
                     <div className={classNames("hidden md:flex flex-1 h-[32px] ml-4 items-center",
-                        { "lg:hidden": isHomePage }
-                    )}>
+                        { "lg:hidden": isHomePage })}
+                        ref={autocompleteRef}
+                    >
                         <AutocompleteInput
                             inputComponent={
-                                <div className="relative w-[392px]" ref={autocompleteRef}>
+                                <div className="relative w-[392px]">
                                     <input
                                         type="text"
                                         placeholder="Search books"
@@ -130,8 +131,6 @@ export const Header = () => {
                             handleClickOnAllResults={handleClickOnAllResultsBooks}
                             allResultsItemClassName="md:border-x"
                         />
-
-
                     </div>
 
                     <button className={classNames('md:hidden bg-black text-white text-sm items-center rounded py-2 px-3 mr-2 cursor-pointer hover:bg-gray-600',
