@@ -24,7 +24,7 @@ export const GenresSearch = () => {
     const inputValue = searchParams.get("name") || "";
 
     const { autocompleteResults, searchResults, status } = useAppSelector((state: RootState) => state.genres);
-    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen } = useAutocomplete(genresActions.searchByName);
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen, handleClickOnAllResultsGenres } = useAutocomplete(genresActions.searchByName);
     const [currentPage, setCurrentPage] = useState(1);
     const isDesktop = useIsDesktop();
 
@@ -76,6 +76,7 @@ export const GenresSearch = () => {
                             inputValue={searchValue}
                             isOpen={isAutocompleteOpen}
                             setIsOpen={setIsAutocompleteOpen}
+                            handleClickOnAllResults={handleClickOnAllResultsGenres}
                         />
                     </div>
                     :
@@ -86,6 +87,7 @@ export const GenresSearch = () => {
                         inputValue={searchValue}
                         isOpen={isAutocompleteOpen}
                         setIsOpen={setIsAutocompleteOpen}
+                        handleClickOnAllResults={handleClickOnAllResultsGenres}
                     />
                 }
             </div>

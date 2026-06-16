@@ -27,7 +27,7 @@ describe("Edition Actions", () => {
 
     it("should return empty editions list and set error message when status is not 200", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch editions"),
+        new Error("Failed to fetch editions")
       );
 
       await dispatch(actions.getAll());
@@ -75,7 +75,7 @@ describe("Edition Actions", () => {
 
     it("should throw error message when status is not 200 and set selecterEdition to null", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch edition"),
+        new Error("Failed to fetch edition")
       );
 
       await dispatch(actions.getById("fakeId"));
@@ -123,11 +123,11 @@ describe("Edition Actions", () => {
 
     it("should throw error message when status is not 200", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch editions"),
+        new Error("Failed to fetch editions")
       );
 
       await dispatch(
-        actions.getMoreEditionsFromBook({ id: "fakeId", bookId: "fakeBookId" }),
+        actions.getMoreEditionsFromBook({ id: "fakeId", bookId: "fakeBookId" })
       );
 
       const state = store.getState() as RootState;
@@ -145,7 +145,7 @@ describe("Edition Actions", () => {
       });
 
       await dispatch(
-        actions.getMoreEditionsFromBook({ id: "fakeId", bookId: "fakeBookId" }),
+        actions.getMoreEditionsFromBook({ id: "fakeId", bookId: "fakeBookId" })
       );
 
       const state = store.getState() as RootState;
@@ -175,14 +175,14 @@ describe("Edition Actions", () => {
 
     it("should throw error message when status is not 200", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch editions"),
+        new Error("Failed to fetch editions")
       );
 
       await dispatch(
         actions.getBooksBySameAuthor({
           authorId: "fakeAuthorId",
           bookId: "fakeBookId",
-        }),
+        })
       );
 
       const state = store.getState() as RootState;
@@ -203,7 +203,7 @@ describe("Edition Actions", () => {
         actions.getBooksBySameAuthor({
           authorId: "fakeAuthorId",
           bookId: "fakeBookId",
-        }),
+        })
       );
 
       const state = store.getState() as RootState;
@@ -233,14 +233,14 @@ describe("Edition Actions", () => {
 
     it("should throw error message when status is not 200", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch editions"),
+        new Error("Failed to fetch editions")
       );
 
       await dispatch(
         actions.getRelatedBooks({
           authorId: "fakeAuthorId",
           bookId: "fakeBookId",
-        }),
+        })
       );
 
       const state = store.getState() as RootState;
@@ -261,7 +261,7 @@ describe("Edition Actions", () => {
         actions.getRelatedBooks({
           authorId: "fakeAuthorId",
           bookId: "fakeBookId",
-        }),
+        })
       );
 
       const state = store.getState() as RootState;
@@ -291,7 +291,7 @@ describe("Edition Actions", () => {
 
     it("should throw error message when status is not 200 and set selecterEdition to null", async () => {
       vi.mocked(axios.post).mockRejectedValueOnce(
-        new Error("Failed to add edition"),
+        new Error("Failed to add edition")
       );
 
       await dispatch(actions.add(fakeEdition));
@@ -339,7 +339,7 @@ describe("Edition Actions", () => {
 
     it("should throw error message when status is not 200 and set latestReleases to an empty array", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch bookList"),
+        new Error("Failed to fetch bookList")
       );
 
       await dispatch(actions.getLatestReleases({ limit: 4 }));
@@ -387,7 +387,7 @@ describe("Edition Actions", () => {
 
     it("should throw error message when status is not 200 and set most rated books to an empty array", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch books"),
+        new Error("Failed to fetch books")
       );
 
       await dispatch(actions.getMostRatedBooks({ limit: 4 }));
@@ -438,7 +438,7 @@ describe("Edition Actions", () => {
 
     it("should throw error message when status is not 200 and set best rated books to an empty array", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch books"),
+        new Error("Failed to fetch books")
       );
 
       await dispatch(actions.getBestRatedBooks({ limit: 4 }));
@@ -467,6 +467,106 @@ describe("Edition Actions", () => {
 
       expect(editionsState.status).toBe("idle");
       expect(editionsState.bestRatedBooks).toEqual(fakeEditionsList);
+      expect(editionsState.error).toBe("");
+    });
+  });
+
+  describe("searchByTitleOrAuthor", () => {
+    let store: ReturnType<typeof configureStore>;
+    let dispatch: AppDispatch;
+
+    beforeEach(() => {
+      vi.resetAllMocks();
+
+      store = configureStore({
+        reducer: {
+          editions: editionsReducer,
+        },
+      });
+
+      dispatch = store.dispatch;
+    });
+
+    it("should throw error message when status is not 200 and set autocompleteResults to an empty array", async () => {
+      vi.mocked(axios.get).mockRejectedValueOnce(
+        new Error("Failed to fetch list")
+      );
+
+      await dispatch(
+        actions.searchByTitleOrAuthor({ query: "fic", isAutocomplete: true })
+      );
+
+      const state = store.getState() as RootState;
+      const editionsState = state.editions;
+
+      expect(editionsState.status).toBe("idle");
+      expect(editionsState.autocompleteResults).toEqual([]);
+      expect(editionsState.error).toBe("Failed to fetch list");
+    });
+
+    it("should throw error message when status is not 200 and set searchResults to an empty array", async () => {
+      vi.mocked(axios.get).mockRejectedValueOnce(
+        new Error("Failed to fetch list")
+      );
+
+      await dispatch(actions.searchByTitleOrAuthor({ query: "fake" }));
+
+      const state = store.getState() as RootState;
+      const editonsState = state.editions;
+
+      expect(editonsState.status).toBe("idle");
+      expect(editonsState.searchResults).toEqual({
+        results: [],
+        totalCount: 0,
+      });
+      expect(editonsState.error).toBe("Failed to fetch list");
+    });
+
+    it("should return autocomplete results when status is 200", async () => {
+      const fakeTotalCount = 2;
+      const fakeResponseData = {
+        results: fakeEditionsList,
+        totalCount: fakeTotalCount,
+      };
+
+      vi.mocked(axios.get).mockResolvedValueOnce({
+        status: 200,
+        data: fakeResponseData,
+      });
+
+      await dispatch(
+        actions.searchByTitleOrAuthor({ query: "fake", isAutocomplete: true })
+      );
+
+      const state = store.getState() as RootState;
+      const editionsState = state.editions;
+
+      expect(editionsState.status).toBe("idle");
+      expect(editionsState.autocompleteResults).toEqual(
+        fakeResponseData.results
+      );
+      expect(editionsState.error).toBe("");
+    });
+
+    it("should return search results when status is 200", async () => {
+      const fakeTotalCount = 2;
+      const fakeResponseData = {
+        results: fakeEditionsList,
+        totalCount: fakeTotalCount,
+      };
+
+      vi.mocked(axios.get).mockResolvedValueOnce({
+        status: 200,
+        data: fakeResponseData,
+      });
+
+      await dispatch(actions.searchByTitleOrAuthor({ query: "fake" }));
+
+      const state = store.getState() as RootState;
+      const editionsState = state.editions;
+
+      expect(editionsState.status).toBe("idle");
+      expect(editionsState.searchResults).toEqual(fakeResponseData);
       expect(editionsState.error).toBe("");
     });
   });
