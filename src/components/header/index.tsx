@@ -94,7 +94,7 @@ export const Header = () => {
                         }
                     </div>
 
-                    <p className={classNames("text-3xl font-bold focus:ring-3 focus:ring-black focus:ring-offset-2 rounded cursor-pointer absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 md:mx-3.5",
+                    <p className={classNames("text-3xl font-bold focus:ring-3 focus:ring-black focus:ring-offset-2 rounded cursor-pointer absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 md:mx-4",
                         { "lg:text-4xl lg:leading-20": isHomePage }
                     )}
                         onClick={() => { navigate('/') }}
@@ -105,32 +105,34 @@ export const Header = () => {
 
                     <NavBar isHomePage={isHomePage} isXl />
 
-                    <div className={classNames("hidden md:flex flex-1 h-[32px] ml-4 items-center",
+                    <div className={classNames("hidden md:flex flex-1 h-[32px] items-center",
                         { "lg:hidden": isHomePage })}
-                        ref={autocompleteRef}
                     >
-                        <AutocompleteInput
-                            inputComponent={
-                                <div className="relative w-[392px]">
-                                    <input
-                                        type="text"
-                                        placeholder="Search books"
-                                        className="w-full h-8 pl-3 border border-gray-300 rounded-md"
-                                        onChange={(e) => debouncedHandleOnChangeSearch(e.target.value)}
-                                    />
-                                    <div className="absolute inset-y-0 right-0 px-2 flex items-center text-gray-700 cursor-pointer">
-                                        <MdSearch size={20} />
+                        <div ref={autocompleteRef}>
+                            <AutocompleteInput
+                                inputComponent={
+                                    <div className="relative w-[392px]">
+                                        <input
+                                            type="text"
+                                            placeholder="Search books"
+                                            className="w-full h-8 pl-3 border border-gray-300 rounded-md"
+                                            onChange={(e) => debouncedHandleOnChangeSearch(e.target.value)}
+                                        />
+                                        <div className="absolute inset-y-0 right-0 px-2 flex items-center text-gray-700 cursor-pointer">
+                                            <MdSearch size={20} />
+                                        </div>
                                     </div>
-                                </div>
-                            }
-                            ItemListComponent={BookAutocompleteItem}
-                            items={autocompleteResults}
-                            inputValue={searchValue}
-                            isOpen={isAutocompleteOpen}
-                            setIsOpen={setIsAutocompleteOpen}
-                            handleClickOnAllResults={handleClickOnAllResultsBooks}
-                            allResultsItemClassName="md:border-x"
-                        />
+                                }
+                                ItemListComponent={BookAutocompleteItem}
+                                items={autocompleteResults}
+                                inputValue={searchValue}
+                                isOpen={isAutocompleteOpen}
+                                setIsOpen={setIsAutocompleteOpen}
+                                handleClickOnAllResults={handleClickOnAllResultsBooks}
+                                allResultsItemClassName="md:border-x"
+                                resultsListClassName="md:ml-0"
+                            />
+                        </div>
                     </div>
 
                     <button className={classNames('md:hidden bg-black text-white text-sm items-center rounded py-2 px-3 mr-2 cursor-pointer hover:bg-gray-600',
