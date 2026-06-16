@@ -31,9 +31,7 @@ export const AutocompleteInput = <T extends { _id: string }>
                     ))}
                     <AllResultsItem
                         inputValue={inputValue}
-                        handleOnClick={() => {
-                            handleClickOnAllResults()
-                        }}
+                        handleOnClick={handleClickOnAllResults}
                         className={allResultsItemClassName}
                     />
                 </div>}
