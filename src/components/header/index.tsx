@@ -88,6 +88,7 @@ export const Header = () => {
                                         setIsOpen={setIsAutocompleteOpen}
                                         setIsMobileHeaderSearchBarOpen={setIsMobileSearchBarOpen}
                                         handleClickOnAllResults={() => { handleClickOnAllResultsBooks(setIsMobileSearchBarOpen) }}
+                                        allResultsItemClassName="w-screen"
                                     />
                                 </div>
                             </div>
@@ -129,7 +130,7 @@ export const Header = () => {
                                 isOpen={isAutocompleteOpen}
                                 setIsOpen={setIsAutocompleteOpen}
                                 handleClickOnAllResults={handleClickOnAllResultsBooks}
-                                allResultsItemClassName="md:border-x"
+                                allResultsItemClassName="md:border-x md:w-[392px]"
                                 resultsListClassName="md:ml-0"
                             />
                         </div>
