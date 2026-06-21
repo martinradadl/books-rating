@@ -12,6 +12,9 @@ import { HomeSearchBarMobile } from "../../components/home/search-bar-mobile";
 import { LinksListMobileItem } from "../../components/home/links-list-mobile-item";
 import { useNavigate } from "react-router-dom";
 import { Loading } from "../../components/loading";
+import { useAutocomplete } from "../../hooks/autocomplete";
+import { AutocompleteInput } from "../../components/autocomplete";
+import { BookAutocompleteItem } from "../../components/autocomplete/book-results-item";
 
 
 const quotesLists = [
@@ -34,9 +37,11 @@ const MOBILE_CHOICE_AWARDS_IMG = "https://s.gr-assets.com/assets/award/2025/sign
 export const HomeMobile = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { mostRatedBooks, latestReleases, status: editionsStatus } = useAppSelector((state: RootState) => state.editions)
+    const { mostRatedBooks, latestReleases, autocompleteResults, status: editionsStatus } = useAppSelector((state: RootState) => state.editions)
     const { listOfBookLists, status: bookListsStatus } = useAppSelector((state: RootState) => state.bookLists)
     const { genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres)
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen, handleClickOnAllResultsBooks } = useAutocomplete(editionsActions.searchByTitleOrAuthor);
+
 
 
     useEffect(() => {
@@ -55,7 +60,23 @@ export const HomeMobile = () => {
 
                 <HomeAuthContainerMobile />
 
-                <HomeSearchBarMobile />
+                <div ref={autocompleteRef}>
+                    <AutocompleteInput
+                        inputComponent={
+                            <HomeSearchBarMobile
+                                onChange={debouncedHandleOnChangeSearch} />
+                        }
+                        ItemListComponent={BookAutocompleteItem}
+                        items={autocompleteResults}
+                        inputValue={searchValue}
+                        isOpen={isAutocompleteOpen}
+                        setIsOpen={setIsAutocompleteOpen}
+                        handleClickOnAllResults={handleClickOnAllResultsBooks}
+                        resultsListClassName="w-[404px] ml-2.5"
+                        allResultsItemClassName="border-x"
+                        itemClassName="w-full border-x md:w-[404px]"
+                    />
+                </div>
 
                 <div className="my-6 flex justify-center">
                     <GooglePlayButton />

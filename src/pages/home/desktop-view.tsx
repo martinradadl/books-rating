@@ -12,6 +12,10 @@ import editionsActions from "../../redux/actions/editions"
 import { HOME_DATA } from "../../data/home"
 import { useNavigate } from "react-router-dom"
 import { Loading } from "../../components/loading"
+import { useAutocomplete } from "../../hooks/autocomplete"
+import { AutocompleteInput } from "../../components/autocomplete"
+import { BookAutocompleteItem } from "../../components/autocomplete/book-results-item"
+import debounce from "lodash.debounce"
 
 const {
     exampleQuote,
@@ -26,8 +30,10 @@ export const HomeDesktop = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { genresList, status: genresStatus } = useAppSelector((state: RootState) => state.genres)
-    const { mostRatedBooks, bestRatedBooks, status: editionsStatus } = useAppSelector((state: RootState) => state.editions)
+    const { mostRatedBooks, bestRatedBooks, autocompleteResults, status: editionsStatus } = useAppSelector((state: RootState) => state.editions)
     const { listOfBookLists, status: bookListsStatus } = useAppSelector((state: RootState) => state.bookLists)
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen, handleClickOnAllResultsBooks } = useAutocomplete(editionsActions.searchByTitleOrAuthor);
+
     const bestRatedBooksStringified = useMemo(() => JSON.stringify(bestRatedBooks), [bestRatedBooks]);
     const mostRatedBooksStringified = useMemo(() => JSON.stringify(mostRatedBooks), [mostRatedBooks]);
 
@@ -41,12 +47,6 @@ export const HomeDesktop = () => {
         linksList.push({ name: "More genres", urlPath: "genres" })
         return linksList;
     }, [genresList])
-
-
-    useEffect(() => {
-        dispatch(editionsActions.getAll());
-        dispatch(editionsActions.getBestRatedBooks({ enableSuggestion: true, limit: 4 }));
-    }, [dispatch])
 
 
     const discoverMostRatedBooks: DiscoverBooksItemProps[] = useMemo(() => (
@@ -95,6 +95,9 @@ export const HomeDesktop = () => {
         return { img: "", id: "", genres: "" }
     }, [bestRatedBooksStringified]) // eslint-disable-line
 
+    useEffect(() => {
+        dispatch(debounce(editionsActions.getBestRatedBooks({ enableSuggestion: true, limit: 4 }), 500));
+    }, [dispatch])
 
     if (editionsStatus === "loading"
         || genresStatus === "loading"
@@ -143,7 +146,23 @@ export const HomeDesktop = () => {
                         <div className="my-[25px] flex flex-col gap-3">
                             <p className="text-lg">Search and browse books</p>
 
-                            <HomeSearchBarDesktop />
+                            <div ref={autocompleteRef}>
+                                <AutocompleteInput
+                                    inputComponent={
+                                        <HomeSearchBarDesktop
+                                            onChange={debouncedHandleOnChangeSearch} />
+                                    }
+                                    ItemListComponent={BookAutocompleteItem}
+                                    items={autocompleteResults}
+                                    inputValue={searchValue}
+                                    isOpen={isAutocompleteOpen}
+                                    setIsOpen={setIsAutocompleteOpen}
+                                    handleClickOnAllResults={handleClickOnAllResultsBooks}
+                                    resultsListClassName="w-[400px]"
+                                    allResultsItemClassName="border-x"
+                                    itemClassName="border-x lg:w-[400px]"
+                                />
+                            </div>
 
                             <LinksListDesktop list={genresLinksList} columns={4} className="leading-[1.5]" />
                         </div>
