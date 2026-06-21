@@ -1,15 +1,17 @@
 import { BookCover } from "../editions/book-cover";
 import type { EditionPreviewI } from "../../data-structures";
 import { useNavigate } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
 
 
 interface BookAutocompleteItemProps {
     item: EditionPreviewI;
     setIsOpen: (isOpen: boolean) => void;
     setIsMobileHeaderSearchBarOpen?: (isOpen: boolean) => void;
+    className?: string;
 }
 
-export const BookAutocompleteItem = ({ item, setIsOpen, setIsMobileHeaderSearchBarOpen }: BookAutocompleteItemProps) => {
+export const BookAutocompleteItem = ({ item, setIsOpen, setIsMobileHeaderSearchBarOpen, className }: BookAutocompleteItemProps) => {
     const navigate = useNavigate();
     const { _id, book, cover, title } = item;
     const { author } = book;
@@ -23,14 +25,16 @@ export const BookAutocompleteItem = ({ item, setIsOpen, setIsMobileHeaderSearchB
     }
 
     return (
-        <div className="w-screen md:w-[392px] h-[55px] py-2 pl-5 pr-4 overflow-hidden border-b md:border-x border-[#D8D8D8] bg-white z-50"
+        <div className={twMerge("w-screen md:w-[392px] h-[55px] py-2 pl-5 pr-4 overflow-hidden border-b md:border-x border-[#D8D8D8] bg-white z-50",
+            className
+        )}
             onClick={handleOnClick}
         >
             <div className={"flex cursor-pointer"}>
                 <BookCover image={cover} className="w-[50px] mr-2" withoutRoundedCorners />
 
-                <div className="flex flex-1 flex-col">
-                    <p className="font-bold text-sm leading-[18px]">
+                <div className="flex flex-1 min-w-0 flex-col">
+                    <p className="font-bold text-sm leading-[18px] truncate">
                         {title}
                     </p>
                     <p className="mt-1 text-xs leading-[19px]">{author.name}</p>
