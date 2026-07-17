@@ -133,7 +133,7 @@ describe("Edition Actions", () => {
       const state = store.getState() as RootState;
       const editionsState = state.editions;
 
-      expect(editionsState.status).toBe("idle");
+      expect(editionsState.moreEditionsStatus).toBe("idle");
       expect(editionsState.moreEditionsFromBook).toEqual([]);
       expect(editionsState.error).toBe("Failed to fetch editions");
     });
@@ -151,7 +151,7 @@ describe("Edition Actions", () => {
       const state = store.getState() as RootState;
       const editionsState = state.editions;
 
-      expect(editionsState.status).toBe("idle");
+      expect(editionsState.moreEditionsStatus).toBe("idle");
       expect(editionsState.moreEditionsFromBook).toEqual(fakeEditionsList);
       expect(editionsState.error).toBe("");
     });
@@ -188,7 +188,7 @@ describe("Edition Actions", () => {
       const state = store.getState() as RootState;
       const editionsState = state.editions;
 
-      expect(editionsState.status).toBe("idle");
+      expect(editionsState.booksBySameAuthorStatus).toBe("idle");
       expect(editionsState.booksBySameAuthor).toEqual([]);
       expect(editionsState.error).toBe("Failed to fetch editions");
     });
@@ -209,7 +209,7 @@ describe("Edition Actions", () => {
       const state = store.getState() as RootState;
       const editionsState = state.editions;
 
-      expect(editionsState.status).toBe("idle");
+      expect(editionsState.booksBySameAuthorStatus).toBe("idle");
       expect(editionsState.booksBySameAuthor).toEqual(fakeEditionsList);
       expect(editionsState.error).toBe("");
     });
@@ -246,7 +246,7 @@ describe("Edition Actions", () => {
       const state = store.getState() as RootState;
       const editionsState = state.editions;
 
-      expect(editionsState.status).toBe("idle");
+      expect(editionsState.relatedBooksStatus).toBe("idle");
       expect(editionsState.relatedBooks).toEqual([]);
       expect(editionsState.error).toBe("Failed to fetch editions");
     });
@@ -267,7 +267,7 @@ describe("Edition Actions", () => {
       const state = store.getState() as RootState;
       const editionsState = state.editions;
 
-      expect(editionsState.status).toBe("idle");
+      expect(editionsState.relatedBooksStatus).toBe("idle");
       expect(editionsState.relatedBooks).toEqual(fakeEditionsList);
       expect(editionsState.error).toBe("");
     });
@@ -499,7 +499,7 @@ describe("Edition Actions", () => {
       const state = store.getState() as RootState;
       const editionsState = state.editions;
 
-      expect(editionsState.status).toBe("idle");
+      expect(editionsState.autocompleteStatus).toBe("idle");
       expect(editionsState.autocompleteResults).toEqual([]);
       expect(editionsState.error).toBe("Failed to fetch list");
     });
@@ -541,7 +541,7 @@ describe("Edition Actions", () => {
       const state = store.getState() as RootState;
       const editionsState = state.editions;
 
-      expect(editionsState.status).toBe("idle");
+      expect(editionsState.autocompleteStatus).toBe("idle");
       expect(editionsState.autocompleteResults).toEqual(
         fakeResponseData.results
       );
