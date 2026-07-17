@@ -20,10 +20,11 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import type { RootState } from "../redux/store";
 import editionsActions from "../redux/actions/editions";
 import { useParams } from "react-router-dom";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import { BookActions } from "../components/editions/book-actions";
 import { TotalRatingBar } from "../components/ratings/total-rating-bar";
 import { Loading } from "../components/loading";
+import { useIsMounted } from "../hooks/is-mounted";
 
 const reviewsCount = 123456;
 
@@ -34,14 +35,38 @@ const authorBooksCount = 1657;
 const authorFollowersCount = 49622;
 
 export const BookEdition = () => {
-  const { selectedEdition, status, moreEditionsFromBook, relatedBooks, booksBySameAuthor } = useAppSelector((state: RootState) => state.editions)
-  const { title, book, description, pagesCount, format: editionFormat, published, ISBN, ASIN, language, cover, averageRating = 0, ratingCount = 0 } = selectedEdition || {};
+  const {
+    selectedEdition,
+    status,
+    moreEditionsFromBook,
+    relatedBooks,
+    booksBySameAuthor,
+    moreEditionsStatus,
+    booksBySameAuthorStatus,
+    relatedBooksStatus,
+  } = useAppSelector((state: RootState) => state.editions);
+
+  const {
+    title,
+    book,
+    description,
+    pagesCount,
+    format: editionFormat,
+    published,
+    ISBN,
+    ASIN,
+    language,
+    cover,
+    averageRating = 0,
+    ratingCount = 0,
+  } = selectedEdition || {};
+
   const { author, firstPublished, relatedGenres } = book || {};
 
-  const formattedDate = (date: Date) => format(date, 'MMMM dd, yyyy')
+  const formattedDate = (date: Date) => format(date, "MMMM dd, yyyy");
 
-  const editionDetails = useMemo(() => (
-    [
+  const editionDetails = useMemo(
+    () => [
       { label: "Format", value: `${pagesCount} pages, ${editionFormat}` },
       { label: "Published", value: formattedDate(published || new Date()) },
       {
@@ -50,43 +75,63 @@ export const BookEdition = () => {
       },
       { label: "ASIN", value: ASIN },
       { label: "Language", value: language },
-    ]
-  ), [ASIN, ISBN, editionFormat, language, pagesCount, published]);
+    ],
+    [ASIN, ISBN, editionFormat, language, pagesCount, published]
+  );
 
   const params = useParams();
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [showFullAuthorDescription, setShowFullAuthorDescription] = useState(false);
+  const [showFullAuthorDescription, setShowFullAuthorDescription] =
+    useState(false);
   const [userRating, setUserRating] = useState(0);
   const dispatch = useAppDispatch();
+  const { skipFirstRender } = useIsMounted();
 
   useEffect(() => {
     return () => {
       dispatch(editionsActions.cleanUp());
-    }
-  }, [dispatch])
+    };
+  }, [dispatch]);
 
   useEffect(() => {
-    if (params.id) {
-      dispatch(editionsActions.getById(params.id));
-    }
-  }, [dispatch, params.id]);
+    skipFirstRender(() => {
+      if (params.id) {
+        dispatch(editionsActions.getById(params.id));
+      }
+    });
+  }, [dispatch, params.id, skipFirstRender]);
 
   useEffect(() => {
     if (params.id && selectedEdition?.book._id) {
-      dispatch(editionsActions.getMoreEditionsFromBook({ id: params.id, bookId: selectedEdition?.book._id }));
+      dispatch(
+        editionsActions.getMoreEditionsFromBook({
+          id: params.id,
+          bookId: selectedEdition?.book._id,
+        })
+      );
     }
-  }, [dispatch, params.id, selectedEdition?.book._id])
+  }, [dispatch, params.id, selectedEdition?.book._id]);
 
   useEffect(() => {
     if (selectedEdition?.book.author._id && selectedEdition?.book._id) {
-      dispatch(editionsActions.getRelatedBooks({ authorId: selectedEdition?.book.author._id, bookId: selectedEdition?.book._id }));
-      dispatch(editionsActions.getBooksBySameAuthor({ authorId: selectedEdition?.book.author._id, bookId: selectedEdition?.book._id }));
+      dispatch(
+        editionsActions.getRelatedBooks({
+          authorId: selectedEdition?.book.author._id,
+          bookId: selectedEdition?.book._id,
+        })
+      );
+      dispatch(
+        editionsActions.getBooksBySameAuthor({
+          authorId: selectedEdition?.book.author._id,
+          bookId: selectedEdition?.book._id,
+        })
+      );
     }
   }, [dispatch, selectedEdition?.book._id, selectedEdition?.book.author._id]);
 
   if (status === "loading") {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
@@ -100,9 +145,14 @@ export const BookEdition = () => {
 
         <div className="flex flex-col md:flex-2 lg:flex-3 flex-1 overflow-y-auto lg:pl-8">
           <div className="flex flex-col items-center md:items-start">
-            <p className="text-5xl font-semibold text-center md:text-left">{title}</p>
+            <p className="text-5xl font-semibold text-center md:text-left">
+              {title}
+            </p>
 
-            <p className="text-4xl cursor-pointer hover:underline focus:ring-3 focus:ring-offset-2 rounded" tabIndex={0}>
+            <p
+              className="text-4xl cursor-pointer hover:underline focus:ring-3 focus:ring-offset-2 rounded"
+              tabIndex={0}
+            >
               {author?.name}
             </p>
 
@@ -111,7 +161,7 @@ export const BookEdition = () => {
                 ratingCount,
                 averageRating,
                 reviewsCount,
-                className: 'cursor-pointer'
+                className: "cursor-pointer",
               }}
             />
           </div>
@@ -123,7 +173,11 @@ export const BookEdition = () => {
             isExpanded={showFullDescription}
             setIsExpanded={setShowFullDescription}
             content={
-              <p className={classNames("text-base lg:w-8/9 xl:w-7/9", { 'max-h-32 overflow-hidden mb-6': !showFullDescription })}>
+              <p
+                className={classNames("text-base lg:w-8/9 xl:w-7/9", {
+                  "max-h-32 overflow-hidden mb-6": !showFullDescription,
+                })}
+              >
                 {description}
               </p>
             }
@@ -146,7 +200,9 @@ export const BookEdition = () => {
 
             <LabelText text={`${pagesCount} pages, ${editionFormat}`} />
 
-            <LabelText text={`First published ${formattedDate(firstPublished || new Date())}`} />
+            <LabelText
+              text={`First published ${formattedDate(firstPublished || new Date())}`}
+            />
           </div>
 
           <ExpandableContent
@@ -155,45 +211,60 @@ export const BookEdition = () => {
             isExpanded={showDetails}
             setIsExpanded={setShowDetails}
             content={
-              !showDetails ?
+              !showDetails ? (
                 <div className="h-4" />
-                :
+              ) : (
                 <div className="mb-10">
                   <p className="text-base font-bold py-2">This edition</p>
 
                   <div className="grid gap-y-2 my-6">
-                    {editionDetails.filter((detail) => detail.value).map((detail) => (
-                      <div key={detail.label} className="flex">
-                        <div className="w-32">
-                          <LabelText text={detail.label} />
+                    {editionDetails
+                      .filter((detail) => detail.value)
+                      .map((detail) => (
+                        <div key={detail.label} className="flex">
+                          <div className="w-32">
+                            <LabelText text={detail.label} />
+                          </div>
+                          <div className="text-base text-gray-600">
+                            {detail.value}
+                          </div>
                         </div>
-                        <div className="text-base text-gray-600">
-                          {detail.value}
-                        </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
 
-                  <div className={!showDetails ? 'my-4' : 'hidden'} />
+                  <div className={!showDetails ? "my-4" : "hidden"} />
 
-                  {moreEditionsFromBook.length > 0 && <BooksCarousel
-                    title={<p className="text-base font-bold mt-2">More editions</p>}
-                    editionsList={moreEditionsFromBook}
-                    showAllLabel="Show all editions"
-                    isMoreEditions
-                  />}
+                  {moreEditionsStatus === "loading" ? (
+                    <Loading />
+                  ) : (
+                    moreEditionsFromBook.length > 0 && (
+                      <BooksCarousel
+                        title={
+                          <p className="text-base font-bold mt-2">
+                            More editions
+                          </p>
+                        }
+                        editionsList={moreEditionsFromBook}
+                        showAllLabel="Show all editions"
+                        isMoreEditions
+                      />
+                    )
+                  )}
                 </div>
+              )
             }
           />
 
-          <Separator className={'my-8'} />
+          <Separator className={"my-8"} />
 
           <div className="w-full sm:hidden">
             <div className="mx-auto max-w-md grid gap-y-4">
               <div className="flex items-center justify-center gap-2">
                 <AvatarGroup />
                 <div className="w-50">
-                  <LabelText text={`${currentlyReadingCount} people are currently reading`} />
+                  <LabelText
+                    text={`${currentlyReadingCount} people are currently reading`}
+                  />
                 </div>
               </div>
 
@@ -209,7 +280,9 @@ export const BookEdition = () => {
           <div className="hidden sm:flex">
             <div className="flex items-center gap-2 justify-center flex-1">
               <AvatarGroup />
-              <LabelText text={`${currentlyReadingCount} people are currently reading`} />
+              <LabelText
+                text={`${currentlyReadingCount} people are currently reading`}
+              />
             </div>
 
             <div className="flex items-center gap-2 justify-center flex-1">
@@ -218,7 +291,7 @@ export const BookEdition = () => {
             </div>
           </div>
 
-          <Separator className={'my-8'} />
+          <Separator className={"my-8"} />
 
           <SectionTitle name="About the author" />
 
@@ -226,13 +299,19 @@ export const BookEdition = () => {
             <ProfilePic image={author?.profilePic} />
 
             <div className="flex flex-col flex-1 min-w-0">
-              <p className="w-fit font-semibold text-lg cursor-pointer hover:underline truncate focus:ring-3 rounded" tabIndex={0}>
+              <p
+                className="w-fit font-semibold text-lg cursor-pointer hover:underline truncate focus:ring-3 rounded"
+                tabIndex={0}
+              >
                 {author?.name}
               </p>
 
-              <LabelText text={`${authorBooksCount} books · ${formatNumberShort(
-                authorFollowersCount
-              )} followers`} className="truncate" />
+              <LabelText
+                text={`${authorBooksCount} books · ${formatNumberShort(
+                  authorFollowersCount
+                )} followers`}
+                className="truncate"
+              />
             </div>
 
             <PillButton label="Follow" className="px-8" />
@@ -243,21 +322,31 @@ export const BookEdition = () => {
             isExpanded={showFullAuthorDescription}
             setIsExpanded={setShowFullAuthorDescription}
             content={
-              <p className={classNames("text-base my-6 lg:w-8/9 xl:w-7/9", { 'max-h-20 mb-6 overflow-hidden': !showFullAuthorDescription })}>
+              <p
+                className={classNames("text-base my-6 lg:w-8/9 xl:w-7/9", {
+                  "max-h-20 mb-6 overflow-hidden": !showFullAuthorDescription,
+                })}
+              >
                 {author?.description}
               </p>
             }
           />
 
-          <Separator className={'my-8'} />
+          <Separator className={"my-8"} />
 
-          {relatedBooks.length > 0 && <BooksCarousel
-            editionsList={relatedBooks}
-            showAllLabel="All similar books"
-            title={<SectionTitle name="Readers also enjoyed" />}
-          />}
+          {relatedBooksStatus === "loading" ? (
+            <Loading />
+          ) : (
+            relatedBooks.length > 0 && (
+              <BooksCarousel
+                editionsList={relatedBooks}
+                showAllLabel="All similar books"
+                title={<SectionTitle name="Readers also enjoyed" />}
+              />
+            )
+          )}
 
-          <Separator className={'my-8'} />
+          <Separator className={"my-8"} />
 
           <SectionTitle name="Ratings & Reviews" />
 
@@ -268,15 +357,22 @@ export const BookEdition = () => {
 
             <div className="flex gap-6 items-center">
               <div className="flex flex-col items-center gap-2">
-                <StarRating interactive userRating={userRating} setUserRating={setUserRating} />
+                <StarRating
+                  interactive
+                  userRating={userRating}
+                  setUserRating={setUserRating}
+                />
                 <LabelText text="Rate this book" className="cursor-pointer" />
               </div>
 
-              <PillButton label="Write a Review" className="px-6 whitespace-nowrap" />
+              <PillButton
+                label="Write a Review"
+                className="px-6 whitespace-nowrap"
+              />
             </div>
           </div>
 
-          <Separator className={'my-8'} />
+          <Separator className={"my-8"} />
 
           <SectionTitle name="Community Reviews" />
 
@@ -292,7 +388,9 @@ export const BookEdition = () => {
 
           <SearchReviewBar />
 
-          <LabelText text={`Displaying 1 - 20 of ${numberToLocaleString(reviewsCount)} reviews`} />
+          <LabelText
+            text={`Displaying 1 - 20 of ${numberToLocaleString(reviewsCount)} reviews`}
+          />
 
           <Review />
 
@@ -304,15 +402,22 @@ export const BookEdition = () => {
 
       <DiscussionOptions />
 
-      {booksBySameAuthor.length > 0 && <BooksCarousel
-        title={<SectionTitle>
-          Other books by <span className="italic">{author?.name}</span>
-        </SectionTitle>}
-        editionsList={booksBySameAuthor}
-        showAllLabel="All books by this author"
-        isBooksBySameAuthor
-      />}
+      {booksBySameAuthorStatus === "loading" ? (
+        <Loading />
+      ) : (
+        booksBySameAuthor.length > 0 && (
+          <BooksCarousel
+            title={
+              <SectionTitle>
+                Other books by <span className="italic">{author?.name}</span>
+              </SectionTitle>
+            }
+            editionsList={booksBySameAuthor}
+            showAllLabel="All books by this author"
+            isBooksBySameAuthor
+          />
+        )
+      )}
     </div>
-
   );
 };

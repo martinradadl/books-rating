@@ -14,6 +14,9 @@ interface EditionsState {
   searchResults: { results: EditionPreviewI[]; totalCount: number };
   autocompleteResults: EditionPreviewI[];
   autocompleteStatus: string;
+  moreEditionsStatus: string;
+  booksBySameAuthorStatus: string;
+  relatedBooksStatus: string;
   status: string;
   error: string;
 }
@@ -29,7 +32,10 @@ const initialState: EditionsState = {
   bestRatedBooks: { list: [], suggestion: null },
   autocompleteResults: [],
   searchResults: { results: [], totalCount: 0 },
-  status: "idle",
+  status: "loading",
+  moreEditionsStatus: "loading",
+  booksBySameAuthorStatus: "loading",
+  relatedBooksStatus: "loading",
   autocompleteStatus: "idle",
   error: "",
 };
@@ -65,38 +71,38 @@ const editionsSlice = createSlice({
         state.selectedEdition = null;
       })
       .addCase(actions.getMoreEditionsFromBook.pending, (state) => {
-        state.status = "loading";
+        state.moreEditionsStatus = "loading";
       })
       .addCase(actions.getMoreEditionsFromBook.fulfilled, (state, action) => {
-        state.status = "idle";
+        state.moreEditionsStatus = "idle";
         state.moreEditionsFromBook = action.payload;
       })
       .addCase(actions.getMoreEditionsFromBook.rejected, (state, action) => {
-        state.status = "idle";
+        state.moreEditionsStatus = "idle";
         state.error = action.error.message || "Failed to fetch editions";
         state.moreEditionsFromBook = [];
       })
       .addCase(actions.getBooksBySameAuthor.pending, (state) => {
-        state.status = "loading";
+        state.booksBySameAuthorStatus = "loading";
       })
       .addCase(actions.getBooksBySameAuthor.fulfilled, (state, action) => {
-        state.status = "idle";
+        state.booksBySameAuthorStatus = "idle";
         state.booksBySameAuthor = action.payload;
       })
       .addCase(actions.getBooksBySameAuthor.rejected, (state, action) => {
-        state.status = "idle";
+        state.booksBySameAuthorStatus = "idle";
         state.error = action.error.message || "Failed to fetch editions";
         state.booksBySameAuthor = [];
       })
       .addCase(actions.getRelatedBooks.pending, (state) => {
-        state.status = "loading";
+        state.relatedBooksStatus = "loading";
       })
       .addCase(actions.getRelatedBooks.fulfilled, (state, action) => {
-        state.status = "idle";
+        state.relatedBooksStatus = "idle";
         state.relatedBooks = action.payload;
       })
       .addCase(actions.getRelatedBooks.rejected, (state, action) => {
-        state.status = "idle";
+        state.relatedBooksStatus = "idle";
         state.error = action.error.message || "Failed to fetch editions";
         state.relatedBooks = [];
       })

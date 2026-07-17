@@ -27,7 +27,7 @@ export const GenreBookListItemsMobile = ({ title, editions, isPreview, buttonLab
         {isPreview && <p className="my-3 pt-2 border-t border-[#D8D8D8] text-sm font-bold uppercase">{title}</p>}
 
         <div className="flex justify-center">
-            <div className="grid w-fit grid-cols-3 gap-x-[20%] gap-y-10">
+            <div className="grid w-fit grid-cols-3 gap-x-8 gap-y-10">
                 {editions.map((edition) => (
                     <div
                         key={edition._id}
