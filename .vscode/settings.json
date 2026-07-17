@@ -1,0 +1,17 @@
+{
+    "workbench.iconTheme": "vscode-icons",
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false,
+        "dotenv": true
+    },
+    "eslint.codeActionsOnSave.options": {
+        
+
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+}
