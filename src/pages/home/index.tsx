@@ -1,28 +1,37 @@
-import { HomeDesktop } from "./desktop-view"
-import { HomeMobile } from "./mobile-view"
-import { useEffect } from "react"
-import { useIsDesktop } from "../../hooks/is-desktop"
-import { useAppDispatch } from "../../redux/hooks"
-import genresActions from "../../redux/actions/genres"
-import debounce from "lodash.debounce"
-import bookListsActions from "../../redux/actions/book-lists"
-import editionsActions from "../../redux/actions/editions"
+import { HomeDesktop } from "./desktop-view";
+import { HomeMobile } from "./mobile-view";
+import { useEffect } from "react";
+import { useIsDesktop } from "../../hooks/is-desktop";
+import { useAppDispatch } from "../../redux/hooks";
+import genresActions from "../../redux/actions/genres";
+import bookListsActions from "../../redux/actions/book-lists";
+import editionsActions from "../../redux/actions/editions";
+import { useIsMounted } from "../../hooks/is-mounted";
 
 export const Home = () => {
-    const isDesktop = useIsDesktop();
-    const dispatch = useAppDispatch();
+  const isDesktop = useIsDesktop();
+  const dispatch = useAppDispatch();
+  const { skipFirstRender } = useIsMounted();
 
-    useEffect(() => {
-        dispatch(
-            debounce(genresActions.getAll({
-                limit: isDesktop ? 27 : 9,
-                sortBy: "occurrence",
-            }),
-                2000)
-        );
-        dispatch(debounce(bookListsActions.getAll({ limit: isDesktop ? 3 : 5 }), 2000));
-        dispatch(debounce(editionsActions.getMostRatedBooks({ enableSuggestion: isDesktop, limit: isDesktop ? 4 : 10 }), 2000));
-    }, [isDesktop, dispatch]);
+  useEffect(() => {
+    skipFirstRender(() => {
+      dispatch(
+        genresActions.getAll({
+          limit: isDesktop ? 27 : 9,
+          sortBy: "occurrence",
+        })
+      );
 
-    return isDesktop ? <HomeDesktop /> : <HomeMobile />;
-}
+      dispatch(bookListsActions.getAll({ limit: isDesktop ? 3 : 5 }));
+
+      dispatch(
+        editionsActions.getMostRatedBooks({
+          enableSuggestion: isDesktop,
+          limit: isDesktop ? 4 : 10,
+        })
+      );
+    });
+  }, [isDesktop, dispatch, skipFirstRender]);
+
+  return isDesktop ? <HomeDesktop /> : <HomeMobile />;
+};
