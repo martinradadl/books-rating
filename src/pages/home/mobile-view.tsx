@@ -15,7 +15,6 @@ import { Loading } from "../../components/loading";
 import { useAutocomplete } from "../../hooks/autocomplete";
 import { AutocompleteInput } from "../../components/autocomplete";
 import { BookAutocompleteItem } from "../../components/autocomplete/book-results-item";
-import { useIsMounted } from "../../hooks/is-mounted";
 
 const quotesLists = [
   "Best quotes",
@@ -58,14 +57,11 @@ export const HomeMobile = () => {
     setIsAutocompleteOpen,
     handleClickOnAllResultsBooks,
   } = useAutocomplete(editionsActions.searchByTitleOrAuthor);
-  const { skipFirstRender } = useIsMounted();
 
   useEffect(() => {
-    skipFirstRender(() => {
-      dispatch(editionsActions.getAll());
-      dispatch(editionsActions.getLatestReleases({ limit: 8 }));
-    });
-  }, [dispatch, skipFirstRender]);
+    dispatch(editionsActions.getAll());
+    dispatch(editionsActions.getLatestReleases({ limit: 8 }));
+  }, [dispatch]);
 
   if (
     editionsStatus === "loading" ||

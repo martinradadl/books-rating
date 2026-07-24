@@ -4,7 +4,6 @@ import type { RootState } from "../../redux/store";
 import { LabelText } from "../label-text";
 import ratingsActions from "../../redux/actions/ratings";
 import { numberToLocaleString } from "../../helpers/utils";
-import { useIsMounted } from "../../hooks/is-mounted";
 
 interface RatingDistributionProps {
   bookId: string;
@@ -13,15 +12,12 @@ interface RatingDistributionProps {
 export const RatingDistribution = ({ bookId }: RatingDistributionProps) => {
   const { distribution } = useAppSelector((state: RootState) => state.ratings);
   const dispatch = useAppDispatch();
-  const { skipFirstRender } = useIsMounted();
 
   useEffect(() => {
-    skipFirstRender(() => {
-      if (bookId) {
-        dispatch(ratingsActions.getRatingDistributionByScore(bookId));
-      }
-    });
-  }, [dispatch, bookId, skipFirstRender]);
+    if (bookId) {
+      dispatch(ratingsActions.getRatingDistributionByScore(bookId));
+    }
+  }, [dispatch, bookId]);
 
   return (
     <div className="w-full max-w-xl space-y-4">

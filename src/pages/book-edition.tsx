@@ -24,7 +24,6 @@ import { format } from "date-fns";
 import { BookActions } from "../components/editions/book-actions";
 import { TotalRatingBar } from "../components/ratings/total-rating-bar";
 import { Loading } from "../components/loading";
-import { useIsMounted } from "../hooks/is-mounted";
 
 const reviewsCount = 123456;
 
@@ -86,7 +85,6 @@ export const BookEdition = () => {
     useState(false);
   const [userRating, setUserRating] = useState(0);
   const dispatch = useAppDispatch();
-  const { skipFirstRender } = useIsMounted();
 
   useEffect(() => {
     return () => {
@@ -95,12 +93,10 @@ export const BookEdition = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    skipFirstRender(() => {
-      if (params.id) {
-        dispatch(editionsActions.getById(params.id));
-      }
-    });
-  }, [dispatch, params.id, skipFirstRender]);
+    if (params.id) {
+      dispatch(editionsActions.getById(params.id));
+    }
+  }, [dispatch, params.id]);
 
   useEffect(() => {
     if (params.id && selectedEdition?.book._id) {

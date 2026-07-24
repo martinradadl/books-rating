@@ -11,7 +11,6 @@ import { GenresSearchBarMobile } from "../../components/genres/search-bar-mobile
 import { AutocompleteInput } from "../../components/autocomplete";
 import { GenreAutocompleteItem } from "../../components/autocomplete/genre-results-item";
 import { useAutocomplete } from "../../hooks/autocomplete";
-import { useIsMounted } from "../../hooks/is-mounted";
 
 export const GenreMobile = () => {
   const navigate = useNavigate();
@@ -39,17 +38,14 @@ export const GenreMobile = () => {
     setIsAutocompleteOpen,
     handleClickOnAllResultsGenres,
   } = useAutocomplete(genresActions.searchByName);
-  const { skipFirstRender } = useIsMounted();
 
   const handleClickOnRelatedGenre = (slug: string) => {
     navigate(`/genres/${slug}`);
   };
 
   useEffect(() => {
-    skipFirstRender(() => {
-      dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
-    });
-  }, [dispatch, skipFirstRender]);
+    dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
+  }, [dispatch]);
 
   if (genresStatus === "loading" || editionsStatus === "loading") {
     return <Loading />;
