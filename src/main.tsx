@@ -12,9 +12,13 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <Header />
-        <MainRouter />
-        <Footer />
+        <div className="min-h-screen flex flex-col">
+          <Header />
+          <main className="flex flex-1 flex-col">
+            <MainRouter />
+          </main>
+          <Footer />
+        </div>
       </BrowserRouter>
     </Provider>
   </StrictMode>

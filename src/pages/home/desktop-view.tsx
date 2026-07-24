@@ -18,7 +18,6 @@ import { Loading } from "../../components/loading";
 import { useAutocomplete } from "../../hooks/autocomplete";
 import { AutocompleteInput } from "../../components/autocomplete";
 import { BookAutocompleteItem } from "../../components/autocomplete/book-results-item";
-import { useIsMounted } from "../../hooks/is-mounted";
 
 const {
   exampleQuote,
@@ -52,7 +51,6 @@ export const HomeDesktop = () => {
     setIsAutocompleteOpen,
     handleClickOnAllResultsBooks,
   } = useAutocomplete(editionsActions.searchByTitleOrAuthor);
-  const { skipFirstRender } = useIsMounted();
 
   const bestRatedBooksStringified = useMemo(
     () => JSON.stringify(bestRatedBooks),
@@ -127,12 +125,10 @@ export const HomeDesktop = () => {
   }, [bestRatedBooksStringified]); // eslint-disable-line
 
   useEffect(() => {
-    skipFirstRender(() => {
-      dispatch(
-        editionsActions.getBestRatedBooks({ enableSuggestion: true, limit: 4 })
-      );
-    });
-  }, [dispatch, skipFirstRender]);
+    dispatch(
+      editionsActions.getBestRatedBooks({ enableSuggestion: true, limit: 4 })
+    );
+  }, [dispatch]);
 
   if (
     editionsStatus === "loading" ||

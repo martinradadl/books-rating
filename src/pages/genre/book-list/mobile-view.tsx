@@ -9,7 +9,6 @@ import type { GenreBookListRouteParams } from ".";
 import { GenreBookListItemsMobile } from "../../../components/genres/list-items-mobile";
 import { urlSlugToCapitalizedText } from "../../../helpers/utils";
 import { useNavigateToGenres } from "../../../hooks/navigateToGenres";
-import { useIsMounted } from "../../../hooks/is-mounted";
 
 export const GenreBookListMobile = () => {
   const dispatch = useAppDispatch();
@@ -24,7 +23,6 @@ export const GenreBookListMobile = () => {
     status: editionsStatus,
   } = useAppSelector((state: RootState) => state.editions);
   const { handleNavigateToGenres } = useNavigateToGenres();
-  const { skipFirstRender } = useIsMounted();
 
   const bookListsMap = {
     "latest-releases": latestReleases,
@@ -42,10 +40,8 @@ export const GenreBookListMobile = () => {
   );
 
   useEffect(() => {
-    skipFirstRender(() => {
-      dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
-    });
-  }, [dispatch, skipFirstRender]);
+    dispatch(genresActions.getAll({ limit: 20, sortBy: "occurrence" }));
+  }, [dispatch]);
 
   if (genresStatus === "loading" || editionsStatus === "loading") {
     return <Loading />;

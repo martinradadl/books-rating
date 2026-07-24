@@ -6,32 +6,28 @@ import { useAppDispatch } from "../../redux/hooks";
 import genresActions from "../../redux/actions/genres";
 import bookListsActions from "../../redux/actions/book-lists";
 import editionsActions from "../../redux/actions/editions";
-import { useIsMounted } from "../../hooks/is-mounted";
 
 export const Home = () => {
   const isDesktop = useIsDesktop();
   const dispatch = useAppDispatch();
-  const { skipFirstRender } = useIsMounted();
 
   useEffect(() => {
-    skipFirstRender(() => {
-      dispatch(
-        genresActions.getAll({
-          limit: isDesktop ? 27 : 9,
-          sortBy: "occurrence",
-        })
-      );
+    dispatch(
+      genresActions.getAll({
+        limit: isDesktop ? 27 : 9,
+        sortBy: "occurrence",
+      })
+    );
 
-      dispatch(bookListsActions.getAll({ limit: isDesktop ? 3 : 5 }));
+    dispatch(bookListsActions.getAll({ limit: isDesktop ? 3 : 5 }));
 
-      dispatch(
-        editionsActions.getMostRatedBooks({
-          enableSuggestion: isDesktop,
-          limit: isDesktop ? 4 : 10,
-        })
-      );
-    });
-  }, [isDesktop, dispatch, skipFirstRender]);
+    dispatch(
+      editionsActions.getMostRatedBooks({
+        enableSuggestion: isDesktop,
+        limit: isDesktop ? 4 : 10,
+      })
+    );
+  }, [isDesktop, dispatch]);
 
   return isDesktop ? <HomeDesktop /> : <HomeMobile />;
 };
