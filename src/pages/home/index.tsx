@@ -19,7 +19,13 @@ export const Home = () => {
       })
     );
 
-    dispatch(bookListsActions.getAll({ limit: isDesktop ? 3 : 5 }));
+    dispatch(
+      bookListsActions.getAll({
+        limit: isDesktop ? 3 : 6,
+        itemLimit: isDesktop ? 4 : 8,
+        booksCount: true,
+      })
+    );
 
     dispatch(
       editionsActions.getMostRatedBooks({

@@ -15,6 +15,7 @@ import { Loading } from "../../components/loading";
 import { useAutocomplete } from "../../hooks/autocomplete";
 import { AutocompleteInput } from "../../components/autocomplete";
 import { BookAutocompleteItem } from "../../components/autocomplete/book-results-item";
+import bookListsActions from "../../redux/actions/book-lists";
 
 const quotesLists = [
   "Best quotes",
@@ -133,7 +134,7 @@ export const HomeMobile = () => {
                     <div className="flex flex-col">
                       <p className="text-base">{bookList.title}</p>
                       <p className="text-sm text-gray-400">
-                        {bookList.books?.length} books
+                        {bookList.booksCount} books
                       </p>
                     </div>
                     <div className="font-extrabold">
@@ -153,6 +154,16 @@ export const HomeMobile = () => {
               </li>
             );
           })}
+
+          <li className="w-1/2 flex">
+            <div
+              onClick={() => {
+                dispatch(bookListsActions.resetStatusToLoading());
+              }}
+            >
+              <LinksListMobileItem title="See more lists" url={`list`} />
+            </div>
+          </li>
         </ul>
 
         <p className="font-semibold my-2">GENRES</p>

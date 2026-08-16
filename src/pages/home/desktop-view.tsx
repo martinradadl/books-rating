@@ -18,6 +18,7 @@ import { Loading } from "../../components/loading";
 import { useAutocomplete } from "../../hooks/autocomplete";
 import { AutocompleteInput } from "../../components/autocomplete";
 import { BookAutocompleteItem } from "../../components/autocomplete/book-results-item";
+import bookListsActions from "../../redux/actions/book-lists";
 
 const {
   exampleQuote,
@@ -283,7 +284,8 @@ export const HomeDesktop = () => {
             <p
               className="my-[18px] text-sm text-[#00635d] cursor-pointer hover:underline"
               onClick={() => {
-                navigate(`list/more`);
+                dispatch(bookListsActions.resetStatusToLoading());
+                navigate(`list`);
               }}
             >
               More book lists
