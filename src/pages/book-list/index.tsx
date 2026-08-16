@@ -1,15 +1,15 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import { BookListItem } from "../components/book-lists/item";
-import { HOME_DATA } from "../data/home";
-import { sequentialRange } from "../helpers/utils";
+import { BookListItem } from "../../components/book-lists/item";
+import { HOME_DATA } from "../../data/home";
+import { sequentialRange } from "../../helpers/utils";
 import classNames from "classnames";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import type { RootState } from "../redux/store";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import type { RootState } from "../../redux/store";
 import { useParams } from "react-router-dom";
-import bookListsActions from "../redux/actions/book-lists";
+import bookListsActions from "../../redux/actions/book-lists";
 import debounce from "lodash.debounce";
 import { FaSpinner } from "react-icons/fa";
-import { BookListItemSkeleton } from "../components/book-lists/item-skeleton";
+import { BookListItemSkeleton } from "../../components/book-lists/item-skeleton";
 
 const {
     NEWS_IMG_URL,
