@@ -8,7 +8,7 @@ interface BookListPreviewProps {
 }
 
 export const BookListPreview = ({ list, votersCount }: BookListPreviewProps) => {
-    const booksCount = list.books?.length;
+    const booksCount = list.booksCount;
     const navigate = useNavigate();
 
     const handleClickOnTitle = () => {

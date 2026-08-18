@@ -60,6 +60,9 @@ const bookListsSlice = createSlice({
         state.status = "idle";
         state.error = action.error.message || "Failed to fetch book list";
         state.selectedBookList = null;
+      })
+      .addCase(actions.resetStatusToLoading, (state) => {
+        state.status = "loading";
       });
   },
 });

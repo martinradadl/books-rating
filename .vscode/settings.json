@@ -5,7 +5,8 @@
         "plaintext": false,
         "markdown": false,
         "scminput": false,
-        "dotenv": true
+        "dotenv": true,
+        "typescriptreact": false
     },
     "eslint.codeActionsOnSave.options": {
         

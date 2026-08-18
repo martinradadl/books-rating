@@ -60,7 +60,6 @@ export interface BookListI {
   title: string;
   description?: string;
   books?: EditionI[];
-  bookLists?: BookListI[];
   urlPath?: string;
   booksCount?: number;
 }
