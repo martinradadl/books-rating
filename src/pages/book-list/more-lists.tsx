@@ -2,31 +2,23 @@ import { MdSearch } from "react-icons/md";
 import { BooksCarousel } from "../../components/books-carousel";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useEffect } from "react";
-import genresActions from "../../redux/actions/genres";
 import { Loading } from "../../components/loading";
 import type { RootState } from "../../redux/store";
 import bookListsActions from "../../redux/actions/book-lists";
+import genresActions from "../../redux/actions/genres";
 import { useNavigate } from "react-router-dom";
 
 export const MoreLists = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { genresList, status: genresStatus } = useAppSelector(
-    (state: RootState) => state.genres
-  );
-  const { listOfBookLists, status: bookListsStatus } = useAppSelector(
+  const { listOfBookLists, status } = useAppSelector(
     (state: RootState) => state.bookLists
   );
+  const { mostCommonRelatedGenresOnBookLists, status: genresStatus } =
+    useAppSelector((state: RootState) => state.genres);
 
   useEffect(() => {
-    dispatch(
-      genresActions.getAll({
-        limit: 12,
-        sortBy: "occurrence",
-      })
-    );
-
     dispatch(
       bookListsActions.getAll({
         limit: 4,
@@ -34,9 +26,11 @@ export const MoreLists = () => {
         carouselData: true,
       })
     );
+
+    dispatch(genresActions.getMostCommonRelatedGenres(10));
   }, [dispatch]);
 
-  if (genresStatus === "loading" || bookListsStatus === "loading") {
+  if (status === "loading" || genresStatus === "loading") {
     return <Loading />;
   }
 
@@ -62,18 +56,18 @@ export const MoreLists = () => {
         </div>
 
         <div className="flex flex-wrap gap-x-2 gap-y-2">
-          {genresList.map((genre) => (
+          {mostCommonRelatedGenresOnBookLists.map((genre) => (
             <button
               key={genre.name}
               className="py-2.5 font-semibold cursor-pointer underline underline-offset-4 decoration-3 decoration-green-700"
+              onClick={() => {
+                dispatch(bookListsActions.resetStatusToLoading());
+                navigate(`/list/genre/${genre.slug}`);
+              }}
             >
               {genre.name}
             </button>
           ))}
-
-          <button className="py-2.5 font-semibold cursor-pointer underline underline-offset-4 decoration-3 decoration-green-700">
-            ...more
-          </button>
         </div>
 
         <p className="mt-8 mb-4 text-xl font-semibold">Featured lists</p>

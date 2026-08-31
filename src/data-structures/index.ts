@@ -10,6 +10,7 @@ export interface GenreI {
   name: string;
   description?: string;
   slug?: string;
+  bookListsCount?: number;
 }
 
 export interface CharacterI {

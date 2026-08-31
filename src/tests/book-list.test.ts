@@ -27,7 +27,7 @@ describe("Book List Actions", () => {
 
     it("should return empty bookLists list and set error message when status is not 200", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch bookLists"),
+        new Error("Failed to fetch bookLists")
       );
 
       await dispatch(actions.getAll({}));
@@ -57,7 +57,7 @@ describe("Book List Actions", () => {
     });
   });
 
-  describe("getById", () => {
+  describe("getByTitle", () => {
     let store: ReturnType<typeof configureStore>;
     let dispatch: AppDispatch;
 
@@ -75,7 +75,7 @@ describe("Book List Actions", () => {
 
     it("should throw error message when status is not 200 and set selectedBookList to null", async () => {
       vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch bookList"),
+        new Error("Failed to fetch bookList")
       );
 
       await dispatch(actions.getByTitle({ titleUrl: "fake-title" }));
@@ -101,6 +101,55 @@ describe("Book List Actions", () => {
 
       expect(bookListsState.status).toBe("idle");
       expect(bookListsState.selectedBookList).toEqual(fakeBookList);
+      expect(bookListsState.error).toBe("");
+    });
+  });
+
+  describe("getByRelatedGenre", () => {
+    let store: ReturnType<typeof configureStore>;
+    let dispatch: AppDispatch;
+
+    beforeEach(() => {
+      vi.resetAllMocks();
+
+      store = configureStore({
+        reducer: {
+          bookLists: bookListsReducer,
+        },
+      });
+
+      dispatch = store.dispatch;
+    });
+
+    it("should throw error message when status is not 200 and set list of book lists to an empty array", async () => {
+      vi.mocked(axios.get).mockRejectedValueOnce(
+        new Error("Failed to fetch list of book lists")
+      );
+
+      await dispatch(actions.getByRelatedGenre({ genreUrl: "fake-genre" }));
+
+      const state = store.getState() as RootState;
+      const bookListsState = state.bookLists;
+
+      expect(bookListsState.status).toBe("idle");
+      expect(bookListsState.bookListsByGenre).toEqual([]);
+      expect(bookListsState.error).toBe("Failed to fetch list of book lists");
+    });
+
+    it("should return list of book lists when status is 200", async () => {
+      vi.mocked(axios.get).mockResolvedValueOnce({
+        status: 200,
+        data: { bookLists: fakeBookListsList, bookListsCount: 2 },
+      });
+
+      await dispatch(actions.getByRelatedGenre({ genreUrl: "fake-genre" }));
+
+      const state = store.getState() as RootState;
+      const bookListsState = state.bookLists;
+
+      expect(bookListsState.status).toBe("idle");
+      expect(bookListsState.bookListsByGenre).toEqual(fakeBookListsList);
+      expect(bookListsState.bookListsCount).toEqual(2);
       expect(bookListsState.error).toBe("");
     });
   });

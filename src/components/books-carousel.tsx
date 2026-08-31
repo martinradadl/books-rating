@@ -18,6 +18,7 @@ type BooksCarouselProps = {
   isBooksBySameAuthor?: boolean;
   isHome?: boolean;
   isFeaturedList?: boolean;
+  isBookListPreview?: boolean;
   handleClickOnShowAll?: () => void;
 };
 
@@ -30,6 +31,8 @@ const isBooksBySameAuthorStyles =
 const isHomeStyles = "min-w-2/5 max-w-2/5 sm:min-w-2/5 sm:max-w-2/5";
 const isFeaturedListStyles =
   "min-w-1/2 max-w-1/2 sm:min-w-1/3 sm:max-w-1/3 lg:min-w-1/4 lg:max-w-1/4 xl:min-w-1/5 xl:max-w-1/5";
+const isBookListPreviewStyles =
+  "min-w-[164px] max-w-[164px] sm:min-w-[164px] sm:max-w-[164px] md:min-w-[164px] md:max-w-[164px]";
 
 export const BooksCarousel = ({
   showAllLabel,
@@ -37,6 +40,7 @@ export const BooksCarousel = ({
   isBooksBySameAuthor,
   isHome,
   isFeaturedList,
+  isBookListPreview,
   editionsList,
   title,
   handleClickOnShowAll,
@@ -100,7 +104,12 @@ export const BooksCarousel = ({
         {title}
 
         {hasOverflow && (
-          <div className="hidden md:flex space-x-1 z-20">
+          <div
+            className={twMerge(
+              "hidden md:flex space-x-1 z-20",
+              isBookListPreview && "md:hidden"
+            )}
+          >
             {Array.from({ length: numOfPages }).map((_, i) => (
               <div
                 key={i}
@@ -125,7 +134,10 @@ export const BooksCarousel = ({
         {hasOverflow && !(currentPage === 0) && (
           <button
             onClick={() => scrollCarousel("prev")}
-            className="absolute top-1/2 -translate-y-1/2 left-0 ml-[-25px] rounded-full p-3 bg-gray-200 shadow-lg shadow-gray-800/60 z-10 hidden md:flex cursor-pointer focus:ring-3 focus:ring-offset-3"
+            className={twMerge(
+              "absolute top-1/2 -translate-y-1/2 left-0 ml-[-25px] rounded-full p-3 bg-gray-200 shadow-lg shadow-gray-800/60 z-10 hidden md:flex cursor-pointer focus:ring-3 focus:ring-offset-3",
+              isBookListPreview && "md:hidden"
+            )}
           >
             <MdArrowBackIosNew size={24} />
           </button>
@@ -134,7 +146,10 @@ export const BooksCarousel = ({
         {hasOverflow && !(numOfPages - currentPage === 1) && (
           <button
             onClick={() => scrollCarousel("next")}
-            className="absolute top-1/2 -translate-y-1/2 right-0 mr-[-14px] rounded-full p-3 bg-gray-200 shadow-lg shadow-gray-800/60 z-10 hidden md:flex cursor-pointer focus:ring-3 focus:ring-offset-3"
+            className={twMerge(
+              "absolute top-1/2 -translate-y-1/2 right-0 mr-[-14px] rounded-full p-3 bg-gray-200 shadow-lg shadow-gray-800/60 z-10 hidden md:flex cursor-pointer focus:ring-3 focus:ring-offset-3",
+              isBookListPreview && "md:hidden"
+            )}
           >
             <MdArrowForwardIos size={24} />
           </button>
@@ -142,7 +157,10 @@ export const BooksCarousel = ({
 
         <div
           ref={scrollRef}
-          className="flex space-between mt-1 mb-2 py-2 overflow-x-auto md:overflow-hidden scroll-smooth"
+          className={twMerge(
+            "flex space-between mt-1 mb-2 py-2 overflow-x-auto md:overflow-hidden scroll-smooth",
+            isBookListPreview && "md:overflow-x-auto"
+          )}
         >
           {editionsList.map((edition, i) => (
             <div
@@ -153,16 +171,22 @@ export const BooksCarousel = ({
                 !isBooksBySameAuthor && !isMoreEditions && isRelatedBooksStyles,
                 isBooksBySameAuthor && isBooksBySameAuthorStyles,
                 isHome && isHomeStyles,
-                isFeaturedList && isFeaturedListStyles
+                isFeaturedList && isFeaturedListStyles,
+                isBookListPreview && isBookListPreviewStyles
               )}
               onClick={() => {
                 handleClickOnBook(edition._id);
               }}
               tabIndex={0}
             >
-              <BookCover key={i} className="rounded" image={edition.cover} />
+              <BookCover
+                key={i}
+                className="rounded"
+                image={edition.cover}
+                withoutRoundedCorners={isBookListPreview}
+              />
 
-              {!isHome && (
+              {!isHome && !isBookListPreview && (
                 <div className="flex flex-col mt-4">
                   {isMoreEditions ? (
                     <div>
@@ -192,7 +216,7 @@ export const BooksCarousel = ({
           ))}
         </div>
 
-        {!isHome && (
+        {!isHome && !isBookListPreview && (
           <>
             <PillButton
               label={showAllLabel || ""}

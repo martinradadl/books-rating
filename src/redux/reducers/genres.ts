@@ -10,6 +10,7 @@ interface GenresState {
   discoverList: { genre: GenreI; editions: EditionI[] }[];
   autocompleteResults: GenreI[];
   searchResults: { results: GenreI[]; totalCount: number };
+  mostCommonRelatedGenresOnBookLists: GenreI[];
   status: string;
   browseGenresListStatus: string;
   autocompleteStatus: string;
@@ -25,6 +26,7 @@ const initialState: GenresState = {
   discoverList: [],
   autocompleteResults: [],
   searchResults: { results: [], totalCount: 0 },
+  mostCommonRelatedGenresOnBookLists: [],
   status: "idle",
   browseGenresListStatus: "idle",
   autocompleteStatus: "idle",
@@ -143,6 +145,21 @@ const genresSlice = createSlice({
           state.searchResults.results = [];
           state.searchResults.totalCount = 0;
         }
+      })
+      .addCase(actions.getMostCommonRelatedGenres.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(
+        actions.getMostCommonRelatedGenres.fulfilled,
+        (state, action) => {
+          state.status = "idle";
+          state.mostCommonRelatedGenresOnBookLists = action.payload;
+        }
+      )
+      .addCase(actions.getMostCommonRelatedGenres.rejected, (state, action) => {
+        state.status = "idle";
+        state.error = action.error.message || "Failed to fetch related genres";
+        state.mostCommonRelatedGenresOnBookLists = [];
       })
       .addCase(actions.add.pending, (state) => {
         state.status = "loading";
