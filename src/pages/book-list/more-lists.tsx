@@ -5,15 +5,18 @@ import { useEffect } from "react";
 import { Loading } from "../../components/loading";
 import type { RootState } from "../../redux/store";
 import bookListsActions from "../../redux/actions/book-lists";
+import genresActions from "../../redux/actions/genres";
 import { useNavigate } from "react-router-dom";
 
 export const MoreLists = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { listOfBookLists, relatedGenres, status } = useAppSelector(
+  const { listOfBookLists, status } = useAppSelector(
     (state: RootState) => state.bookLists
   );
+  const { mostCommonRelatedGenresOnBookLists, status: genresStatus } =
+    useAppSelector((state: RootState) => state.genres);
 
   useEffect(() => {
     dispatch(
@@ -24,10 +27,10 @@ export const MoreLists = () => {
       })
     );
 
-    dispatch(bookListsActions.getMostCommonRelatedGenres(10));
+    dispatch(genresActions.getMostCommonRelatedGenres(10));
   }, [dispatch]);
 
-  if (status === "loading") {
+  if (status === "loading" || genresStatus === "loading") {
     return <Loading />;
   }
 
@@ -53,7 +56,7 @@ export const MoreLists = () => {
         </div>
 
         <div className="flex flex-wrap gap-x-2 gap-y-2">
-          {relatedGenres.map((genre) => (
+          {mostCommonRelatedGenresOnBookLists.map((genre) => (
             <button
               key={genre.name}
               className="py-2.5 font-semibold cursor-pointer underline underline-offset-4 decoration-3 decoration-green-700"

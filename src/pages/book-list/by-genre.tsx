@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Loading } from "../../components/loading";
 import { useEffect } from "react";
 import bookListsActions from "../../redux/actions/book-lists";
+import genresActions from "../../redux/actions/genres";
 
 const pageLimit = 4;
 
@@ -19,8 +20,11 @@ export const BookListsByGenre = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const genreName = urlSlugToCapitalizedText(params.genre as string);
-  const { bookListsByGenre, bookListsCount, relatedGenres, status } =
-    useAppSelector((state: RootState) => state.bookLists);
+  const { bookListsByGenre, bookListsCount, status } = useAppSelector(
+    (state: RootState) => state.bookLists
+  );
+  const { mostCommonRelatedGenresOnBookLists, status: genresStatus } =
+    useAppSelector((state: RootState) => state.genres);
   const totalPages = Math.ceil(bookListsCount / pageLimit);
 
   const {
@@ -50,7 +54,7 @@ export const BookListsByGenre = () => {
   }, [dispatch, params.genre, currentPage, isDesktop]);
 
   useEffect(() => {
-    dispatch(bookListsActions.getMostCommonRelatedGenres(10));
+    dispatch(genresActions.getMostCommonRelatedGenres(10));
   }, [dispatch]);
 
   useEffect(() => {
@@ -60,7 +64,10 @@ export const BookListsByGenre = () => {
     }
   }, [status, setIsRequestingNextPage, setIsViewportSwitching]);
 
-  if (status === "loading" && !bookListsByGenre) {
+  if (
+    (status === "loading" || genresStatus === "loading") &&
+    !bookListsByGenre
+  ) {
     return <Loading />;
   }
 
@@ -193,7 +200,7 @@ export const BookListsByGenre = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-y-0.5 mb-8">
-              {relatedGenres.map((genre) => (
+              {mostCommonRelatedGenresOnBookLists.map((genre) => (
                 <p
                   key={genre.name}
                   className="text-[#00635d] w-fit hover:underline cursor-pointer"
