@@ -94,24 +94,6 @@ const getByRelatedGenre = createAsyncThunk(
   }
 );
 
-const getMostCommonRelatedGenres = createAsyncThunk(
-  "bookLists/getMostCommonRelatedGenres",
-  async (limit?: number) => {
-    try {
-      const response = await axios.get(
-        `${API_URL}/book-lists/genres?limit=${limit}`
-      );
-
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new Error(error.message);
-      }
-      throw new Error("Failed to fetch book list");
-    }
-  }
-);
-
 const resetStatusToLoading = createAction("bookLists/resetStatusToLoading");
 const resetListOfBookLists = createAction("bookLists/resetListOfBookLists");
 
@@ -120,7 +102,6 @@ const bookListsActions = {
   getByTitle,
   resetStatusToLoading,
   getByRelatedGenre,
-  getMostCommonRelatedGenres,
   resetListOfBookLists,
 };
 

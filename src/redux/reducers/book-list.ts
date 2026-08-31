@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import actions from "../actions/book-lists";
-import type { BookListI, GenreI } from "../../data-structures";
+import type { BookListI } from "../../data-structures";
 
 interface BookListsState {
   listOfBookLists: BookListI[];
   bookListsByGenre: BookListI[];
   selectedBookList: BookListI | null;
-  relatedGenres: GenreI[];
   bookListsCount: number;
   status: string;
   error: string;
@@ -16,7 +15,6 @@ const initialState: BookListsState = {
   listOfBookLists: [],
   bookListsByGenre: [],
   selectedBookList: null,
-  relatedGenres: [],
   bookListsCount: 0,
   status: "loading",
   error: "",
@@ -91,21 +89,6 @@ const bookListsSlice = createSlice({
           action.error.message || "Failed to fetch list of book lists";
         state.bookListsByGenre = [];
         state.bookListsCount = 0;
-      })
-      .addCase(actions.getMostCommonRelatedGenres.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(
-        actions.getMostCommonRelatedGenres.fulfilled,
-        (state, action) => {
-          state.status = "idle";
-          state.relatedGenres = action.payload;
-        }
-      )
-      .addCase(actions.getMostCommonRelatedGenres.rejected, (state, action) => {
-        state.status = "idle";
-        state.error = action.error.message || "Failed to fetch related genres";
-        state.relatedGenres = [];
       })
       .addCase(actions.resetStatusToLoading, (state) => {
         state.status = "loading";
