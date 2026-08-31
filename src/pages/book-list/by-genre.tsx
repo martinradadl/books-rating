@@ -167,18 +167,20 @@ export const BookListsByGenre = () => {
             ))}
           </div>
 
-          <div className="py-2.5">
-            <PageSelector
-              {...{
-                currentPage,
-                handleChangePage,
-                handleNextPage,
-                handlePreviousPage,
-                pagesShown,
-                totalPages,
-              }}
-            />
-          </div>
+          {totalPages > 1 && (
+            <div className="py-2.5">
+              <PageSelector
+                {...{
+                  currentPage,
+                  handleChangePage,
+                  handleNextPage,
+                  handlePreviousPage,
+                  pagesShown,
+                  totalPages,
+                }}
+              />
+            </div>
+          )}
         </div>
 
         <div className="h-20 w-[300px] ml-2">
