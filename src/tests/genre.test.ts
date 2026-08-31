@@ -346,6 +346,56 @@ describe("Genre Actions", () => {
     });
   });
 
+  describe("getMostCommonRelatedGenres", () => {
+    let store: ReturnType<typeof configureStore>;
+    let dispatch: AppDispatch;
+
+    beforeEach(() => {
+      vi.resetAllMocks();
+
+      store = configureStore({
+        reducer: {
+          genres: genresReducer,
+        },
+      });
+
+      dispatch = store.dispatch;
+    });
+
+    it("should return empty related genres list and set error message when status is not 200", async () => {
+      vi.mocked(axios.get).mockRejectedValueOnce(
+        new Error("Failed to fetch related genres")
+      );
+
+      await dispatch(actions.getMostCommonRelatedGenres());
+
+      const state = store.getState() as RootState;
+      const genresState = state.genres;
+      console.log("genresState.status: ", genresState.status);
+      expect(genresState.status).toBe("idle");
+      expect(genresState.mostCommonRelatedGenresOnBookLists).toEqual([]);
+      expect(genresState.error).toBe("Failed to fetch related genres");
+    });
+
+    it("should return related genres when status is 200", async () => {
+      vi.mocked(axios.get).mockResolvedValueOnce({
+        status: 200,
+        data: fakeGenresList,
+      });
+
+      await dispatch(actions.getMostCommonRelatedGenres());
+
+      const state = store.getState() as RootState;
+      const genresState = state.genres;
+
+      expect(genresState.status).toBe("idle");
+      expect(genresState.mostCommonRelatedGenresOnBookLists).toEqual(
+        fakeGenresList
+      );
+      expect(genresState.error).toBe("");
+    });
+  });
+
   describe("Add", () => {
     let store: ReturnType<typeof configureStore>;
     let dispatch: AppDispatch;

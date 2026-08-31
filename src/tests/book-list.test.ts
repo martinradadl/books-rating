@@ -5,7 +5,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import bookListsReducer from "../redux/reducers/book-list";
 import type { AppDispatch, RootState } from "../redux/store";
 import { fakeBookList, fakeBookListsList } from "./fake-data/book-lists";
-import { fakeGenresList } from "./fake-data/genre";
 
 vi.mock("axios");
 
@@ -151,54 +150,6 @@ describe("Book List Actions", () => {
       expect(bookListsState.status).toBe("idle");
       expect(bookListsState.bookListsByGenre).toEqual(fakeBookListsList);
       expect(bookListsState.bookListsCount).toEqual(2);
-      expect(bookListsState.error).toBe("");
-    });
-  });
-
-  describe("getMostCommonRelatedGenres", () => {
-    let store: ReturnType<typeof configureStore>;
-    let dispatch: AppDispatch;
-
-    beforeEach(() => {
-      vi.resetAllMocks();
-
-      store = configureStore({
-        reducer: {
-          bookLists: bookListsReducer,
-        },
-      });
-
-      dispatch = store.dispatch;
-    });
-
-    it("should return empty related genres list and set error message when status is not 200", async () => {
-      vi.mocked(axios.get).mockRejectedValueOnce(
-        new Error("Failed to fetch related genres")
-      );
-
-      await dispatch(actions.getMostCommonRelatedGenres());
-
-      const state = store.getState() as RootState;
-      const bookListsState = state.bookLists;
-
-      expect(bookListsState.status).toBe("idle");
-      expect(bookListsState.relatedGenres).toEqual([]);
-      expect(bookListsState.error).toBe("Failed to fetch related genres");
-    });
-
-    it("should return related genres when status is 200", async () => {
-      vi.mocked(axios.get).mockResolvedValueOnce({
-        status: 200,
-        data: fakeGenresList,
-      });
-
-      await dispatch(actions.getMostCommonRelatedGenres());
-
-      const state = store.getState() as RootState;
-      const bookListsState = state.bookLists;
-
-      expect(bookListsState.status).toBe("idle");
-      expect(bookListsState.relatedGenres).toEqual(fakeGenresList);
       expect(bookListsState.error).toBe("");
     });
   });
