@@ -125,12 +125,12 @@ const searchByName = createAsyncThunk(
   }
 );
 
-const getMostCommonRelatedGenres = createAsyncThunk(
-  "bookLists/getMostCommonRelatedGenres",
+const getMostCommonRelatedGenresOnBookLists = createAsyncThunk(
+  "bookLists/getMostCommonRelatedGenresOnBookLists",
   async (limit?: number) => {
     try {
       const response = await axios.get(
-        `${API_URL}/book-lists/genres?limit=${limit}`
+        `${API_URL}/genres/book-list-genres?limit=${limit}`
       );
 
       return response.data;
@@ -166,7 +166,7 @@ const genresActions = {
   add,
   getDiscoverList,
   searchByName,
-  getMostCommonRelatedGenres,
+  getMostCommonRelatedGenresOnBookLists,
 };
 
 export default genresActions;

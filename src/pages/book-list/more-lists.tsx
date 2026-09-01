@@ -27,7 +27,7 @@ export const MoreLists = () => {
       })
     );
 
-    dispatch(genresActions.getMostCommonRelatedGenres(10));
+    dispatch(genresActions.getMostCommonRelatedGenresOnBookLists(10));
   }, [dispatch]);
 
   if (status === "loading" || genresStatus === "loading") {

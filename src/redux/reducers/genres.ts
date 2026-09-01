@@ -146,17 +146,17 @@ const genresSlice = createSlice({
           state.searchResults.totalCount = 0;
         }
       })
-      .addCase(actions.getMostCommonRelatedGenres.pending, (state) => {
+      .addCase(actions.getMostCommonRelatedGenresOnBookLists.pending, (state) => {
         state.status = "loading";
       })
       .addCase(
-        actions.getMostCommonRelatedGenres.fulfilled,
+        actions.getMostCommonRelatedGenresOnBookLists.fulfilled,
         (state, action) => {
           state.status = "idle";
           state.mostCommonRelatedGenresOnBookLists = action.payload;
         }
       )
-      .addCase(actions.getMostCommonRelatedGenres.rejected, (state, action) => {
+      .addCase(actions.getMostCommonRelatedGenresOnBookLists.rejected, (state, action) => {
         state.status = "idle";
         state.error = action.error.message || "Failed to fetch related genres";
         state.mostCommonRelatedGenresOnBookLists = [];

@@ -346,7 +346,7 @@ describe("Genre Actions", () => {
     });
   });
 
-  describe("getMostCommonRelatedGenres", () => {
+  describe("getMostCommonRelatedGenresOnBookLists", () => {
     let store: ReturnType<typeof configureStore>;
     let dispatch: AppDispatch;
 
@@ -367,7 +367,7 @@ describe("Genre Actions", () => {
         new Error("Failed to fetch related genres")
       );
 
-      await dispatch(actions.getMostCommonRelatedGenres());
+      await dispatch(actions.getMostCommonRelatedGenresOnBookLists());
 
       const state = store.getState() as RootState;
       const genresState = state.genres;
@@ -383,7 +383,7 @@ describe("Genre Actions", () => {
         data: fakeGenresList,
       });
 
-      await dispatch(actions.getMostCommonRelatedGenres());
+      await dispatch(actions.getMostCommonRelatedGenresOnBookLists());
 
       const state = store.getState() as RootState;
       const genresState = state.genres;
