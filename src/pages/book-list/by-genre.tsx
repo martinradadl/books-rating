@@ -54,7 +54,7 @@ export const BookListsByGenre = () => {
   }, [dispatch, params.genre, currentPage, isDesktop]);
 
   useEffect(() => {
-    dispatch(genresActions.getMostCommonRelatedGenres(10));
+    dispatch(genresActions.getMostCommonRelatedGenresOnBookLists(10));
   }, [dispatch]);
 
   useEffect(() => {
