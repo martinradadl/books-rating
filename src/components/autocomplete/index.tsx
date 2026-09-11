@@ -10,22 +10,24 @@ interface AutocompleteInputProps<T extends { _id: string }> {
         className?: string;
     }>;
     items: T[];
+    allResultsTotalCount: number;
     inputValue: string;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
     handleClickOnAllResults: () => void;
     setIsMobileHeaderSearchBarOpen?: (isOpen: boolean) => void;
     allResultsItemClassName?: string;
+    mainWrapperClassName?: string;
     resultsListClassName?: string;
     itemClassName?: string;
 }
 
 export const AutocompleteInput = <T extends { _id: string }>
-    ({ inputComponent, ItemListComponent, items, inputValue, isOpen, setIsOpen, setIsMobileHeaderSearchBarOpen, handleClickOnAllResults, allResultsItemClassName, resultsListClassName, itemClassName }: AutocompleteInputProps<T>) => {
+    ({ inputComponent, ItemListComponent, items, allResultsTotalCount, inputValue, isOpen, setIsOpen, setIsMobileHeaderSearchBarOpen, handleClickOnAllResults, allResultsItemClassName, mainWrapperClassName, resultsListClassName, itemClassName }: AutocompleteInputProps<T>) => {
 
 
     return (
-        <div>
+        <div className={mainWrapperClassName}>
             {inputComponent}
             {isOpen &&
                 <div className={twMerge("absolute ml-[-12px] lg:ml-0 flex flex-col justify-center lg:shadow-md", resultsListClassName)}>
@@ -38,11 +40,15 @@ export const AutocompleteInput = <T extends { _id: string }>
                             className={itemClassName}
                         />
                     ))}
-                    <AllResultsItem
-                        inputValue={inputValue}
-                        handleOnClick={handleClickOnAllResults}
-                        className={allResultsItemClassName}
-                    />
+
+                  {(allResultsTotalCount === 0 || allResultsTotalCount > items.length)  
+                  &&
+                  (<AllResultsItem
+                    inputValue={inputValue}
+                    handleOnClick={handleClickOnAllResults}
+                    className={allResultsItemClassName}
+                    noResultsFound={allResultsTotalCount === 0}
+                    />)}
                 </div>}
 
         </div>

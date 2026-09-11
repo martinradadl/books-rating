@@ -4,9 +4,10 @@ interface AllResultsItem {
     inputValue: string;
     handleOnClick: () => void;
     className?: string;
+    noResultsFound?: boolean;
 }
 
-export const AllResultsItem = ({ inputValue, handleOnClick, className }: AllResultsItem) => {
+export const AllResultsItem = ({ inputValue, handleOnClick, className, noResultsFound }: AllResultsItem) => {
 
     return (
         <p className={classNames(
@@ -14,7 +15,10 @@ export const AllResultsItem = ({ inputValue, handleOnClick, className }: AllResu
             className
         )}
             onClick={handleOnClick}>
-            See all results for <span>"{inputValue}"</span>
+                {noResultsFound
+                ? <>No results found for <span>"{inputValue}"</span></>
+                : <>See all results for <span>"{inputValue}"</span></>
+                }
         </p>
     )
 }
