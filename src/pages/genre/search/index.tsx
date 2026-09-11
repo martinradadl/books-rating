@@ -15,23 +15,28 @@ import classNames from "classnames";
 import { useIsDesktop } from "../../../hooks/is-desktop";
 import { GenresSearchBarDesktop } from "../../../components/genres/search-bar-desktop";
 
+const pageLimit = 4;
 
-export const GenresSearch = () => {
+interface GenreSearchProps {
+    isOnBookLists?: boolean;
+}
+
+export const GenresSearch = ({ isOnBookLists }: GenreSearchProps) => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch();
 
     const [searchParams] = useSearchParams();
     const inputValue = searchParams.get("name") || "";
 
-    const { autocompleteResults, searchResults, status } = useAppSelector((state: RootState) => state.genres);
-    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen, handleClickOnAllResultsGenres } = useAutocomplete(genresActions.searchByName);
+    const { autocompleteResults, searchResults, autocompleteResultsTotalCount, status } = useAppSelector((state: RootState) => state.genres);
+    const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen, handleClickOnAllResultsGenres, handleClickOnAllResultsGenresOnBookLists } = useAutocomplete(genresActions.searchByName, {isOnBookLists});
     const [currentPage, setCurrentPage] = useState(1);
     const isDesktop = useIsDesktop();
 
 
 
     const totalPages = useMemo(
-        () => Math.ceil(searchResults.totalCount / 10),
+        () => Math.ceil(searchResults.totalCount / pageLimit),
         [searchResults.totalCount]
     );
     const pagesShown = useMemo(() => sequentialRange(1, totalPages), [totalPages])
@@ -52,15 +57,9 @@ export const GenresSearch = () => {
         setCurrentPage(page);
     }
 
-
     useEffect(() => {
-        dispatch(genresActions.searchByName({ query: inputValue, limit: 10 }))
-    }, [dispatch, inputValue])
-
-    useEffect(() => {
-        dispatch(genresActions.searchByName({ query: inputValue, limit: 10, page: currentPage }))
-    }, [dispatch, currentPage, inputValue])
-
+        dispatch(genresActions.searchByName({ query: inputValue, limit: pageLimit, page: currentPage, isOnBookLists }))
+    }, [dispatch, currentPage, inputValue, isOnBookLists])
 
     return (
         <div className="pt-3">
@@ -71,29 +70,41 @@ export const GenresSearch = () => {
                             inputComponent={
                                 <GenresSearchBarDesktop onChange={debouncedHandleOnChangeSearch} />
                             }
-                            ItemListComponent={GenreAutocompleteItem}
+                            ItemListComponent={(props)=> <GenreAutocompleteItem isOnBookLists={isOnBookLists} 
+                            {...{
+                                ...props
+                            }}/>}
                             items={autocompleteResults}
+                            allResultsTotalCount={autocompleteResultsTotalCount}
                             inputValue={searchValue}
                             isOpen={isAutocompleteOpen}
                             setIsOpen={setIsAutocompleteOpen}
-                            handleClickOnAllResults={handleClickOnAllResultsGenres}
+                            handleClickOnAllResults={isOnBookLists?
+                                handleClickOnAllResultsGenresOnBookLists
+                                : handleClickOnAllResultsGenres}
                         />
                     </div>
                     :
                     <AutocompleteInput
                         inputComponent={<GenresSearchBarMobile onChange={debouncedHandleOnChangeSearch} />}
-                        ItemListComponent={GenreAutocompleteItem}
+                        ItemListComponent={(props)=> <GenreAutocompleteItem isOnBookLists={isOnBookLists} 
+                            {...{
+                                ...props
+                            }}/>}
                         items={autocompleteResults}
+                        allResultsTotalCount={autocompleteResultsTotalCount}
                         inputValue={searchValue}
                         isOpen={isAutocompleteOpen}
                         setIsOpen={setIsAutocompleteOpen}
-                        handleClickOnAllResults={handleClickOnAllResultsGenres}
+                        handleClickOnAllResults={isOnBookLists?
+                                handleClickOnAllResultsGenresOnBookLists
+                                : handleClickOnAllResultsGenres}
                     />
                 }
             </div>
 
             <div className="p-3">
-                <p className="text-2xl mb-2.5">Genres</p>
+                <p className="text-2xl mb-2.5">{isOnBookLists? "Related Genres on Book Lists" : "Genres"}</p>
 
                 {status === "loading" ?
                     <Loading className="h-36" />
@@ -110,7 +121,11 @@ export const GenresSearch = () => {
                         <div className="pl-2">
                             {searchResults.results.map((item) => {
                                 return <div key={item._id}>
-                                    <LinksListMobileItem title={item.name} url={`/genres/${item.slug}`} />
+                                    <LinksListMobileItem 
+                                        title={item.name} 
+                                        url={isOnBookLists?`/list/genre/${item.slug}` : `/genres/${item.slug}`} 
+                                        count={item.bookListsCount || undefined}
+                                        />
                                 </div>
                             })}
 

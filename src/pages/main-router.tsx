@@ -19,6 +19,7 @@ export const MainRouter = () => {
       <Route path="/genres/:name" element={<Genre />} />
       <Route path="/genres/:list/:genre" element={<GenreBookList />} />
       <Route path="/list" element={<MoreLists />} />
+      <Route path="/list/search" element={<GenresSearch isOnBookLists />} />
       <Route path="/list/genre/:genre" element={<BookListsByGenre />} />
       <Route path="/list/:title" element={<BookList />} />
     </Routes>
