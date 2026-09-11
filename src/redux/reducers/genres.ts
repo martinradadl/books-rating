@@ -9,6 +9,7 @@ interface GenresState {
   relatedGenres: GenreI[];
   discoverList: { genre: GenreI; editions: EditionI[] }[];
   autocompleteResults: GenreI[];
+  autocompleteResultsTotalCount: number;
   searchResults: { results: GenreI[]; totalCount: number };
   mostCommonRelatedGenresOnBookLists: GenreI[];
   status: string;
@@ -25,6 +26,7 @@ const initialState: GenresState = {
   relatedGenres: [],
   discoverList: [],
   autocompleteResults: [],
+  autocompleteResultsTotalCount: 0,
   searchResults: { results: [], totalCount: 0 },
   mostCommonRelatedGenresOnBookLists: [],
   status: "idle",
@@ -128,6 +130,7 @@ const genresSlice = createSlice({
         if (action.payload.isAutocomplete) {
           state.autocompleteStatus = "idle";
           state.autocompleteResults = action.payload.data.results;
+          state.autocompleteResultsTotalCount = action.payload.data.totalCount;
         } else {
           state.status = "idle";
           state.searchResults.results = action.payload.data.results;
@@ -140,6 +143,7 @@ const genresSlice = createSlice({
         if (action.meta.arg.isAutocomplete) {
           state.autocompleteStatus = "idle";
           state.autocompleteResults = [];
+          state.autocompleteResultsTotalCount = 0;
         } else {
           state.status = "idle";
           state.searchResults.results = [];

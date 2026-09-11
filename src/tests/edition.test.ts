@@ -545,6 +545,7 @@ describe("Edition Actions", () => {
       expect(editionsState.autocompleteResults).toEqual(
         fakeResponseData.results
       );
+      expect(editionsState.autocompleteResultsTotalCount).toEqual(fakeResponseData.totalCount);
       expect(editionsState.error).toBe("");
     });
 
