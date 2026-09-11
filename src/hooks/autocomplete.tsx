@@ -1,23 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppDispatch } from "../redux/hooks";
 import debounce from "lodash.debounce";
-import type { AsyncThunk, AsyncThunkConfig } from "@reduxjs/toolkit";
 import { textToUrlSlug } from "../helpers/utils";
 import { useNavigate } from "react-router-dom";
+import type { AsyncThunkAction, AsyncThunkConfig } from "@reduxjs/toolkit";
 
-type SearchThunk<T> = AsyncThunk<
-    T,
-    {
-        query: string;
-        limit?: number;
-        page?: number;
-        isAutocomplete?: boolean;
-    },
+type SearchParams = {
+    query: string;
+    limit?: number;
+    page?: number;
+    isAutocomplete?: boolean;
+    isOnBookLists?: boolean;
+};
+
+type SearchThunk = (arg: SearchParams) => AsyncThunkAction<
+    unknown,
+    SearchParams,
     AsyncThunkConfig
 >;
 
-export const useAutocomplete = <T,>(
-    searchAction: SearchThunk<T>
+export const useAutocomplete = (
+    searchAction: SearchThunk,
+    searchOptions?: Omit<SearchParams, "query" | "isAutocomplete">
 ) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -28,7 +32,7 @@ export const useAutocomplete = <T,>(
     const handleOnChangeSearch = async (value: string) => {
         setSearchValue(value);
         if (value) {
-            await dispatch(searchAction({ query: value, isAutocomplete: true }));
+            await dispatch(searchAction({ query: value, isAutocomplete: true, ...searchOptions, }));
         }
 
         if (!isAutocompleteOpen && value) {
@@ -44,6 +48,12 @@ export const useAutocomplete = <T,>(
     const handleClickOnAllResultsGenres = () => {
         const inputValueSlug = textToUrlSlug(searchValue)
         navigate(`/genres/search?name=${inputValueSlug}`)
+        setIsAutocompleteOpen(false)
+    }
+
+    const handleClickOnAllResultsGenresOnBookLists = () => {
+        const inputValueSlug = textToUrlSlug(searchValue)
+        navigate(`/list/search?name=${inputValueSlug}`)
         setIsAutocompleteOpen(false)
     }
 
@@ -80,6 +90,7 @@ export const useAutocomplete = <T,>(
         isAutocompleteOpen,
         setIsAutocompleteOpen,
         handleClickOnAllResultsGenres,
+        handleClickOnAllResultsGenresOnBookLists,
         handleClickOnAllResultsBooks
     }
 }
