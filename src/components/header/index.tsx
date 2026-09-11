@@ -21,7 +21,7 @@ export const Header = () => {
     const [isMd, setIsMd] = useState(window.innerWidth >= 768);
     const [isMobileSearchBarOpen, setIsMobileSearchBarOpen] = useState(false);
     const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen, handleClickOnAllResultsBooks } = useAutocomplete(editionsActions.searchByTitleOrAuthor);
-    const { autocompleteResults } = useAppSelector((state: RootState) => state.editions);
+    const { autocompleteResults, autocompleteResultsTotalCount } = useAppSelector((state: RootState) => state.editions);
 
     const handleCancelSearch = () => {
         setIsAutocompleteOpen(false)
@@ -83,6 +83,7 @@ export const Header = () => {
                                         }
                                         ItemListComponent={BookAutocompleteItem}
                                         items={autocompleteResults}
+                                        allResultsTotalCount={autocompleteResultsTotalCount}
                                         inputValue={searchValue}
                                         isOpen={isAutocompleteOpen}
                                         setIsOpen={setIsAutocompleteOpen}
@@ -126,6 +127,7 @@ export const Header = () => {
                                 }
                                 ItemListComponent={BookAutocompleteItem}
                                 items={autocompleteResults}
+                                allResultsTotalCount={autocompleteResultsTotalCount}
                                 inputValue={searchValue}
                                 isOpen={isAutocompleteOpen}
                                 setIsOpen={setIsAutocompleteOpen}

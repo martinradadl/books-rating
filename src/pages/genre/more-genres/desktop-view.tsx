@@ -10,7 +10,7 @@ import { useAutocomplete } from "../../../hooks/autocomplete";
 import { GenresSearchBarDesktop } from "../../../components/genres/search-bar-desktop";
 
 export const MoreGenresDesktop = () => {
-    const { genresList, discoverList, autocompleteResults, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
+    const { genresList, discoverList, autocompleteResults, autocompleteResultsTotalCount, status: genresStatus } = useAppSelector((state: RootState) => state.genres);
     const { handleNavigateToGenres } = useNavigateToGenres();
     const { autocompleteRef, debouncedHandleOnChangeSearch, searchValue, isAutocompleteOpen, setIsAutocompleteOpen, handleClickOnAllResultsGenres } = useAutocomplete(genresActions.searchByName);
 
@@ -30,6 +30,7 @@ export const MoreGenresDesktop = () => {
                         inputComponent={<GenresSearchBarDesktop onChange={debouncedHandleOnChangeSearch} />}
                         ItemListComponent={GenreAutocompleteItem}
                         items={autocompleteResults}
+                        allResultsTotalCount={autocompleteResultsTotalCount}
                         inputValue={searchValue}
                         isOpen={isAutocompleteOpen}
                         setIsOpen={setIsAutocompleteOpen}
