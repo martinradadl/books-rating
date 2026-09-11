@@ -104,15 +104,17 @@ const searchByName = createAsyncThunk(
     limit,
     page,
     isAutocomplete,
+    isOnBookLists,
   }: {
     query: string;
     limit?: number;
     page?: number;
     isAutocomplete?: boolean;
+    isOnBookLists?: boolean;
   }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/genres/search?query=${query}&limit=${limit}&page=${page}`
+        `${API_URL}/genres/search?query=${query}&limit=${limit}&page=${page}&onBookLists=${isOnBookLists}`
       );
 
       return { data: response.data, isAutocomplete };
@@ -126,7 +128,7 @@ const searchByName = createAsyncThunk(
 );
 
 const getMostCommonRelatedGenresOnBookLists = createAsyncThunk(
-  "bookLists/getMostCommonRelatedGenresOnBookLists",
+  "genres/getMostCommonRelatedGenresOnBookLists",
   async (limit?: number) => {
     try {
       const response = await axios.get(
