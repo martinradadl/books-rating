@@ -62,10 +62,10 @@ export const GenresSearch = ({ isOnBookLists }: GenreSearchProps) => {
     }, [dispatch, currentPage, inputValue, isOnBookLists])
 
     return (
-        <div className="pt-3">
+        <div className="pt-3 px-6 xl:px-3 2xl:px-0 xl:w-[1260px] xl:mx-auto">
             <div ref={autocompleteRef}>
                 {isDesktop ?
-                    <div className="pl-3 w-140">
+                    <div className="w-140">
                         <AutocompleteInput
                             inputComponent={
                                 <GenresSearchBarDesktop onChange={debouncedHandleOnChangeSearch} />
@@ -103,8 +103,11 @@ export const GenresSearch = ({ isOnBookLists }: GenreSearchProps) => {
                 }
             </div>
 
-            <div className="p-3">
-                <p className="text-2xl mb-2.5">{isOnBookLists? "Related Genres on Book Lists" : "Genres"}</p>
+            <div className="py-3">
+                <p className="text-2xl mb-2.5">
+                    {isOnBookLists? 
+                    "Related Genres on Book Lists" : "Genres"}
+                </p>
 
                 {status === "loading" ?
                     <Loading className="h-36" />
@@ -123,7 +126,9 @@ export const GenresSearch = ({ isOnBookLists }: GenreSearchProps) => {
                                 return <div key={item._id}>
                                     <LinksListMobileItem 
                                         title={item.name} 
-                                        url={isOnBookLists?`/list/genre/${item.slug}` : `/genres/${item.slug}`} 
+                                        url={isOnBookLists?
+                                            `/list/genre/${item.slug}` : 
+                                            `/genres/${item.slug}`} 
                                         count={item.bookListsCount || undefined}
                                         />
                                 </div>
