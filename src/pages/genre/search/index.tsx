@@ -79,8 +79,8 @@ export const GenresSearch = ({ isOnBookLists }: GenreSearchProps) => {
                             inputValue={searchValue}
                             isOpen={isAutocompleteOpen}
                             setIsOpen={setIsAutocompleteOpen}
-                            handleClickOnAllResults={isOnBookLists?
-                                handleClickOnAllResultsGenresOnBookLists
+                            handleClickOnAllResults={isOnBookLists
+                                ? handleClickOnAllResultsGenresOnBookLists
                                 : handleClickOnAllResultsGenres}
                         />
                     </div>
@@ -96,9 +96,9 @@ export const GenresSearch = ({ isOnBookLists }: GenreSearchProps) => {
                         inputValue={searchValue}
                         isOpen={isAutocompleteOpen}
                         setIsOpen={setIsAutocompleteOpen}
-                        handleClickOnAllResults={isOnBookLists?
-                                handleClickOnAllResultsGenresOnBookLists
-                                : handleClickOnAllResultsGenres}
+                        handleClickOnAllResults={isOnBookLists
+                            ? handleClickOnAllResultsGenresOnBookLists
+                            : handleClickOnAllResultsGenres}
                     />
                 }
             </div>
