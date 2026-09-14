@@ -105,8 +105,9 @@ export const GenresSearch = ({ isOnBookLists }: GenreSearchProps) => {
 
             <div className="py-3">
                 <p className="text-2xl mb-2.5">
-                    {isOnBookLists? 
-                    "Related Genres on Book Lists" : "Genres"}
+                    {isOnBookLists
+                    ? "Related Genres on Book Lists" 
+                    : "Genres"}
                 </p>
 
                 {status === "loading" ?
@@ -126,9 +127,9 @@ export const GenresSearch = ({ isOnBookLists }: GenreSearchProps) => {
                                 return <div key={item._id}>
                                     <LinksListMobileItem 
                                         title={item.name} 
-                                        url={isOnBookLists?
-                                            `/list/genre/${item.slug}` : 
-                                            `/genres/${item.slug}`} 
+                                        url={isOnBookLists
+                                            ? `/list/genre/${item.slug}` 
+                                            : `/genres/${item.slug}`} 
                                         count={item.bookListsCount || undefined}
                                         />
                                 </div>
