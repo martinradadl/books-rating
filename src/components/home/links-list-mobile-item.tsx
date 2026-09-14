@@ -11,7 +11,7 @@ export const LinksListMobileItem = ({ title, url, count }: LinksListMobileItemPr
 
     return (
         <Link to={url} className="text-[#00635D] text-sm cursor-pointer hover:underline mb-[0.8em]">
-            {title} {count !== undefined && `(${count})`}
+            {title} {count && `(${count})`}
         </Link>
     )
 }
