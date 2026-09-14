@@ -42,6 +42,7 @@ export const HomeMobile = () => {
     mostRatedBooks,
     latestReleases,
     autocompleteResults,
+    autocompleteResultsTotalCount,
     status: editionsStatus,
   } = useAppSelector((state: RootState) => state.editions);
   const { listOfBookLists, status: bookListsStatus } = useAppSelector(
@@ -90,6 +91,7 @@ export const HomeMobile = () => {
             }
             ItemListComponent={BookAutocompleteItem}
             items={autocompleteResults}
+            allResultsTotalCount={autocompleteResultsTotalCount}
             inputValue={searchValue}
             isOpen={isAutocompleteOpen}
             setIsOpen={setIsAutocompleteOpen}

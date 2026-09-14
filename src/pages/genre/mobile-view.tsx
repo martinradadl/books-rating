@@ -20,6 +20,7 @@ export const GenreMobile = () => {
     relatedGenres,
     genresList,
     autocompleteResults,
+    autocompleteResultsTotalCount,
     status: genresStatus,
   } = useAppSelector((state: RootState) => state.genres);
   const {
@@ -60,6 +61,7 @@ export const GenreMobile = () => {
           }
           ItemListComponent={GenreAutocompleteItem}
           items={autocompleteResults}
+          allResultsTotalCount={autocompleteResultsTotalCount}
           inputValue={searchValue}
           isOpen={isAutocompleteOpen}
           setIsOpen={setIsAutocompleteOpen}

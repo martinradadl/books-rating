@@ -13,6 +13,7 @@ interface EditionsState {
   bestRatedBooks: { list: EditionI[]; suggestion: EditionI | null };
   searchResults: { results: EditionPreviewI[]; totalCount: number };
   autocompleteResults: EditionPreviewI[];
+  autocompleteResultsTotalCount: number;
   autocompleteStatus: string;
   moreEditionsStatus: string;
   booksBySameAuthorStatus: string;
@@ -31,6 +32,7 @@ const initialState: EditionsState = {
   mostRatedBooks: { list: [], suggestion: null },
   bestRatedBooks: { list: [], suggestion: null },
   autocompleteResults: [],
+  autocompleteResultsTotalCount: 0,
   searchResults: { results: [], totalCount: 0 },
   status: "loading",
   moreEditionsStatus: "loading",
@@ -155,6 +157,7 @@ const editionsSlice = createSlice({
         if (action.payload.isAutocomplete) {
           state.autocompleteStatus = "idle";
           state.autocompleteResults = action.payload.data.results;
+          state.autocompleteResultsTotalCount = action.payload.data.totalCount;
         } else {
           state.status = "idle";
           state.searchResults.results = action.payload.data.results;
@@ -167,6 +170,7 @@ const editionsSlice = createSlice({
         if (action.meta.arg.isAutocomplete) {
           state.autocompleteStatus = "idle";
           state.autocompleteResults = [];
+          state.autocompleteResultsTotalCount = 0;
         } else {
           state.status = "idle";
           state.searchResults.results = [];

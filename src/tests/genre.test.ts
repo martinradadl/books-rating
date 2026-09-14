@@ -320,6 +320,7 @@ describe("Genre Actions", () => {
 
       expect(genresState.status).toBe("idle");
       expect(genresState.autocompleteResults).toEqual(fakeResponseData.results);
+      expect(genresState.autocompleteResultsTotalCount).toEqual(fakeResponseData.totalCount);
       expect(genresState.error).toBe("");
     });
 

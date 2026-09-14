@@ -7,6 +7,9 @@ import type { RootState } from "../../redux/store";
 import bookListsActions from "../../redux/actions/book-lists";
 import genresActions from "../../redux/actions/genres";
 import { useNavigate } from "react-router-dom";
+import { useAutocomplete } from "../../hooks/autocomplete";
+import { AutocompleteInput } from "../../components/autocomplete";
+import { GenreAutocompleteItem } from "../../components/autocomplete/genre-results-item";
 
 export const MoreLists = () => {
   const dispatch = useAppDispatch();
@@ -15,8 +18,21 @@ export const MoreLists = () => {
   const { listOfBookLists, status } = useAppSelector(
     (state: RootState) => state.bookLists
   );
-  const { mostCommonRelatedGenresOnBookLists, status: genresStatus } =
-    useAppSelector((state: RootState) => state.genres);
+  const {
+    mostCommonRelatedGenresOnBookLists,
+    autocompleteResults,
+    autocompleteResultsTotalCount,
+    status: genresStatus,
+  } = useAppSelector((state: RootState) => state.genres);
+
+  const {
+    autocompleteRef,
+    debouncedHandleOnChangeSearch,
+    searchValue,
+    isAutocompleteOpen,
+    setIsAutocompleteOpen,
+    handleClickOnAllResultsGenresOnBookLists,
+  } = useAutocomplete(genresActions.searchByName, { isOnBookLists: true });
 
   useEffect(() => {
     dispatch(
@@ -39,19 +55,45 @@ export const MoreLists = () => {
       <div className="min-w-[320px] flex-1">
         <p className="text-[22px] pb-4 font-semibold">More Lists</p>
 
-        <div
-          className="flex items-center min-h-[46px] px-1 mb-3 text-base rounded-full
+        <div ref={autocompleteRef}>
+          <AutocompleteInput
+            inputComponent={
+              <div
+                className="flex items-center min-h-[46px] px-1 mb-3 text-base rounded-full
          border border-[#707070] focus-within:ring-2 focus-within:ring-black 
          focus-within:border-black focus-within:ring-offset-2"
-        >
-          <div className="p-2.5">
-            <MdSearch size={20} />
-          </div>
+              >
+                <div className="p-2.5">
+                  <MdSearch size={20} />
+                </div>
 
-          <input
-            type="text"
-            placeholder="Search tags"
-            className="mx-2 flex-1 outline-none"
+                <input
+                  type="text"
+                  placeholder="Search tags"
+                  className="mx-2 flex-1 outline-none"
+                  onChange={(e) =>
+                    debouncedHandleOnChangeSearch(e.target.value)
+                  }
+                />
+              </div>
+            }
+            ItemListComponent={(props) => (
+              <GenreAutocompleteItem
+                isOnBookLists={true}
+                {...{
+                  ...props,
+                }}
+              />
+            )}
+            items={autocompleteResults}
+            allResultsTotalCount={autocompleteResultsTotalCount}
+            inputValue={searchValue}
+            isOpen={isAutocompleteOpen}
+            setIsOpen={setIsAutocompleteOpen}
+            handleClickOnAllResults={handleClickOnAllResultsGenresOnBookLists}
+            mainWrapperClassName="relative"
+            resultsListClassName="w-full"
+            itemClassName="w-full"
           />
         </div>
 

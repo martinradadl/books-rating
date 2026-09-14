@@ -12,6 +12,9 @@ import { Loading } from "../../components/loading";
 import { useEffect } from "react";
 import bookListsActions from "../../redux/actions/book-lists";
 import genresActions from "../../redux/actions/genres";
+import { useAutocomplete } from "../../hooks/autocomplete";
+import { AutocompleteInput } from "../../components/autocomplete";
+import { GenreOnBookListsByGenreAutocompleteItem } from "../../components/autocomplete/genre-on-book-lists-by-genre-results-item";
 
 const pageLimit = 4;
 
@@ -23,8 +26,12 @@ export const BookListsByGenre = () => {
   const { bookListsByGenre, bookListsCount, status } = useAppSelector(
     (state: RootState) => state.bookLists
   );
-  const { mostCommonRelatedGenresOnBookLists, status: genresStatus } =
-    useAppSelector((state: RootState) => state.genres);
+  const {
+    mostCommonRelatedGenresOnBookLists,
+    autocompleteResults,
+    autocompleteResultsTotalCount,
+    status: genresStatus,
+  } = useAppSelector((state: RootState) => state.genres);
   const totalPages = Math.ceil(bookListsCount / pageLimit);
 
   const {
@@ -38,6 +45,17 @@ export const BookListsByGenre = () => {
     handleNextPage,
     isDesktop,
   } = usePaginationManager();
+
+  const {
+    autocompleteRef,
+    debouncedHandleOnChangeSearch,
+    searchValue,
+    isAutocompleteOpen,
+    setIsAutocompleteOpen,
+    handleClickOnAllResultsGenresOnBookLists,
+  } = useAutocomplete(genresActions.searchByName, {
+    isOnBookLists: true,
+  });
 
   useEffect(() => {
     if (params.genre) {
@@ -190,13 +208,33 @@ export const BookListsByGenre = () => {
             </p>
 
             <div className="flex mb-5 h-[21px]">
-              <input
-                type="text"
-                placeholder="Search for a Genre"
-                className="border border-[#DCD6CC] p-0.5 w-3/4 rounded"
-              />
+              <div ref={autocompleteRef}>
+                <AutocompleteInput
+                  inputComponent={
+                    <input
+                      type="text"
+                      placeholder="Search for a Genre"
+                      className="border border-[#DCD6CC] w-[225px] p-0.5 rounded"
+                      onChange={(e) =>
+                        debouncedHandleOnChangeSearch(e.target.value)
+                      }
+                    />
+                  }
+                  ItemListComponent={GenreOnBookListsByGenreAutocompleteItem}
+                  items={autocompleteResults}
+                  allResultsTotalCount={autocompleteResultsTotalCount}
+                  inputValue={searchValue}
+                  isOpen={isAutocompleteOpen}
+                  setIsOpen={setIsAutocompleteOpen}
+                  handleClickOnAllResults={
+                    handleClickOnAllResultsGenresOnBookLists
+                  }
+                  allResultsItemClassName="w-[225px]"
+                />
+              </div>
 
-              <button className="ml-1 border border-[#D6D0C4] bg-[#F4F1EA] px-3 rounded cursor-pointer hover:bg-[#EDE6D6]">
+              <button className="ml-1 border border-[#D6D0C4] bg-[#F4F1EA] px-3 rounded cursor-pointer hover:bg-[#EDE6D6]"
+              onClick={handleClickOnAllResultsGenresOnBookLists}>
                 Search
               </button>
             </div>
