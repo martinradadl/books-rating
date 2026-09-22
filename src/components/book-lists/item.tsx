@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { BookCover } from "../editions/book-cover";
 import { StarRating } from "../ratings/star-rating";
-import { numberToLocaleString } from "../../helpers/utils";
+import { numberToLocaleString, textToUrlSlug } from "../../helpers/utils";
 import { FaBook } from "react-icons/fa";
 import { MdArrowDropDown } from "react-icons/md";
 import type { EditionI } from "../../data-structures";
@@ -25,6 +25,7 @@ export const BookListItem = ({
   const navigate = useNavigate();
   const { _id, cover, title, averageRating, ratingCount = 123, book } = item;
   const authorName = book.author?.name;
+  const authorNameSlug = textToUrlSlug(authorName || "");
   const publishedYear = new Date(book.firstPublished).getFullYear();
 
   const handleClickOnEdition = () => {
@@ -65,7 +66,10 @@ export const BookListItem = ({
             {!isListByAuthor && (
               <p className="text-[13px] leading-[19px]">
                 by{" "}
-                <span className="text-[#00635D] lg:text-[#181818] cursor-pointer hover:underline">
+                <span
+                  className="text-[#00635D] lg:text-[#181818] cursor-pointer hover:underline"
+                  onClick={() => navigate(`/author/${authorNameSlug}`)}
+                >
                   {authorName}
                 </span>
               </p>
