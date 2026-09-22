@@ -5,11 +5,13 @@ import { numberToLocaleString } from "../../helpers/utils";
 import { FaBook } from "react-icons/fa";
 import { MdArrowDropDown } from "react-icons/md";
 import type { EditionI } from "../../data-structures";
+import { twMerge } from "tailwind-merge";
 
 interface BookListItemProps {
   index: number;
   item: EditionI;
   isListByGenre?: boolean;
+  isListByAuthor?: boolean;
 }
 
 const reviewsCount = 678;
@@ -18,6 +20,7 @@ export const BookListItem = ({
   item,
   index,
   isListByGenre,
+  isListByAuthor,
 }: BookListItemProps) => {
   const navigate = useNavigate();
   const { _id, cover, title, averageRating, ratingCount = 123, book } = item;
@@ -30,13 +33,18 @@ export const BookListItem = ({
 
   return (
     <div className="border-t border-[#CCCCCC] lg:flex">
-      {!isListByGenre && (
+      {!isListByGenre && !isListByAuthor && (
         <p className="text-[#999999] lg:text-[#181818] m-2.5 lg:m-0 lg:p-[5px] lg:w-10 text-sm font-bold lg:text-base">
           {index} <span className="lg:hidden">.</span>
         </p>
       )}
 
-      <div className="mb-[15px] lg:mb-0 flex lg:flex-1 lg:mt-[5px]">
+      <div
+        className={twMerge(
+          "mb-[15px] lg:mb-0 flex lg:flex-1 lg:mt-[5px]",
+          isListByAuthor && "mt-[15px]"
+        )}
+      >
         <div onClick={handleClickOnEdition}>
           <BookCover
             image={cover}
@@ -54,21 +62,30 @@ export const BookListItem = ({
               {title}
             </p>
 
-            <p className="text-[13px] leading-[19px]">
-              by{" "}
-              <span className="text-[#00635D] lg:text-[#181818] cursor-pointer hover:underline">
-                {authorName}
-              </span>
-            </p>
+            {!isListByAuthor && (
+              <p className="text-[13px] leading-[19px]">
+                by{" "}
+                <span className="text-[#00635D] lg:text-[#181818] cursor-pointer hover:underline">
+                  {authorName}
+                </span>
+              </p>
+            )}
 
-            <div className="text-[11px] flex items-center gap-1 mb-2.5 text-[#999999] leading-none lg:leading-[19px]">
+            <div
+              className={twMerge(
+                "text-[11px] flex items-center gap-1 mb-2.5 text-[#999999] leading-none lg:leading-[19px]",
+                isListByAuthor && "mt-[5px] lg:mt-0"
+              )}
+            >
               {!isListByGenre && (
                 <StarRating rating={averageRating} starsSize={15} isSmall />
               )}
 
               <p className="whitespace-nowrap">
                 {averageRating?.toFixed(2)}{" "}
-                <span className="hidden lg:inline">avg rating</span>
+                {!isListByAuthor && (
+                  <span className="hidden lg:inline">avg rating</span>
+                )}
               </p>
 
               <p className="hidden lg:inline whitespace-nowrap">—</p>
@@ -82,7 +99,7 @@ export const BookListItem = ({
               <p className="lg:hidden whitespace-nowrap">
                 {`${numberToLocaleString(reviewsCount, "en-US")} reviews`}
               </p>
-              {isListByGenre && (
+              {(isListByGenre || isListByAuthor) && (
                 <>
                   <p className="hidden lg:inline whitespace-nowrap">—</p>
                   <p className="hidden lg:inline whitespace-nowrap">
@@ -94,6 +111,12 @@ export const BookListItem = ({
                 </>
               )}
             </div>
+
+            {isListByAuthor && (
+              <p className="text-[11px] text-[#999999] mb-2.5 lg:hidden whitespace-nowrap">
+                published {publishedYear}
+              </p>
+            )}
           </div>
 
           <div className="w-[145px] lg:w-[140px] lg:p-[5px] lg:flex lg:flex-col lg:items-center lg:justify-center">

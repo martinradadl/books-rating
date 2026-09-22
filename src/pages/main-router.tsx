@@ -8,6 +8,7 @@ import { MoreGenres } from "./genre/more-genres";
 import { GenresSearch } from "./genre/search";
 import { MoreLists } from "./book-list/more-lists";
 import { BookListsByGenre } from "./book-list/by-genre";
+import { Author } from "./author";
 
 export const MainRouter = () => {
   return (
@@ -22,6 +23,7 @@ export const MainRouter = () => {
       <Route path="/list/search" element={<GenresSearch isOnBookLists />} />
       <Route path="/list/genre/:genre" element={<BookListsByGenre />} />
       <Route path="/list/:title" element={<BookList />} />
+      <Route path="/author/:name" element={<Author />} />
     </Routes>
   );
 };
