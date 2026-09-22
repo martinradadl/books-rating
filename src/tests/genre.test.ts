@@ -203,6 +203,54 @@ describe("Genre Actions", () => {
     });
   });
 
+  describe("getGenresByAuthor", () => {
+    let store: ReturnType<typeof configureStore>;
+    let dispatch: AppDispatch;
+
+    beforeEach(() => {
+      vi.resetAllMocks();
+
+      store = configureStore({
+        reducer: {
+          genres: genresReducer,
+        },
+      });
+
+      dispatch = store.dispatch;
+    });
+
+    it("should throw error message when status is not 200 and set authorGenres to an empty array", async () => {
+      vi.mocked(axios.get).mockRejectedValueOnce(
+        new Error("Failed to fetch genres")
+      );
+
+      await dispatch(actions.getGenresByAuthor({ slug: "fake-slug" }));
+
+      const state = store.getState() as RootState;
+      const genresState = state.genres;
+
+      expect(genresState.status).toBe("idle");
+      expect(genresState.authorGenres).toEqual([]);
+      expect(genresState.error).toBe("Failed to fetch genres");
+    });
+
+    it("should return author genres when status is 200", async () => {
+      vi.mocked(axios.get).mockResolvedValueOnce({
+        status: 200,
+        data: fakeGenresList,
+      });
+
+      await dispatch(actions.getGenresByAuthor({ slug: "fake-slug" }));
+
+      const state = store.getState() as RootState;
+      const genresState = state.genres;
+
+      expect(genresState.status).toBe("idle");
+      expect(genresState.authorGenres).toEqual(fakeGenresList);
+      expect(genresState.error).toBe("");
+    });
+  });
+
   describe("getDiscoverList", () => {
     let store: ReturnType<typeof configureStore>;
     let dispatch: AppDispatch;
@@ -320,7 +368,9 @@ describe("Genre Actions", () => {
 
       expect(genresState.status).toBe("idle");
       expect(genresState.autocompleteResults).toEqual(fakeResponseData.results);
-      expect(genresState.autocompleteResultsTotalCount).toEqual(fakeResponseData.totalCount);
+      expect(genresState.autocompleteResultsTotalCount).toEqual(
+        fakeResponseData.totalCount
+      );
       expect(genresState.error).toBe("");
     });
 

@@ -74,6 +74,23 @@ const getRelatedGenres = createAsyncThunk(
   }
 );
 
+const getGenresByAuthor = createAsyncThunk(
+  "genres/getGenresByAuthor",
+  async ({ slug, limit }: { slug: string; limit?: number }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/genres/author/${slug}?limit=${limit}`
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to fetch genre");
+    }
+  }
+);
+
 const getDiscoverList = createAsyncThunk(
   "genres/getDiscoverList",
   async ({
@@ -165,6 +182,7 @@ const genresActions = {
   getById,
   getByUrlSlug,
   getRelatedGenres,
+  getGenresByAuthor,
   add,
   getDiscoverList,
   searchByName,
