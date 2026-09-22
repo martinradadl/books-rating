@@ -47,6 +47,18 @@ const authorsSlice = createSlice({
         state.error = action.error.message || "Failed to fetch author";
         state.selectedAuthor = null;
       })
+      .addCase(actions.getByUrlSlug.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(actions.getByUrlSlug.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.selectedAuthor = action.payload;
+      })
+      .addCase(actions.getByUrlSlug.rejected, (state, action) => {
+        state.status = "idle";
+        state.error = action.error.message || "Failed to fetch author";
+        state.selectedAuthor = null;
+      })
       .addCase(actions.add.pending, (state) => {
         state.status = "loading";
       })

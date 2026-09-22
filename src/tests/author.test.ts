@@ -105,7 +105,55 @@ describe("Author Actions", () => {
     });
   });
 
-  describe("getById", () => {
+  describe("getByUrlSlug", () => {
+    let store: ReturnType<typeof configureStore>;
+    let dispatch: AppDispatch;
+
+    beforeEach(() => {
+      vi.resetAllMocks();
+
+      store = configureStore({
+        reducer: {
+          authors: authorsReducer,
+        },
+      });
+
+      dispatch = store.dispatch;
+    });
+
+    it("should throw error message when status is not 200 and set selectedAuthor to null", async () => {
+      vi.mocked(axios.get).mockRejectedValueOnce(
+        new Error("Failed to fetch author")
+      );
+
+      await dispatch(actions.getByUrlSlug("fake-slug"));
+
+      const state = store.getState() as RootState;
+      const authorsState = state.authors;
+
+      expect(authorsState.status).toBe("idle");
+      expect(authorsState.selectedAuthor).toEqual(null);
+      expect(authorsState.error).toBe("Failed to fetch author");
+    });
+
+    it("should return selected author when status is 200", async () => {
+      vi.mocked(axios.get).mockResolvedValueOnce({
+        status: 200,
+        data: fakeAuthor,
+      });
+
+      await dispatch(actions.getByUrlSlug("fake-slug"));
+
+      const state = store.getState() as RootState;
+      const authorsState = state.authors;
+
+      expect(authorsState.status).toBe("idle");
+      expect(authorsState.selectedAuthor).toEqual(fakeAuthor);
+      expect(authorsState.error).toBe("");
+    });
+  });
+
+  describe("Add", () => {
     let store: ReturnType<typeof configureStore>;
     let dispatch: AppDispatch;
 
