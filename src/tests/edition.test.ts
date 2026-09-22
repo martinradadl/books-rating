@@ -545,7 +545,9 @@ describe("Edition Actions", () => {
       expect(editionsState.autocompleteResults).toEqual(
         fakeResponseData.results
       );
-      expect(editionsState.autocompleteResultsTotalCount).toEqual(fakeResponseData.totalCount);
+      expect(editionsState.autocompleteResultsTotalCount).toEqual(
+        fakeResponseData.totalCount
+      );
       expect(editionsState.error).toBe("");
     });
 
@@ -568,6 +570,56 @@ describe("Edition Actions", () => {
 
       expect(editionsState.status).toBe("idle");
       expect(editionsState.searchResults).toEqual(fakeResponseData);
+      expect(editionsState.error).toBe("");
+    });
+  });
+
+  describe("getByAuthor", () => {
+    let store: ReturnType<typeof configureStore>;
+    let dispatch: AppDispatch;
+
+    beforeEach(() => {
+      vi.resetAllMocks();
+
+      store = configureStore({
+        reducer: {
+          editions: editionsReducer,
+        },
+      });
+
+      dispatch = store.dispatch;
+    });
+
+    it("should throw error message when status is not 200 and set editionsList to an empty array", async () => {
+      vi.mocked(axios.get).mockRejectedValueOnce(
+        new Error("Failed to fetch editions")
+      );
+
+      await dispatch(actions.getByAuthor({ authorUrl: "fake-author" }));
+
+      const state = store.getState() as RootState;
+      const editionsState = state.editions;
+
+      expect(editionsState.status).toBe("idle");
+      expect(editionsState.editionsList).toEqual([]);
+      expect(editionsState.editionsListTotalCount).toEqual(0);
+      expect(editionsState.error).toBe("Failed to fetch editions");
+    });
+
+    it("should return editions list when status is 200", async () => {
+      vi.mocked(axios.get).mockResolvedValueOnce({
+        status: 200,
+        data: { editions: fakeEditionsList, totalCount: 10 },
+      });
+
+      await dispatch(actions.getByAuthor({ authorUrl: "fake-author" }));
+
+      const state = store.getState() as RootState;
+      const editionsState = state.editions;
+
+      expect(editionsState.status).toBe("idle");
+      expect(editionsState.editionsList).toEqual(fakeEditionsList);
+      expect(editionsState.editionsListTotalCount).toEqual(10);
       expect(editionsState.error).toBe("");
     });
   });

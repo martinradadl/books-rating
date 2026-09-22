@@ -4,6 +4,7 @@ import type { EditionI, EditionPreviewI } from "../../data-structures";
 
 interface EditionsState {
   editionsList: EditionI[];
+  editionsListTotalCount: number;
   selectedEdition: EditionI | null;
   moreEditionsFromBook: EditionI[];
   booksBySameAuthor: EditionI[];
@@ -24,6 +25,7 @@ interface EditionsState {
 
 const initialState: EditionsState = {
   editionsList: [],
+  editionsListTotalCount: 0,
   selectedEdition: null,
   moreEditionsFromBook: [],
   booksBySameAuthor: [],
@@ -176,6 +178,30 @@ const editionsSlice = createSlice({
           state.searchResults.results = [];
           state.searchResults.totalCount = 0;
         }
+      })
+      .addCase(actions.getByAuthor.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(actions.getByAuthor.fulfilled, (state, action) => {
+        state.status = "idle";
+
+        const updatedEditionsListMobile = [
+          ...(action.payload.isFirstPage ? [] : state.editionsList || []),
+          ...action.payload.data.editions,
+        ];
+
+        const updatedEditionsList = action?.payload?.isMobile
+          ? updatedEditionsListMobile
+          : action?.payload?.data.editions;
+
+        state.editionsList = updatedEditionsList;
+        state.editionsListTotalCount = action?.payload?.data.totalCount;
+      })
+      .addCase(actions.getByAuthor.rejected, (state, action) => {
+        state.status = "idle";
+        state.error = action.error.message || "Failed to fetch editions list";
+        state.editionsList = [];
+        state.editionsListTotalCount = 0;
       })
       .addCase(actions.add.pending, (state) => {
         state.status = "loading";
