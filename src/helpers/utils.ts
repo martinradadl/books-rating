@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 export const formatNumberShort = (n: number) => {
   if (n >= 1_000_000) {
     return (n / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
@@ -23,3 +25,5 @@ export const urlSlugToCapitalizedText = (slug: string) =>
 
 export const textToUrlSlug = (text: string): string =>
   text.toLowerCase().trim().replace(/\s+/g, "-");
+
+export const formattedDate = (date: Date) => format(date, "MMMM dd, yyyy");

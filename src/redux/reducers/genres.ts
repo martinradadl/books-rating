@@ -7,6 +7,7 @@ interface GenresState {
   browseGenresList: GenreI[];
   selectedGenre: GenreI | null;
   relatedGenres: GenreI[];
+  authorGenres: GenreI[];
   discoverList: { genre: GenreI; editions: EditionI[] }[];
   autocompleteResults: GenreI[];
   autocompleteResultsTotalCount: number;
@@ -24,6 +25,7 @@ const initialState: GenresState = {
   browseGenresList: [],
   selectedGenre: null,
   relatedGenres: [],
+  authorGenres: [],
   discoverList: [],
   autocompleteResults: [],
   autocompleteResultsTotalCount: 0,
@@ -106,6 +108,18 @@ const genresSlice = createSlice({
         state.status = "idle";
         state.error = action.error.message || "Failed to fetch genres";
         state.relatedGenres = [];
+      })
+      .addCase(actions.getGenresByAuthor.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(actions.getGenresByAuthor.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.authorGenres = action.payload;
+      })
+      .addCase(actions.getGenresByAuthor.rejected, (state, action) => {
+        state.status = "idle";
+        state.error = action.error.message || "Failed to fetch genres";
+        state.authorGenres = [];
       })
       .addCase(actions.getDiscoverList.pending, (state) => {
         state.status = "loading";

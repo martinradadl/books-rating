@@ -3,6 +3,11 @@ export interface AuthorI {
   name: string;
   profilePic: string;
   description: string;
+  birthplace: string;
+  birthdate: Date;
+  deathdate?: Date;
+  ratingCount?: number;
+  averageRating?: number;
 }
 
 export interface GenreI {

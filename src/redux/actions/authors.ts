@@ -42,10 +42,26 @@ const add = createAsyncThunk<AuthorI, AuthorI>(
   }
 );
 
+const getByUrlSlug = createAsyncThunk(
+  "authors/getByUrlSlug",
+  async (slug: string) => {
+    try {
+      const response = await axios.get(`${API_URL}/authors/slug/${slug}`);
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to fetch genre");
+    }
+  }
+);
+
 const authorsActions = {
   getAll,
   getById,
   add,
+  getByUrlSlug,
 };
 
 export default authorsActions;

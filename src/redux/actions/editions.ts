@@ -173,6 +173,33 @@ const searchByTitleOrAuthor = createAsyncThunk(
   }
 );
 
+const getByAuthor = createAsyncThunk(
+  "editions/getByAuthor",
+  async ({
+    authorUrl,
+    limit,
+    page,
+    isMobile,
+  }: {
+    authorUrl: string;
+    limit?: number;
+    page?: number;
+    isMobile?: boolean;
+  }) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/editions/author/${authorUrl}?limit=${limit}&page=${page}`
+      );
+      return { data: response.data, isMobile, isFirstPage: page === 1 };
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Failed to fetch book list");
+    }
+  }
+);
+
 const add = createAsyncThunk<EditionI, EditionI>(
   "editions/add",
   async (newEdition: EditionI) => {
@@ -200,6 +227,7 @@ const editionsActions = {
   getMostRatedBooks,
   getBestRatedBooks,
   searchByTitleOrAuthor,
+  getByAuthor,
   add,
   cleanUp,
 };

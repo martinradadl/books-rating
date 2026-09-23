@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { StarRating } from "../components/ratings/star-rating";
 import { MdMenuBook } from "react-icons/md";
-import { formatNumberShort, numberToLocaleString } from "../helpers/utils";
+import {
+  formatNumberShort,
+  formattedDate,
+  numberToLocaleString,
+  textToUrlSlug,
+} from "../helpers/utils";
 import { LabelText } from "../components/label-text";
 import { ExpandableContent } from "../components/expandable-content";
 import { BooksCarousel } from "../components/books-carousel";
@@ -19,8 +24,7 @@ import { DiscussionOptions } from "../components/editions/discussion-options";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import type { RootState } from "../redux/store";
 import editionsActions from "../redux/actions/editions";
-import { useParams } from "react-router-dom";
-import { format } from "date-fns";
+import { useNavigate, useParams } from "react-router-dom";
 import { BookActions } from "../components/editions/book-actions";
 import { TotalRatingBar } from "../components/ratings/total-rating-bar";
 import { Loading } from "../components/loading";
@@ -62,8 +66,6 @@ export const BookEdition = () => {
 
   const { author, firstPublished, relatedGenres } = book || {};
 
-  const formattedDate = (date: Date) => format(date, "MMMM dd, yyyy");
-
   const editionDetails = useMemo(
     () => [
       { label: "Format", value: `${pagesCount} pages, ${editionFormat}` },
@@ -84,7 +86,11 @@ export const BookEdition = () => {
   const [showFullAuthorDescription, setShowFullAuthorDescription] =
     useState(false);
   const [userRating, setUserRating] = useState(0);
+  const authorNameSlug = textToUrlSlug(author?.name || "");
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const navigateToAuthorPage = () => navigate(`/author/${authorNameSlug}`);
 
   useEffect(() => {
     return () => {
@@ -148,6 +154,7 @@ export const BookEdition = () => {
             <p
               className="text-4xl cursor-pointer hover:underline focus:ring-3 focus:ring-offset-2 rounded"
               tabIndex={0}
+              onClick={navigateToAuthorPage}
             >
               {author?.name}
             </p>
@@ -292,12 +299,15 @@ export const BookEdition = () => {
           <SectionTitle name="About the author" />
 
           <div className="flex py-2 gap-4 items-center">
-            <ProfilePic image={author?.profilePic} />
+            <div onClick={navigateToAuthorPage}>
+              <ProfilePic image={author?.profilePic} />
+            </div>
 
             <div className="flex flex-col flex-1 min-w-0">
               <p
                 className="w-fit font-semibold text-lg cursor-pointer hover:underline truncate focus:ring-3 rounded"
                 tabIndex={0}
+                onClick={navigateToAuthorPage}
               >
                 {author?.name}
               </p>

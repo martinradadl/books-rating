@@ -5,6 +5,8 @@ export const fakeAuthor: AuthorI = {
   name: "fakeName",
   profilePic: "fakeProfilePic",
   description: "fakeDescription",
+  birthplace: "fakeBirthPlace",
+  birthdate: new Date(),
 };
 
 export const fakeAuthor2: AuthorI = {
@@ -12,6 +14,8 @@ export const fakeAuthor2: AuthorI = {
   name: "fakeName2",
   profilePic: "fakeProfilePic2",
   description: "fakeDescription2",
+  birthplace: "fakeBirthPlace2",
+  birthdate: new Date(),
 };
 
 export const fakeAuthorsList = [fakeAuthor, fakeAuthor2];
