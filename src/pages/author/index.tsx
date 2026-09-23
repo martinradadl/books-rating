@@ -63,6 +63,12 @@ export const Author = () => {
   const booksCount = editionsListTotalCount || 0;
   const totalPages = Math.ceil(booksCount / pageLimit);
 
+  const toggleDropdownMenu = () => setShowDropdownMenu(!showDropdownMenu);
+  const toggleFullDescription = () =>
+    setShowFullDescription(!showFullDescription);
+  const toggleAuthorDetails = () => setShowAuthorDetails(!showAuthorDetails);
+  const navigateToGenrePage = (slug: string) => navigate(`/genres/${slug}`);
+
   useEffect(() => {
     if (params.name) {
       dispatch(authorsActions.getByUrlSlug(params.name));
@@ -139,7 +145,7 @@ export const Author = () => {
 
               <div className="relative">
                 <button
-                  onClick={() => setShowDropdownMenu(!showDropdownMenu)}
+                  onClick={toggleDropdownMenu}
                   className="w-[36px] h-[32px] bg-[#F4F1EA] border border-[#D6D0C4] rounded-[3px] flex items-center justify-center cursor-pointer hover:bg-[#ede6d6]"
                 >
                   <MdExpandMore className="text-xl text-[#9E9E9E]" />
@@ -189,7 +195,7 @@ export const Author = () => {
                 <span key={genre.name}>
                   <span
                     className="text-[#00635D] cursor-pointer hover:underline"
-                    onClick={() => navigate(`/genres/${genre.slug}`)}
+                    onClick={() => navigateToGenrePage(genre.slug || "")}
                   >
                     {genre.name}
                   </span>
@@ -207,7 +213,7 @@ export const Author = () => {
 
           {shouldTruncate && (
             <span
-              onClick={() => setShowFullDescription(!showFullDescription)}
+              onClick={toggleFullDescription}
               className="ml-1 text-[#00635D] cursor-pointer hover:underline"
             >
               {showFullDescription ? "Less" : "More"}
@@ -284,9 +290,7 @@ export const Author = () => {
         <div className="border-y border-[#CCCCCC] lg:hidden">
           <div
             className="flex items-center justify-between"
-            onClick={() => {
-              setShowAuthorDetails(!showAuthorDetails);
-            }}
+            onClick={toggleAuthorDetails}
           >
             <p className="text-lg mx-2.5 py-[15px]">Author Details</p>
             {showAuthorDetails ? (
@@ -319,9 +323,7 @@ export const Author = () => {
                       <span
                         key={genre.name}
                         className="text-[#00635D] cursor-pointer hover:underline"
-                        onClick={() => {
-                          navigate(`/genres/${genre.slug}`);
-                        }}
+                        onClick={() => navigateToGenrePage(genre.slug || "")}
                       >
                         {genre.name}
                         {index < authorGenres.length - 1 && ", "}

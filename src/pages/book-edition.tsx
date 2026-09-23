@@ -90,6 +90,8 @@ export const BookEdition = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const navigateToAuthorPage = (slug: string) => navigate(`/author/${slug}`);
+
   useEffect(() => {
     return () => {
       dispatch(editionsActions.cleanUp());
@@ -152,6 +154,7 @@ export const BookEdition = () => {
             <p
               className="text-4xl cursor-pointer hover:underline focus:ring-3 focus:ring-offset-2 rounded"
               tabIndex={0}
+              onClick={() => navigateToAuthorPage(authorNameSlug)}
             >
               {author?.name}
             </p>
@@ -296,7 +299,7 @@ export const BookEdition = () => {
           <SectionTitle name="About the author" />
 
           <div className="flex py-2 gap-4 items-center">
-            <div onClick={() => navigate(`/author/${authorNameSlug}`)}>
+            <div onClick={() => navigateToAuthorPage(authorNameSlug)}>
               <ProfilePic image={author?.profilePic} />
             </div>
 
@@ -304,7 +307,7 @@ export const BookEdition = () => {
               <p
                 className="w-fit font-semibold text-lg cursor-pointer hover:underline truncate focus:ring-3 rounded"
                 tabIndex={0}
-                onClick={() => navigate(`/author/${authorNameSlug}`)}
+                onClick={() => navigateToAuthorPage(authorNameSlug)}
               >
                 {author?.name}
               </p>
