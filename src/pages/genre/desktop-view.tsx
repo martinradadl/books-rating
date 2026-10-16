@@ -6,6 +6,7 @@ import type { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { GENRE_DATA } from "../../data/genre";
 import { Loading } from "../../components/loading";
+import { useNavigateToGenres } from "../../hooks/navigateToGenres";
 
 const {
   NEWS_IMG_URL,
@@ -31,6 +32,7 @@ export const GenreDesktop = () => {
     bestRatedBooks,
     status: editionsStatus,
   } = useAppSelector((state: RootState) => state.editions);
+  const { handleNavigateToGenres } = useNavigateToGenres();
 
   const { name, description } = selectedGenre || {};
 
@@ -50,7 +52,10 @@ export const GenreDesktop = () => {
     <div className="w-[970px] mx-auto px-[5px] pt-[15px] flex">
       <div className="w-[643px] pl-2 pr-2.5">
         <p className="text-xs">
-          <span className="text-[#00635d] cursor-pointer hover:underline">
+          <span
+            className="text-[#00635d] cursor-pointer hover:underline"
+            onClick={() => handleNavigateToGenres()}
+          >
             Genres
           </span>
           <span>{" > "}</span>
