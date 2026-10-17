@@ -44,6 +44,8 @@ export const GenreDesktop = () => {
 
   const handleNavigateToMoreGenres = () => handleNavigateToGenres();
 
+  console.count("on GenreDesktop")
+
   if (genresStatus === "loading" || editionsStatus === "loading") {
     return <Loading />;
   }
