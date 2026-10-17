@@ -1,6 +1,5 @@
 import { GenreBookListPreviewDesktop } from "../../../components/genres/list-preview-desktop";
 import { Loading } from "../../../components/loading";
-import { useNavigateToGenres } from "../../../hooks/navigateToGenres";
 import { useAppSelector } from "../../../redux/hooks";
 import type { RootState } from "../../../redux/store";
 import { AutocompleteInput } from "../../../components/autocomplete";
@@ -8,6 +7,7 @@ import { GenreAutocompleteItem } from "../../../components/autocomplete/genre-re
 import genresActions from "../../../redux/actions/genres";
 import { useAutocomplete } from "../../../hooks/autocomplete";
 import { GenresSearchBarDesktop } from "../../../components/genres/search-bar-desktop";
+import { MoreGenresListDesktop } from "../../../components/genres/more-genres-list-desktop";
 
 export const MoreGenresDesktop = () => {
   const {
@@ -17,7 +17,6 @@ export const MoreGenresDesktop = () => {
     autocompleteResultsTotalCount,
     status: genresStatus,
   } = useAppSelector((state: RootState) => state.genres);
-  const { handleNavigateToGenres } = useNavigateToGenres();
   const {
     autocompleteRef,
     debouncedHandleOnChangeSearch,
@@ -69,19 +68,8 @@ export const MoreGenresDesktop = () => {
             Browse
           </p>
         </div>
-        <div className="text-xs pb-5 grid grid-cols-2">
-          {genresList.map((genre) => (
-            <p
-              key={genre.name}
-              className="w-fit leading-[18px] cursor-pointer hover:underline text-[#00635d]"
-              onClick={() => {
-                handleNavigateToGenres(genre.slug || "");
-              }}
-            >
-              {genre.name}
-            </p>
-          ))}
-        </div>
+
+        <MoreGenresListDesktop list={genresList} />
       </div>
     </div>
   );

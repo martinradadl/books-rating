@@ -6,6 +6,7 @@ import type { RootState } from "../../redux/store";
 import { GENRE_DATA } from "../../data/genre";
 import { Loading } from "../../components/loading";
 import { useNavigateToGenres } from "../../hooks/navigateToGenres";
+import { MoreGenresListDesktop } from "../../components/genres/more-genres-list-desktop";
 
 const {
   NEWS_IMG_URL,
@@ -38,6 +39,11 @@ export const GenreDesktop = () => {
     ? description
     : description?.slice(0, descriptionLimit);
 
+  const handleDescriptionToggle = () =>
+    setIsDescriptionExpanded(!isDescriptionExpanded);
+
+  const handleNavigateToMoreGenres = () => handleNavigateToGenres();
+
   if (genresStatus === "loading" || editionsStatus === "loading") {
     return <Loading />;
   }
@@ -48,7 +54,7 @@ export const GenreDesktop = () => {
         <p className="text-xs">
           <span
             className="text-[#00635d] cursor-pointer hover:underline"
-            onClick={() => handleNavigateToGenres()}
+            onClick={handleNavigateToMoreGenres}
           >
             Genres
           </span>
@@ -65,7 +71,7 @@ export const GenreDesktop = () => {
           {description && description.length > descriptionLimit && (
             <span
               className="text-[#00635d] underline cursor-pointer ml-1"
-              onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+              onClick={handleDescriptionToggle}
             >
               {isDescriptionExpanded ? "(less)" : "...more"}
             </span>
@@ -95,19 +101,7 @@ export const GenreDesktop = () => {
           </p>
         </div>
 
-        <div className="text-xs pb-5 grid grid-cols-2">
-          {relatedGenres.map((genre) => (
-            <p
-              key={genre.name}
-              className="w-fit leading-[18px] cursor-pointer hover:underline text-[#00635d]"
-              onClick={() => {
-                handleNavigateToGenres(genre.slug || "");
-              }}
-            >
-              {genre.name}
-            </p>
-          ))}
-        </div>
+        <MoreGenresListDesktop list={relatedGenres} />
 
         <div className="text-xs mt-3 pb-2.5">
           <div className="pb-2.5">
