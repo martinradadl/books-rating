@@ -3,7 +3,6 @@ import { GenreBookListPreviewDesktop } from "../../components/genres/list-previe
 import { ProfilePic } from "../../components/profile-pic";
 import { useAppSelector } from "../../redux/hooks";
 import type { RootState } from "../../redux/store";
-import { useNavigate } from "react-router-dom";
 import { GENRE_DATA } from "../../data/genre";
 import { Loading } from "../../components/loading";
 import { useNavigateToGenres } from "../../hooks/navigateToGenres";
@@ -19,7 +18,6 @@ const {
 const descriptionLimit = 480;
 
 export const GenreDesktop = () => {
-  const navigate = useNavigate();
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const {
     selectedGenre,
@@ -39,10 +37,6 @@ export const GenreDesktop = () => {
   const displayedDescription = isDescriptionExpanded
     ? description
     : description?.slice(0, descriptionLimit);
-
-  const handleClickOnRelatedGenre = (slug: string) => {
-    navigate(`/genres/${slug}`);
-  };
 
   if (genresStatus === "loading" || editionsStatus === "loading") {
     return <Loading />;
@@ -107,7 +101,7 @@ export const GenreDesktop = () => {
               key={genre.name}
               className="w-fit leading-[18px] cursor-pointer hover:underline text-[#00635d]"
               onClick={() => {
-                handleClickOnRelatedGenre(genre.slug || "");
+                handleNavigateToGenres(genre.slug || "");
               }}
             >
               {genre.name}
