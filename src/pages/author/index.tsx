@@ -1,18 +1,20 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import type { RootState } from "../../redux/store";
 import { usePaginationManager } from "../../hooks/pagination-manager";
 import { useEffect, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import authorsActions from "../../redux/actions/authors";
-import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { formattedDate } from "../../helpers/utils";
 import genresActions from "../../redux/actions/genres";
 import editionsActions from "../../redux/actions/editions";
 import { BookListItemSkeleton } from "../../components/book-lists/item-skeleton";
 import { BookListItem } from "../../components/book-lists/item";
 import { PageSelector } from "../../components/pagination/page-selector";
 import { LoadMoreButton } from "../../components/pagination/load-more-button";
+import { AuthorProfileMobile } from "../../components/author/profile-mobile";
+import { AuthorDetailsDesktop } from "../../components/author/details-desktop";
+import { AuthorBooksHeader } from "../../components/author/books-header";
+import { AuthorDetailsMobile } from "../../components/author/details-mobile";
 
 const pageLimit = 4;
 const DESCRIPTION_MAX_LENGTH_MOBILE = 280;
@@ -24,7 +26,6 @@ const authorFollowersCount = 1234;
 export const Author = () => {
   const dispatch = useAppDispatch();
   const params = useParams();
-  const navigate = useNavigate();
   const { editionsList, editionsListTotalCount, status } = useAppSelector(
     (state: RootState) => state.editions
   );
@@ -36,8 +37,6 @@ export const Author = () => {
   );
 
   const [showFullDescription, setShowFullDescription] = useState(false);
-  const [showDropdownMenu, setShowDropdownMenu] = useState(false);
-  const [showAuthorDetails, setShowAuthorDetails] = useState(false);
 
   const {
     currentPage,
@@ -63,11 +62,8 @@ export const Author = () => {
   const booksCount = editionsListTotalCount || 0;
   const totalPages = Math.ceil(booksCount / pageLimit);
 
-  const toggleDropdownMenu = () => setShowDropdownMenu(!showDropdownMenu);
   const toggleFullDescription = () =>
     setShowFullDescription(!showFullDescription);
-  const toggleAuthorDetails = () => setShowAuthorDetails(!showAuthorDetails);
-  const navigateToGenrePage = (slug: string) => navigate(`/genres/${slug}`);
 
   useEffect(() => {
     if (params.name) {
@@ -121,90 +117,20 @@ export const Author = () => {
         <img
           src={selectedAuthor?.profilePic}
           alt="Author Pic"
-          className="w-[200px] h-[208px]"
+          className="w-auto h-[208px]"
         />
       </div>
 
       <div className="lg:w-[625px] lg:ml-3">
-        <div className="flex p-2.5 pb-[5px] lg:hidden">
-          <img
-            src={selectedAuthor?.profilePic}
-            alt="Author Pic"
-            className="w-[90px] h-[90px] mr-2.5"
-          />
+        <AuthorProfileMobile
+          profilePic={selectedAuthor?.profilePic ?? ""}
+          name={selectedAuthor?.name ?? ""}
+          followersCount={authorFollowersCount}
+        />
 
-          <div>
-            <p className="text-2xl leading-[26px] mb-2.5">
-              {selectedAuthor?.name}
-            </p>
-
-            <div className="flex">
-              <button className="w-[140px] mr-2.5 bg-[#F4F1EA] border border-[#D6D0C4] rounded-[3px] text-sm leading-3.5 px-3 py-2 cursor-pointer hover:bg-[#ede6d6]">
-                Follow Author
-              </button>
-
-              <div className="relative">
-                <button
-                  onClick={toggleDropdownMenu}
-                  className="w-[36px] h-[32px] bg-[#F4F1EA] border border-[#D6D0C4] rounded-[3px] flex items-center justify-center cursor-pointer hover:bg-[#ede6d6]"
-                >
-                  <MdExpandMore className="text-xl text-[#9E9E9E]" />
-                </button>
-
-                {showDropdownMenu && (
-                  <div className="absolute top-[34px] left-0 w-fit bg-white border border-[#D6D0C4] shadow-sm z-50">
-                    <button className="w-full whitespace-nowrap text-left text-sm p-3 hover:bg-[#ede6d6] hover:underline cursor-pointer">
-                      Report this account
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <p className="text-sm">{authorFollowersCount} followers</p>
-          </div>
-        </div>
-
-        <p className="hidden lg:block text-xl font-bold mb-2 py-1 border-b border-[#d8d8d8]">
-          {selectedAuthor?.name}
-        </p>
-
-        <div className="hidden lg:block text-xs">
-          <div className="flex gap-2 my-1">
-            <p className="w-1/5 font-bold">Born</p>
-
-            <div className="w-3/4">
-              <p>in {selectedAuthor?.birthplace}</p>
-              <p>{formattedDate(selectedAuthor?.birthdate || new Date())}</p>
-            </div>
-          </div>
-
-          {selectedAuthor?.deathdate && (
-            <div className="flex gap-2 my-1">
-              <p className="w-1/5 font-bold">Died</p>
-
-              <p className="w-3/4">{formattedDate(selectedAuthor.deathdate)}</p>
-            </div>
-          )}
-
-          <div className="flex gap-2 my-1">
-            <p className="w-1/5 font-bold">Genres</p>
-
-            <div className="w-3/4">
-              {authorGenres.map((genre, index) => (
-                <span key={genre.name}>
-                  <span
-                    className="text-[#00635D] cursor-pointer hover:underline"
-                    onClick={() => navigateToGenrePage(genre.slug || "")}
-                  >
-                    {genre.name}
-                  </span>
-                  {index < authorGenres.length - 1 && ", "}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
+        {selectedAuthor && (
+          <AuthorDetailsDesktop author={selectedAuthor} genres={authorGenres} />
+        )}
 
         <p className="px-2.5 mb-2.5 lg:px-0 lg:mt-6">
           {showFullDescription || !shouldTruncate
@@ -221,23 +147,12 @@ export const Author = () => {
           )}
         </p>
 
-        <p className="lg:hidden border-t border-[#CCCCCC] px-2.5 pt-2.5 text-lg">
-          {selectedAuthor?.name}'s Books
-        </p>
-
-        <p className="text-[#999999] px-2.5 pb-2.5 lg:hidden">
-          Avg rating: {selectedAuthor?.averageRating} ·{" "}
-          {selectedAuthor?.ratingCount} ratings · {authorTotalReviews} reviews
-        </p>
-
-        <p className="hidden lg:block uppercase mb-2.5 mt-5 text-sm font-semibold py-1 border-b border-[#CCCCCC]">
-          {selectedAuthor?.name}'s books
-        </p>
-
-        <p className="hidden lg:block pl-1.25 pb-2.5 text-xs">
-          Avg rating: {selectedAuthor?.averageRating} ·{" "}
-          {selectedAuthor?.ratingCount} ratings · {authorTotalReviews} reviews
-        </p>
+        <AuthorBooksHeader
+          authorName={selectedAuthor?.name}
+          averageRating={selectedAuthor?.averageRating}
+          ratingCount={selectedAuthor?.ratingCount}
+          totalReviews={authorTotalReviews}
+        />
 
         {isViewportSwitching ? (
           <div className="flex justify-center items-center min-h-[500px]">
@@ -287,54 +202,9 @@ export const Author = () => {
           />
         </div>
 
-        <div className="border-y border-[#CCCCCC] lg:hidden">
-          <div
-            className="flex items-center justify-between"
-            onClick={toggleAuthorDetails}
-          >
-            <p className="text-lg mx-2.5 py-[15px]">Author Details</p>
-            {showAuthorDetails ? (
-              <MdExpandLess className="text-4xl" />
-            ) : (
-              <MdExpandMore className="text-4xl text-[#9E9E9E]" />
-            )}
-          </div>
-
-          {showAuthorDetails && (
-            <div className="px-2.5">
-              <div className="text-[#999999]">
-                <p>Born in {selectedAuthor?.birthplace}</p>
-                <p>
-                  Born on{" "}
-                  {formattedDate(selectedAuthor?.birthdate || new Date())}
-                </p>
-                {selectedAuthor?.deathdate && (
-                  <p>
-                    Died on{" "}
-                    {formattedDate(selectedAuthor?.deathdate || new Date())}
-                  </p>
-                )}
-
-                <div className="flex my-3.5">
-                  <p className="font-bold text-black mr-1">Genres:</p>
-
-                  <div>
-                    {authorGenres.map((genre, index) => (
-                      <span
-                        key={genre.name}
-                        className="text-[#00635D] cursor-pointer hover:underline"
-                        onClick={() => navigateToGenrePage(genre.slug || "")}
-                      >
-                        {genre.name}
-                        {index < authorGenres.length - 1 && ", "}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        {selectedAuthor && (
+          <AuthorDetailsMobile author={selectedAuthor} genres={authorGenres} />
+        )}
       </div>
     </div>
   );
