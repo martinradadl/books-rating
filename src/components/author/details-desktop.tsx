@@ -1,6 +1,6 @@
 import type { AuthorI, GenreI } from "../../data-structures";
 import { formattedDate } from "../../helpers/utils";
-import { useNavigateToGenres } from "../../hooks/navigateToGenres";
+import { GenreListItemDesktop } from "../genres/list-item-desktop";
 
 interface AuthorDetailsDesktopProps {
   author: AuthorI;
@@ -11,8 +11,6 @@ export const AuthorDetailsDesktop = ({
   author,
   genres,
 }: AuthorDetailsDesktopProps) => {
-  const { handleNavigateToGenres } = useNavigateToGenres();
-
   return (
     <>
       <p className="hidden lg:block text-xl font-bold mb-2 py-1 border-b border-[#d8d8d8]">
@@ -43,12 +41,8 @@ export const AuthorDetailsDesktop = ({
           <div className="w-3/4">
             {genres.map((genre, index) => (
               <span key={genre.name}>
-                <span
-                  className="text-[#00635D] cursor-pointer hover:underline"
-                  onClick={() => handleNavigateToGenres(genre.slug || "")}
-                >
-                  {genre.name}
-                </span>
+                <GenreListItemDesktop name={genre.name} slug={genre.slug} />
+
                 {index < genres.length - 1 && ", "}
               </span>
             ))}
