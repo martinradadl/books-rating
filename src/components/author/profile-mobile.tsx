@@ -20,7 +20,7 @@ export const AuthorProfileMobile = ({
       <img
         src={profilePic}
         alt="Author Pic"
-        className="w-[90px] h-[90px] mr-2.5"
+        className="w-auto h-[90px] mr-2.5"
       />
 
       <div>

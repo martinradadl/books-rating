@@ -117,7 +117,7 @@ export const Author = () => {
         <img
           src={selectedAuthor?.profilePic}
           alt="Author Pic"
-          className="w-[200px] h-[208px]"
+          className="w-auto h-[208px]"
         />
       </div>
 
